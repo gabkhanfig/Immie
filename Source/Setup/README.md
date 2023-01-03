@@ -22,7 +22,7 @@ The individual components necessary to add on are the following:
 
 ## Unreal Engine Setup
 
-[Connect GitHub account to Epic Games account](https://www.unrealengine.com/account/connections?lang=en-US). Follow the prompt in the recieved email to join the Epic Games organization. You should now have access to the [Unreal Engine Source Code Repo](https://github.com/EpicGames/UnrealEngine). Clone the Unreal Engine source code into a new UnrealEngine directory.
+[Connect the GitHub account to the Epic Games account](https://www.unrealengine.com/account/connections?lang=en-US). Follow the prompt in the recieved email to join the Epic Games organization. You should now have access to the [Unreal Engine Source Code Repo](https://github.com/EpicGames/UnrealEngine). Clone the Unreal Engine source code into a new UnrealEngine directory.
 ```
 git clone https://github.com/EpicGames/UnrealEngine.git
 ``` 
@@ -39,7 +39,7 @@ Execute the setup and generate project files batch files.
 Setup.bat
 GenerateProjectFiles.bat
 ```
-Open the `UE5.sln` file. Ensure the Solution Configurations is `Development Editor` and then Solution Platforms is set to `Win64`. Right click on `UE5` under the engine folder and select `Build`. This usually takes a while. On a ryzen 9 7950x it took ~30 minutes. Double check everything worked by navigating to `UnrealEngine\Engine\Binaries\Win64` and running `UnrealEditor.exe`. Optionally it can be run through Visual Studio. Right click again on `UE5` and select `Set as Startup Project`. Running local windows debuggers or pressing f5 should successfully launch the engine.
+Open the `UE5.sln` file. Ensure the Solution Configurations is `Development Editor` and Solution Platforms is set to `Win64`. Right click on `UE5` under the engine folder and select `Build`. This usually takes a while. On a ryzen 9 7950x it took ~30 minutes. Double check everything worked by navigating to `UnrealEngine\Engine\Binaries\Win64` and running `UnrealEditor.exe`. Optionally it can be run through Visual Studio. Right click again on `UE5` and select `Set as Startup Project`. Running local windows debuggers or pressing f5 should successfully launch the engine.
 
 ## Immie Setup
 
