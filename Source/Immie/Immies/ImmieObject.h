@@ -21,9 +21,6 @@ class IMMIE_API UImmie : public UObject
 {
 	GENERATED_BODY()
 
-	friend class USpecieDataManager;
-	friend class UImmieGameInstance;
-
 private:
 
 	UPROPERTY()

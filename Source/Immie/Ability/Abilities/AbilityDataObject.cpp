@@ -32,6 +32,10 @@
 
 #define DEFAULT_MAX_DELAY 0.25
 
+class UAbility;
+class AAbilityActor;
+class ADummyAbilityActor;
+
 UAbilityDataObject::UAbilityDataObject()
 {
 }
@@ -53,6 +57,12 @@ void UAbilityDataObject::LoadClasses()
 	UClass* ActorClassReference = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *ActorClassReferenceString));
 	if (IsValid(ActorClassReference)) {
 		ActorClass = ActorClassReference;
+	}
+
+	const FString DummyActorClassReferenceString = GetAbilitiesBlueprintFolder() + AbilityCapitalizedName + "/Dummy" + AbilityCapitalizedName + "Actor_BP.Dummy" + AbilityCapitalizedName + "Actor_BP_C'";
+	UClass* DummyActorClassReference = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *DummyActorClassReferenceString));
+	if (IsValid(DummyActorClassReference)) {
+		DummyActorClass = DummyActorClassReference;
 	}
 }
 

@@ -4,7 +4,7 @@
 #include "Formula.h"
 #include <Runtime/Engine/Classes/Kismet/KismetMathLibrary.h>
 
-#define STAT_LEVEL_SUM(S) UKismetMathLibrary::Abs((S - 1.f + 1.f) * (1.f + S) / 2.f)
+#define STAT_LEVEL_SUM(S) UKismetMathLibrary::Abs((double(S) - 1.0 + 1.0) * (1.0 + double(S)) / 2.0)
 
 float UFormula::HealthStat(uint8 BaseStat, uint8 Level, uint8 StatLevel)
 {

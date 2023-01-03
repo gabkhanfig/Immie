@@ -12,6 +12,7 @@
 class UAbility;
 class AImmieCharacter;
 class UDamageComponent;
+class ADummyAbilityActor;
 
 UCLASS()
 class IMMIE_API AAbilityActor : public AActor, public IBattleActor
@@ -40,7 +41,7 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite)
 		/* Only exists on client. */
-		AAbilityActor* VisualDummy;
+		ADummyAbilityActor* Dummy;
 
 public:	
 	// Sets default values for this actor's properties

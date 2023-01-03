@@ -31,6 +31,10 @@ private:
 		/**/
 		UClass* ActorClass;
 
+	UPROPERTY()
+		/**/
+		UClass* DummyActorClass;
+
 protected:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
@@ -141,6 +145,11 @@ public:
 	UFUNCTION(BlueprintPure)
 		/**/
 		UClass* GetActorClass() const { return ActorClass; }
+
+	UFUNCTION(BlueprintPure)
+		/**/
+		UClass* GetDummyActorClass() const { return DummyActorClass; }
+
 
 	UFUNCTION(BlueprintPure)
 		/**/

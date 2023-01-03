@@ -7,6 +7,7 @@
 #include <Immie/Ability/Abilities/AbilityDataObject.h>
 #include <Immie/Battle/Components/DamageComponent.h>
 #include <Net/UnrealNetwork.h>
+#include "DummyAbilityActor.h"
 
 AAbilityActor::AAbilityActor()
 {
