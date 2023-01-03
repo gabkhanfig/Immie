@@ -13,7 +13,7 @@
 Binaries/
 Build/
 Content/*
-!Content/Data/
+Content/Data/Saves/*
 !Content/Data/GameData
 DerivedDataCache/
 Images/
