@@ -22,7 +22,7 @@ The individual components necessary to add on are the following:
 
 ## Unreal Engine Setup
 
-[Connect GitHub account to Epic Games account](https://www.unrealengine.com/account/connections?lang=en-US). Follow the prompt in the recieved email to join the Epic Games organization. You should now have access to the [Unreal Engine Source Code Repo](https://github.com/EpicGames/UnrealEngine). Clone the Unreal Engine sourcee code into a new UnrealEngine directory.
+[Connect GitHub account to Epic Games account](https://www.unrealengine.com/account/connections?lang=en-US). Follow the prompt in the recieved email to join the Epic Games organization. You should now have access to the [Unreal Engine Source Code Repo](https://github.com/EpicGames/UnrealEngine). Clone the Unreal Engine source code into a new UnrealEngine directory.
 ```
 git clone https://github.com/EpicGames/UnrealEngine.git
 ``` 
@@ -43,6 +43,10 @@ Open the `UE5.sln` file. Ensure the Solution Configurations is `Development Edit
 
 ## Immie Setup
 
+[Clone the Immie project into a new Immie directory.](https://github.com/gabkhanfig/Immie)
+```
+git clone https://github.com/gabkhanfig/Immie.git
+```
 Right click on `Immie.uproject`. Switch the Unreal Engine version to the version setup above (UnrealEngine folder) and generate the Visual Studio project files.
 ```
 Switch Unreal Engine version...
