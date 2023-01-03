@@ -2,11 +2,11 @@
 
 ## Requirements
 
-> Windows 10+
-> Visual Studio
-> GitHub account
-> Epic Games account
-> Unreal Engine 5.1 (built from Epic Games source)
+- Windows 10+
+- Visual Studio
+- GitHub account
+- Epic Games account
+- Unreal Engine 5.1 (built from Epic Games source)
 
 ## Visual Studio Setup
 
@@ -30,7 +30,7 @@ Cd into it.
 ```
 cd UnrealEngine
 ``` 
-Checkout the correct unreal engine version. These is `major.minor`.
+Checkout the correct unreal engine version. The branch is `major.minor`.
 ```
 git checkout 5.1
 ```
@@ -43,4 +43,9 @@ Open the `UE5.sln` file. Ensure the Solution Configurations is `Development Edit
 
 ## Immie Setup
 
-Right click on `Immie.uproject`. Select `Switch Unreal Engine version...` and select the version (UnrealEngine folder) setup above. Next select `Generated Visual Studio project files`. Once these are complete, open `Immie.sln`. Right click on `Immie` under the `Games` folder within the solution. Click `Build`. Immie can now be launched either through Visual Studio or by running `Immie.uproject`.
+Right click on `Immie.uproject`. Switch the Unreal Engine version to the version setup above (UnrealEngine folder) and generate the Visual Studio project files.
+```
+Switch Unreal Engine version...
+Generated Visual Studio project files
+```
+Open `Immie.sln`. Right click on `Immie` under the `Games` folder within the solution. Click `Build`. Immie can now be launched either through Visual Studio or by running `Immie.uproject`.
