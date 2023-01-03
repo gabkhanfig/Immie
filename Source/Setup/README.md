@@ -23,11 +23,17 @@ The individual components necessary to add on are the following:
 ## Unreal Engine Setup
 
 [Connect GitHub account to Epic Games account](https://www.unrealengine.com/account/connections?lang=en-US). Follow the prompt in the recieved email to join the Epic Games organization. You should now have access to the [Unreal Engine Source Code Repo](https://github.com/EpicGames/UnrealEngine). Clone the Unreal Engine sourcee code into a new UnrealEngine directory.
-```git clone https://github.com/EpicGames/UnrealEngine.git``` 
+```
+git clone https://github.com/EpicGames/UnrealEngine.git
+``` 
 Cd into it.
-```cd UnrealEngine``` 
-Checkout the correct unreal engine version. These is `major`.`minor`.
-```git checkout 5.1```
+```
+cd UnrealEngine
+``` 
+Checkout the correct unreal engine version. These is `major.minor`.
+```
+git checkout 5.1
+```
 Execute the setup and generate project files batch files.
 ```
 Setup.bat
