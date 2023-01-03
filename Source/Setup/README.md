@@ -3,15 +3,12 @@
 ## Requirements
 
 - Windows 10+
-- Visual Studio
 - GitHub account
 - Epic Games account
-- Unreal Engine 5.1 (built from Epic Games source)
 
 ## Visual Studio Setup
 
-[Download visual studio community edition](https://visualstudio.microsoft.com/free-developer-offers/). 
-The workloads necessary are the following:
+[Download visual studio community edition](https://visualstudio.microsoft.com/free-developer-offers/). The workloads necessary are the following:
 - .NET desktop development
 - Desktop development with C++
 - Game development with C++
@@ -19,6 +16,8 @@ The workloads necessary are the following:
 
 The individual components necessary to add on are the following:
 - .NET Core 3.1 Runtime (LTS)
+
+Follow whatever prompts to install it.
 
 ## Unreal Engine Setup
 

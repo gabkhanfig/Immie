@@ -1,0 +1,19 @@
+{
+    "HexColor": "#e3dd66",
+    "Weaknesses": [
+        {
+            "Type": "ground"
+        }
+    ],
+    "Resistances": [
+        {
+            "Type": "nature"
+        },
+        {
+            "Type": "electric"
+        },
+        {
+            "Type": "air"
+        }
+    ]
+}

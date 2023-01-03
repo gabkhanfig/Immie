@@ -1,0 +1,25 @@
+{
+	"Types": [
+        {
+            "Type": "fire"
+        }
+    ],
+    "BaseHealth": 24,
+    "BaseAttack": 52,
+    "BaseDefense": 14,
+    "BaseSpeed": 68,
+    "Learnset":
+    {
+        "Initial": [],
+        "Level10": [],
+        "Level20": [],
+        "Level30": [],
+        "Level40": [],
+        "Level50": [],
+        "Level60": [],
+        "Level70": [],
+        "Level80": [],
+        "Level90": [],
+        "Level100": []
+    }
+}

@@ -1,0 +1,31 @@
+{
+	"PlayerTeam": [
+		{
+			"Specie": "snamdon",
+			"DisplayName": "load save!",
+			"Xp": 1000000,
+			"Health": 1,
+			"HealthLevel": 3,
+			"AttackLevel": 3,
+			"DefenseLevel": 3,
+			"SpeedLevel": 3,
+			"Abilities": [
+				{
+					"Ability": "testAbility"
+				},
+				{
+					"Ability": "testAbility"
+				},
+				{
+					"Ability": "testAbility"
+				},
+				{
+					"Ability": "testAbility"
+				}
+			],
+			"SpecieSpecific":
+			{
+			}
+		}
+	]
+}

@@ -1,0 +1,18 @@
+{
+    "Types": [
+        {
+            "Type": "fire"
+        },
+        {
+            "Type": "nature"
+        }
+    ],
+    "BaseHealth": 100,
+    "MaxUses": 8,
+    "InitialUses": 1,
+    "MaxCooldown": 2,
+    "InitialCooldown": 1.7,
+    "AbilityFlags": {
+        "DoesDamage": true
+    }
+}

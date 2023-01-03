@@ -1,0 +1,16 @@
+{
+    "HexColor": "#bff2e3",
+    "Weaknesses": [
+        {
+            "Type": "electric"
+        },
+        {
+            "Type": "metal"
+        }
+    ],
+    "Resistances": [
+        {
+            "Type": "ground"
+        }
+    ]
+}

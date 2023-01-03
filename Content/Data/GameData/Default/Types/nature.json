@@ -1,0 +1,25 @@
+{
+    "HexColor": "#5ec916",
+    "Weaknesses": [
+        {
+            "Type": "fire"
+        },
+        {
+            "Type": "air"
+        },
+        {
+            "Type": "dark"
+        }
+    ],
+    "Resistances": [
+        {
+            "Type": "water"
+        },
+        {
+            "Type": "nature"
+        },
+        {
+            "Type": "electric"
+        }
+    ]
+}

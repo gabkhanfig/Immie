@@ -12,8 +12,9 @@
 .vs/
 Binaries/
 Build/
-Content/
-#!Content/Data/GameData/*
+Content/*
+!Content/Data/
+!Content/Data/GameData
 DerivedDataCache/
 Images/
 Intermediate/

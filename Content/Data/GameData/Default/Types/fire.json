@@ -1,0 +1,22 @@
+{
+    "HexColor": "#d1480d",
+    "Weaknesses": [
+        {
+            "Type": "water"
+        },
+        {
+            "Type": "ground"
+        }
+    ],
+    "Resistances": [
+        {
+            "Type": "nature"
+        },
+        {
+            "Type": "fire"
+        },
+        {
+            "Type": "metal"
+        }
+    ]
+}
