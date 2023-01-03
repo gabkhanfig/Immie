@@ -53,3 +53,6 @@ Switch Unreal Engine version...
 Generated Visual Studio project files
 ```
 Open `Immie.sln`. Right click on `Immie` under the `Games` folder within the solution. Click `Build`. Immie can now be launched either through Visual Studio or by running `Immie.uproject`.
+
+[^note]:
+    Currently does not contain blueprint assets. Those will need to be copied in manually.
