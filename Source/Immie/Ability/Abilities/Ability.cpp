@@ -17,6 +17,7 @@
 #include <Immie/Immies/ImmieObject.h>
 #include <Kismet/GameplayStatics.h>
 #include <Immie/Ability/Actor/AbilityActor.h>
+#include <Immie/Controller/Player/ImmiePlayerController.h>
 
 UAbility::UAbility()
 {
@@ -40,17 +41,19 @@ void UAbility::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 
 UAbility* UAbility::NewAbility(AImmieCharacter* Owner, int _AbilityId)
 {
-	UAbility* Ability = NewObject<UAbility>(Owner, GetAbilityDataManager()->GetAbilityClass(_AbilityId));
+	UClass* AbilityClass = GetAbilityDataManager()->GetAbilityClass(_AbilityId);
+	UAbility* Ability = NewObject<UAbility>(Owner, AbilityClass);
 	Ability->AbilityId = _AbilityId;
 	return Ability;
 }
 
 void UAbility::InitializeForBattle()
 {
+	AbilityDataObject = GetBattleInstance()->GetBattleAbilityManager()->GetAbilityDataObject(AbilityId);
+
 	CurrentCooldown = AbilityDataObject->GetInitialCooldown();
 	CurrentUses = AbilityDataObject->GetInitialUses();
 	
-
 	FAbilityFlags AbilityFlags = AbilityDataObject->GetAbilityFlags();
 
 	if (AbilityFlags.SameTypeImmie) {
@@ -116,7 +119,10 @@ void UAbility::SyncClientAbilityData_Implementation(int _AbilityId, FBattleStats
 void UAbility::ExecuteInputPress()
 {
 	bInputHeld = true;
-	iLog("Ability input was pressed for ability " + GetAbilityName().ToString());
+	if (HasBattleAuthority()) {
+		AAbilityActor* actor = CreateAbilityActor(GetTeam(), FTransform::Identity);
+		actor->InitializeForBattle();
+	}
 	BP_OnInputPress();
 }
 
@@ -162,6 +168,8 @@ AAbilityActor* UAbility::CreateAbilityActorFromClass(AActor* Owner, const FTrans
 		(AbilityActorClass, SpawnTransform, Owner, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 
 	check(IsValid(AbilityActor));
+	AbilityActor->SetAbility(this);
+
 	UGameplayStatics::FinishSpawningActor(AbilityActor, SpawnTransform);
 	return AbilityActor;
 }
@@ -177,7 +185,6 @@ void UAbility::ClientBattleTick(float DeltaTime)
 void UAbility::ExecuteInputRelease()
 {
 	bInputHeld = false;
-	iLog("Ability input was released for ability " + GetAbilityName().ToString());
 	BP_OnInputRelease();
 }
 

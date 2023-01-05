@@ -165,9 +165,17 @@ protected:
 		/* Perform client battle ticking on the components this Immie character owns. */
 		void ClientBattleTickComponents(float DeltaTime);
 
+	void SetImmieObjectFromJsonString(const FString& JsonString);
+
 public:	
 
 	AImmieCharacter(const FObjectInitializer& ObjectInitializer);
+
+	/**/
+	//virtual void OnActorChannelOpen(class FInBunch& InBunch, class UNetConnection* Connection) override;
+
+	/**/
+	//virtual void OnSerializeNewActor(class FOutBunch& OutBunch) override;
 
 	virtual void Tick(float DeltaTime) override;
 

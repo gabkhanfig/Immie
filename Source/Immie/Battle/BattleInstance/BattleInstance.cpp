@@ -120,10 +120,10 @@ void ABattleInstance::CreateTeams()
 {
 	for (int i = 0; i < InitTeams.Num(); i++) {
 		UClass* TeamClass = GetBattleDataManager()->GetTeamClass(InitTeams[i].TeamType);
-		check(TeamClass);
+		//check(TeamClass);
 		FTransform SpawnTransform = FTransform(InitTeams[i].SpawnRotation, InitTeams[i].SpawnLocation, { 1, 1, 1 });
 		ABattleTeam* Team = GetWorld()->SpawnActorDeferred<ABattleTeam>(TeamClass, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-		check(Team);
+		//check(Team);
 		UGameplayStatics::FinishSpawningActor(Team, SpawnTransform);
 		Teams.Add(Team);
 	}

@@ -22,6 +22,7 @@
 #include <Immie/Immies/SpecieDataObject.h>
 #include <Kismet/KismetMathLibrary.h>
 #include <Immie/Movement/ImmieMovementComponent.h>
+#include <Immie/Controller/Player/ImmiePlayerController.h>
 
 AImmieCharacter::AImmieCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UImmieMovementComponent>(ACharacter::CharacterMovementComponentName))
@@ -62,14 +63,12 @@ void AImmieCharacter::BeginPlay()
 
 void AImmieCharacter::PressAbility(int Index)
 {
-	iLog("Pressed ability with index " + FString::FromInt(Index));
 	UAbility* Ability = Abilities[Index];
 	Ability->InputPress();
 }
 
 void AImmieCharacter::ReleaseAbility(int Index)
 {
-	iLog("Released ability with index " + FString::FromInt(Index));
 	UAbility* Ability = Abilities[Index];
 	Ability->InputRelease();
 }
@@ -145,6 +144,17 @@ void AImmieCharacter::ClientBattleTickComponents(float DeltaTime)
 		Abilities[i]->ClientBattleTick(DeltaTime);
 	}
 	DamageComponent->ClientBattleTick(DeltaTime);
+}
+
+void AImmieCharacter::SetImmieObjectFromJsonString(const FString& JsonString)
+{
+	FJsonObjectBP ImmieJson;
+	if (FJsonObjectBP::LoadJsonString(JsonString, ImmieJson)) {
+		FName ParsedSpecieName = FName(ImmieJson.GetStringField("Specie"));
+		const int SpecieId = GetSpecieDataManager()->GetSpecieId(ParsedSpecieName);
+		ImmieObject = UImmie::NewImmieObject(this, SpecieId);
+		ImmieObject->LoadJsonData(SpecieId, ImmieJson);
+	}
 }
 
 void AImmieCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -323,13 +333,7 @@ void AImmieCharacter::SetClientSubobjects_Implementation(const FString& ImmieObj
 	Team = BattleTeamObject;
 	DamageComponent = DamageComponentObject;
 
-	FJsonObjectBP ImmieJson;
-	if (FJsonObjectBP::LoadJsonString(ImmieObjectString, ImmieJson)) {
-		FName ParsedSpecieName = FName(ImmieJson.GetStringField("Specie"));
-		const int SpecieId = GetSpecieDataManager()->GetSpecieId(ParsedSpecieName);
-		ImmieObject = UImmie::NewImmieObject(this, SpecieId);
-		ImmieObject->LoadJsonData(SpecieId, ImmieJson);
-	}
+	SetImmieObjectFromJsonString(ImmieObjectString);
 }
 
 bool AImmieCharacter::AllClientBattleSubobjectsValid()

@@ -28,9 +28,6 @@ class IMMIE_API UImmieType : public UActorComponent
 {
 	GENERATED_BODY()
 
-	friend class UTypeDataManager;
-	friend class UImmieGameInstance;
-
 private:
 
 	UPROPERTY()

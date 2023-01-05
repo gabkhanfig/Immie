@@ -21,12 +21,12 @@ class IMMIE_API AAbilityActor : public AActor, public IBattleActor
 
 private:
 
-	UPROPERTY(replicated)
-		/* The ability that "owns" this ability actor. Replicated via lifetime props. */
+	UPROPERTY()
+		/* The ability that "owns" this ability actor. Replicated via serialization on spawn. DO NOT CHANGE ON CLIENT. */
 		UAbility* Ability;
 
-	UPROPERTY(replicated)
-		/* The damage component of this ability actor. Replicated via lifetime props. */
+	UPROPERTY()
+		/* The damage component of this ability actor. Is constructed with this ability actor. Replicated via serialization on spawn. DO NOT CHANGE ON CLIENT. */
 		UDamageComponent* DamageComponent;
 
 	UPROPERTY(replicated)
@@ -51,11 +51,33 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UFUNCTION(NetMulticast, Reliable)
+		/* Informs clients or standalone of spawn. */
+		void InformSpawn();
+
+	UFUNCTION()
+		/**/
+		void SpawnVisualDummy();
+
+	UFUNCTION()
+		/**/
+		ADummyAbilityActor* CreateDummyActor();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+		/**/
+		FTransform GetDummySpawnTransform();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void InitializeForBattle(UAbility* _Ability);
+	void SetAbility(UAbility* _Ability);
+
+	/**/
+	void InitializeForBattle();
+
+	virtual void OnActorChannelOpen(class FInBunch& InBunch, class UNetConnection* Connection) override;
+	virtual void OnSerializeNewActor(class FOutBunch& OutBunch) override;
 
 	/**/
 	virtual UDamageComponent* GetDamageComponent_Implementation() const;

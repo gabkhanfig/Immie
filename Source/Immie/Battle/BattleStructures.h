@@ -65,6 +65,9 @@ struct FBattleTeamInit
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/**/
 		TEnumAsByte<EBattleTeamType> TeamType;
+
+	FBattleTeamInit();
+
 };
 
 USTRUCT(BlueprintType)

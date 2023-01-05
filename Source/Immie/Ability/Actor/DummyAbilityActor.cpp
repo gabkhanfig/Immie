@@ -3,20 +3,24 @@
 
 #include "DummyAbilityActor.h"
 #include "AbilityActor.h"
+#include <Immie/ImmieCore.h>
 
 // Sets default values
 ADummyAbilityActor::ADummyAbilityActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	bReplicates = false;
 }
 
-// Called when the game starts or when spawned
 void ADummyAbilityActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+}
+
+void ADummyAbilityActor::SetAbilityActor(AAbilityActor* _AbilityActor)
+{
+	AbilityActor = _AbilityActor;
 }
 
 // Called every frame

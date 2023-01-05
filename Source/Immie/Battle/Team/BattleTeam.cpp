@@ -7,6 +7,7 @@
 #include <Immie/Battle/BattleInstance/BattleInstance.h>
 #include <Immie/Type/ImmieType.h>
 #include <Immie/Ability/Abilities/Ability.h>
+#include <Immie/Controller/Player/ImmiePlayerController.h>
 
 ABattleTeam::ABattleTeam()
 {
@@ -151,7 +152,7 @@ void ABattleTeam::SetImmieForBattle(AImmieCharacter* ImmieCharacter)
 
 	ImmieCharacter->SetImmieEnabled(true);
 
-	if (Controller) {
+	if (IsValid(Controller)) {
 		ImmieCharacter->PossessForBattle(Controller);
 	}
 

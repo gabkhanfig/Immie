@@ -13,6 +13,7 @@
     "MaxCooldown": 2,
     "InitialCooldown": 1.7,
     "AbilityFlags": {
-        "DoesDamage": true
+        "DoesDamage": true,
+        "VisualDummy": true
     }
 }
