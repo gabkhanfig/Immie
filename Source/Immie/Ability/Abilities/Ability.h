@@ -93,9 +93,9 @@ protected:
 		/* TODO check if its ok with AI controllers on network. */
 		void InformClientsInputPress();
 
-	UFUNCTION(BlueprintImplementableEvent, DisplayName = "On Input Press")
-		/* Blueprint sided handling for when this ability has it's input pressed. Executes on all clients and server. Ensure checking correct battle authority. See UAbility::HasBattleAuthority() */
-		void BP_OnInputPress();
+	UFUNCTION(BlueprintNativeEvent, DisplayName = "On Input Press")
+		/**/
+		void BP_OnInputPress(bool HasBattleAuthority, FAbilityFlags AbilityFlags);
 
 	/* Execute what should happen when this ability input is released. */
 	void ExecuteInputRelease();
@@ -108,17 +108,17 @@ protected:
 		/* TODO check if its ok with AI controllers on network. */
 		void InformClientsInputRelease();
 
-	UFUNCTION(BlueprintImplementableEvent, DisplayName = "On Input Release")
+	UFUNCTION(BlueprintNativeEvent, DisplayName = "On Input Release")
 		/* Blueprint sided handling for when this ability has it's input released. Executes on all clients and server. Ensure checking correct battle authority. See UAbility::HasBattleAuthority() */
-		void BP_OnInputRelease();
+		void BP_OnInputRelease(bool HasBattleAuthority, FAbilityFlags AbilityFlags);
 
 	UFUNCTION(BlueprintCallable)
-		/* Spawns the ability actor from the class defined in the corresponding ability data object. */
-		AAbilityActor* CreateAbilityActor(AActor* Owner, const FTransform& SpawnTransform);
+		/* Spawns and initializes the default actor class of this ability. */
+		AAbilityActor* SpawnAbilityActor(const FTransform& SpawnTransform);
 
 	UFUNCTION(BlueprintCallable)
-		/* Spawns an ability actor from any ability actor class. */
-		AAbilityActor* CreateAbilityActorFromClass(AActor* Owner, const FTransform& SpawnTransform, UClass* AbilityActorClass);
+		/* Spawns and initializes an ability actor from a provided class. */
+		AAbilityActor* SpawnAbilityActorFromClass(TSubclassOf<AAbilityActor> AbilityActorClass, const FTransform& SpawnTransform);
 
 public:	
 

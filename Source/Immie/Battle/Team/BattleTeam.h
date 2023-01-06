@@ -10,6 +10,7 @@
 class ABattleInstance;
 class UImmie;
 class AImmieCharacter;
+class AAbilityActor;
 
 UCLASS()
 class IMMIE_API ABattleTeam : public AActor
@@ -33,6 +34,8 @@ private:
 	AActor* TeamOwner;
 
 	TEnumAsByte<EBattleTeamType> TeamType;
+
+	TArray<AAbilityActor*> AbilityActors;
 
 protected:
 
@@ -91,7 +94,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 		/**/
 		void RemoveActiveImmieFromBattle();
+	
+	UFUNCTION(BlueprintCallable)
+		/* Spawned ability actor will be owned by this team actor. */
+		AAbilityActor* SpawnAbilityActor(TSubclassOf<AAbilityActor> AbilityActorClass, UAbility* Ability, const FTransform& SpawnTransform);
 
+	UFUNCTION(BlueprintCallable)
+		/**/
+		void RemoveAbilityActor(AAbilityActor* AbilityActor);
 
 	UFUNCTION(BlueprintNativeEvent)
 		/* Authority sided battle ticking for this team and the actors and objects it owns. By default calls ticking on them. Can be overridden in blueprints. */

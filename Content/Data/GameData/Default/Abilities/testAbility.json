@@ -2,9 +2,6 @@
     "Types": [
         {
             "Type": "fire"
-        },
-        {
-            "Type": "nature"
         }
     ],
     "BaseHealth": 100,

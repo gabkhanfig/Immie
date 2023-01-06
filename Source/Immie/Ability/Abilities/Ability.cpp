@@ -119,11 +119,7 @@ void UAbility::SyncClientAbilityData_Implementation(int _AbilityId, FBattleStats
 void UAbility::ExecuteInputPress()
 {
 	bInputHeld = true;
-	if (HasBattleAuthority()) {
-		AAbilityActor* actor = CreateAbilityActor(GetTeam(), FTransform::Identity);
-		actor->InitializeForBattle();
-	}
-	BP_OnInputPress();
+	BP_OnInputPress(HasBattleAuthority(), GetAbilityFlags());
 }
 
 void UAbility::ServerInputPress_Implementation()
@@ -146,46 +142,26 @@ void UAbility::InformClientsInputPress_Implementation()
 	ExecuteInputPress();
 }
 
+void UAbility::BP_OnInputPress_Implementation(bool HasBattleAuthority, FAbilityFlags AbilityFlags)
+{
+	if (HasBattleAuthority) {
+		SpawnAbilityActor(FTransform::Identity);
+	}
+}
+
 void UAbility::InputRelease()
 {
 	ExecuteInputRelease();
 	if (!HasBattleAuthority()) {
 		ServerInputRelease();
 	}
-	
-}
 
-AAbilityActor* UAbility::CreateAbilityActor(AActor* Owner, const FTransform& SpawnTransform)
-{
-	UClass* ActorClass = AbilityDataObject->GetActorClass();
-	return CreateAbilityActorFromClass(Owner, SpawnTransform, ActorClass);
-}
-
-AAbilityActor* UAbility::CreateAbilityActorFromClass(AActor* Owner, const FTransform& SpawnTransform, UClass* AbilityActorClass)
-{
-	check(IsValid(AbilityActorClass));
-	AAbilityActor* AbilityActor = Owner->GetWorld()->SpawnActorDeferred<AAbilityActor>
-		(AbilityActorClass, SpawnTransform, Owner, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-
-	check(IsValid(AbilityActor));
-	AbilityActor->SetAbility(this);
-
-	UGameplayStatics::FinishSpawningActor(AbilityActor, SpawnTransform);
-	return AbilityActor;
-}
-
-void UAbility::AuthorityBattleTick(float DeltaTime)
-{
-}
-
-void UAbility::ClientBattleTick(float DeltaTime)
-{
 }
 
 void UAbility::ExecuteInputRelease()
 {
 	bInputHeld = false;
-	BP_OnInputRelease();
+	BP_OnInputRelease(HasBattleAuthority(), GetAbilityFlags());
 }
 
 void UAbility::ServerInputRelease_Implementation()
@@ -206,6 +182,28 @@ void UAbility::InformClientsInputRelease_Implementation()
 	}
 
 	ExecuteInputRelease();
+}
+
+void UAbility::BP_OnInputRelease_Implementation(bool HasBattleAuthority, FAbilityFlags AbilityFlags)
+{
+}
+
+AAbilityActor* UAbility::SpawnAbilityActor(const FTransform& SpawnTransform)
+{
+	return SpawnAbilityActorFromClass(GetActorClass(), SpawnTransform);
+}
+
+AAbilityActor* UAbility::SpawnAbilityActorFromClass(TSubclassOf<AAbilityActor> AbilityActorClass, const FTransform& SpawnTransform)
+{
+	return GetTeam()->SpawnAbilityActor(AbilityActorClass, this, SpawnTransform);
+}
+
+void UAbility::AuthorityBattleTick(float DeltaTime)
+{
+}
+
+void UAbility::ClientBattleTick(float DeltaTime)
+{
 }
 
 AImmieCharacter* UAbility::GetImmieCharacter() const

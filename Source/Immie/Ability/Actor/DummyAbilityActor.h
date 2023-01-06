@@ -29,6 +29,10 @@ protected:
 	/* AbilityActor can be assumed to be valid at this point. */
 	virtual void BeginPlay() override;
 
+	UFUNCTION(BlueprintImplementableEvent)
+		/* Called when the actual ability actor is being destroyed, not necessarily this dummy actor. */
+		void BP_OnAbilityActorDestroy();
+
 public:	
 
 	/**/
@@ -36,5 +40,8 @@ public:
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	/* Called when the actual ability actor is being destroyed, not this one (yet). */
+	void OnAbilityActorDestroy();
 
 };

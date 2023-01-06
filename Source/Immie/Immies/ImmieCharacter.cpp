@@ -23,6 +23,7 @@
 #include <Kismet/KismetMathLibrary.h>
 #include <Immie/Movement/ImmieMovementComponent.h>
 #include <Immie/Controller/Player/ImmiePlayerController.h>
+#include <Immie/Type/ImmieType.h>
 
 AImmieCharacter::AImmieCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UImmieMovementComponent>(ACharacter::CharacterMovementComponentName))
@@ -338,32 +339,38 @@ void AImmieCharacter::SetClientSubobjects_Implementation(const FString& ImmieObj
 
 bool AImmieCharacter::AllClientBattleSubobjectsValid()
 {
-	bool IsValidSubobjects = true;
+	const int TypeCount = Type.Num();
+	const int AbilityCount = Abilities.Num();
 
 	if (!IsValid(ImmieObject))
 		return false;
 
-	if (Type.Num() == 0)
+	if (TypeCount == 0)
 		return false;
 
-	if (Abilities.Num() == 0)
+	if (AbilityCount == 0)
 		return false;
-
-	for (int i = 0; i < Abilities.Num(); i++) {
-		if (!IsValid(Abilities[i])) {
-			return false;
-		}
-	}
 
 	if (!IsValid(Team))
 		return false;
 
 	if (!IsValid(DamageComponent))
 		return false;
-	
-	bool IsValidBlueprintSubobjects = BP_AllClientBattleSubobjectsValid();
 
-	return IsValidSubobjects && IsValidBlueprintSubobjects;
+	for (int i = 0; i < TypeCount; i++) {
+		if (!IsValid(Type[i])) {
+			return false;
+		}
+	}
+
+	for (int i = 0; i < AbilityCount; i++) {
+		if (!IsValid(Abilities[i])) {
+			return false;
+		}
+	}
+	
+	const bool IsValidBlueprintSubobjects = BP_AllClientBattleSubobjectsValid();
+	return IsValidBlueprintSubobjects;
 }
 
 int AImmieCharacter::GetSpecieId() const

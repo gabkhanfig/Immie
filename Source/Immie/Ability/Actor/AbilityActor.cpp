@@ -25,7 +25,6 @@ void AAbilityActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(AAbilityActor, SpawnedActiveStats);
 	DOREPLIFETIME(AAbilityActor, ActiveStats);
 }
 
@@ -82,14 +81,31 @@ void AAbilityActor::Tick(float DeltaTime)
 	
 }
 
+void AAbilityActor::DestroyAbilityActor()
+{
+	GetTeam()->RemoveAbilityActor(this);
+}
+
+void AAbilityActor::OnAbilityActorDestroy()
+{
+	if (IsValid(Dummy)) {
+		Dummy->OnAbilityActorDestroy();
+	}
+	BP_OnAbilityActorDestroy();
+}
+
 void AAbilityActor::SetAbility(UAbility* _Ability)
 {
 	Ability = _Ability;
 }
 
+void AAbilityActor::SetSpawnedActiveStats(FBattleStats _SpawnedActiveStats)
+{
+	SpawnedActiveStats = _SpawnedActiveStats;
+}
+
 void AAbilityActor::InitializeForBattle()
 {
-	SpawnedActiveStats = Ability->GetActiveStats();
 	ActiveStats = SpawnedActiveStats;
 
 	InformSpawn();
@@ -99,12 +115,20 @@ void AAbilityActor::OnActorChannelOpen(FInBunch& InBunch, UNetConnection* Connec
 {
 	InBunch << Ability;
 	InBunch << DamageComponent;
+	InBunch << SpawnedActiveStats.Health;
+	InBunch << SpawnedActiveStats.Attack;
+	InBunch << SpawnedActiveStats.Defense;
+	InBunch << SpawnedActiveStats.Speed;
 }
 
 void AAbilityActor::OnSerializeNewActor(FOutBunch& OutBunch)
 {
 	OutBunch << Ability;
 	OutBunch << DamageComponent;
+	OutBunch << SpawnedActiveStats.Health;
+	OutBunch << SpawnedActiveStats.Attack;
+	OutBunch << SpawnedActiveStats.Defense;
+	OutBunch << SpawnedActiveStats.Speed;
 }
 
 UDamageComponent* AAbilityActor::GetDamageComponent_Implementation() const

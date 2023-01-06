@@ -8,6 +8,8 @@
 #include <Immie/Type/ImmieType.h>
 #include <Immie/Ability/Abilities/Ability.h>
 #include <Immie/Controller/Player/ImmiePlayerController.h>
+#include <Immie/Ability/Actor/AbilityActor.h>
+#include <Kismet/GameplayStatics.h>
 
 ABattleTeam::ABattleTeam()
 {
@@ -36,16 +38,24 @@ void ABattleTeam::CreateTeamFromImmies(const TArray<UImmie*>& TeamImmies)
 
 void ABattleTeam::AuthorityBattleTickBattleActors(float DeltaTime)
 {
-	for (int i = 0; i < Team.Num(); i++) {
-		IBattleActor::Execute_AuthorityBattleTick(Team[i], DeltaTime);
+	IBattleActor::Execute_AuthorityBattleTick(ActiveImmie, DeltaTime);
+
+	for (int i = 0; i < AbilityActors.Num(); i++) {
+		// Should be valid
+		AAbilityActor* Actor = AbilityActors[i];
+		IBattleActor::Execute_AuthorityBattleTick(Actor, DeltaTime);
+
 	}
 }
 
 void ABattleTeam::ClientBattleTickBattleActors(float DeltaTime)
 {
-	for (int i = 0; i < Team.Num(); i++) {
-		IBattleActor::Execute_ClientBattleTick(Team[i], DeltaTime);
+	if (IsValid(ActiveImmie)) {
+		IBattleActor::Execute_ClientBattleTick(ActiveImmie, DeltaTime);
 	}
+	
+
+	// Client ability actors do not execute client battle tick. DummyAbilityActor::Tick() should handle any client relevant ticking.
 }
 
 void ABattleTeam::Tick(float DeltaTime)
@@ -169,6 +179,29 @@ void ABattleTeam::RemoveActiveImmieFromBattle()
 	ActiveImmie->UnPossessForBattle();
 	ActiveImmie->SetImmieEnabled(false);
 	ActiveImmie = nullptr;
+}
+
+AAbilityActor* ABattleTeam::SpawnAbilityActor(TSubclassOf<AAbilityActor> AbilityActorClass, UAbility* Ability, const FTransform& SpawnTransform)
+{
+	check(IsValid(AbilityActorClass));
+	AAbilityActor* AbilityActor = Owner->GetWorld()->SpawnActorDeferred<AAbilityActor>
+		(AbilityActorClass, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+
+	check(IsValid(AbilityActor));
+	AbilityActor->SetAbility(Ability);
+	AbilityActor->SetSpawnedActiveStats(Ability->GetActiveStats());
+	AbilityActors.Add(AbilityActor);
+
+	UGameplayStatics::FinishSpawningActor(AbilityActor, SpawnTransform);
+	AbilityActor->InitializeForBattle();
+	return AbilityActor;
+}
+
+void ABattleTeam::RemoveAbilityActor(AAbilityActor* AbilityActor)
+{
+	AbilityActors.RemoveSingleSwap(AbilityActor);
+	AbilityActor->OnAbilityActorDestroy();
+	AbilityActor->Destroy();
 }
 
 void ABattleTeam::AuthorityBattleTick_Implementation(float DeltaTime)

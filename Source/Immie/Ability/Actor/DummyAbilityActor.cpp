@@ -27,6 +27,10 @@ void ADummyAbilityActor::SetAbilityActor(AAbilityActor* _AbilityActor)
 void ADummyAbilityActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
 
+void ADummyAbilityActor::OnAbilityActorDestroy()
+{
+	BP_OnAbilityActorDestroy();
 }
 
