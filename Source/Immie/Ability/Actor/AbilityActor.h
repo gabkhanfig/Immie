@@ -78,7 +78,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable)
-		/* Prefer this to Destroy() */
+		/* Prefer this to AAbilityActor::Destroy() */
 		void DestroyAbilityActor();
 
 	/* Should be called right before this ability actor is fully destroyed. */

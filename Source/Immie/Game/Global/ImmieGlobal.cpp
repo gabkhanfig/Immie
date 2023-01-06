@@ -40,3 +40,8 @@ USaveManager* GetSaveManager()
 {
 	return GetImmieGameInstance()->_GetSaveManager();
 }
+
+UConfigDataManager* GetConfigDataManager()
+{
+	return GetImmieGameInstance()->_GetConfigDataManager();
+}

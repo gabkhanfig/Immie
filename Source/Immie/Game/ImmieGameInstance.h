@@ -13,6 +13,7 @@ class USpecieDataManager;
 class UBattleDataManager;
 class UPlayerImmies;
 class USaveManager;
+class UConfigDataManager;
 
 /**
  * 
@@ -48,6 +49,10 @@ protected:
 		/**/
 		USaveManager* SaveManager;
 
+	UPROPERTY(BlueprintReadOnly)
+		/**/
+		UConfigDataManager* ConfigDataManager;
+
 private:
 
 	void InitializeGameDataManagers();
@@ -73,4 +78,6 @@ public:
 	FORCEINLINE UPlayerImmies* _GetPlayerImmies() const { return PlayerImmies; }
 
 	FORCEINLINE USaveManager* _GetSaveManager() const { return SaveManager; }
+
+	FORCEINLINE UConfigDataManager* _GetConfigDataManager() const { return ConfigDataManager; }
 };

@@ -13,6 +13,7 @@ class USpecieDataManager;
 class UBattleDataManager;
 class UPlayerImmies;
 class USaveManager;
+class UConfigDataManager;
 
 extern UImmieGameInstance* _ImmieGameInstance;
 
@@ -37,6 +38,9 @@ UPlayerImmies* GetPlayerImmies();
 /**/
 USaveManager* GetSaveManager();
 
+/**/
+UConfigDataManager* GetConfigDataManager();
+
 UCLASS()
 class UImmieGlobal : public UBlueprintFunctionLibrary
 {
@@ -46,26 +50,29 @@ public:
 
 	UFUNCTION(BlueprintPure, DisplayName="Get Immie Game Instance")
 		/**/
-		inline UImmieGameInstance* BP_GetImmieGameInstance() { return GetImmieGameInstance(); }
+		static inline UImmieGameInstance* BP_GetImmieGameInstance() { return GetImmieGameInstance(); }
 
 	UFUNCTION(BlueprintPure, DisplayName="Get Type Data Manager")
 		/**/
-		inline UTypeDataManager* BP_GetTypeDataManager() { return GetTypeDataManager(); }
+		static inline UTypeDataManager* BP_GetTypeDataManager() { return GetTypeDataManager(); }
 
 	UFUNCTION(BlueprintPure, DisplayName="Get Ability Data Manager")
 		/**/
-		inline UAbilityDataManager* BP_GetAbilityDataManager() { return GetAbilityDataManager(); }
+		static inline UAbilityDataManager* BP_GetAbilityDataManager() { return GetAbilityDataManager(); }
 		
 	UFUNCTION(BlueprintPure, DisplayName = "Get Specie Data Manager")
 		/**/
-		inline USpecieDataManager* BP_GetSpecieDataManager() { return GetSpecieDataManager();}
+		static inline USpecieDataManager* BP_GetSpecieDataManager() { return GetSpecieDataManager();}
 
 	UFUNCTION(BlueprintPure, DisplayName = "Get Player Immies")
 		/**/
-		inline UPlayerImmies* BP_GetPlayerImmies() { return GetPlayerImmies(); }
+		static inline UPlayerImmies* BP_GetPlayerImmies() { return GetPlayerImmies(); }
 
 	UFUNCTION(BlueprintPure, DisplayName = "Get Save Manager")
 		/**/
-		inline USaveManager* BP_GetSaveManager() { return GetSaveManager(); }
+		static inline USaveManager* BP_GetSaveManager() { return GetSaveManager(); }
 
+	UFUNCTION(BlueprintPure)
+		/**/
+		static inline UConfigDataManager* BP_GetConfigDataManager() { return GetConfigDataManager(); }
 };

@@ -43,6 +43,7 @@ void ABattleTeam::AuthorityBattleTickBattleActors(float DeltaTime)
 	for (int i = 0; i < AbilityActors.Num(); i++) {
 		// Should be valid
 		AAbilityActor* Actor = AbilityActors[i];
+		checkf(IsValid(Actor), TEXT("Ability Actor should be valid for authority battle tick. See if AAbilityActor::Destroy() was called anywhere. Use AAbilityActor::DestroyAbilityActor() instead."));
 		IBattleActor::Execute_AuthorityBattleTick(Actor, DeltaTime);
 
 	}
@@ -54,7 +55,6 @@ void ABattleTeam::ClientBattleTickBattleActors(float DeltaTime)
 		IBattleActor::Execute_ClientBattleTick(ActiveImmie, DeltaTime);
 	}
 	
-
 	// Client ability actors do not execute client battle tick. DummyAbilityActor::Tick() should handle any client relevant ticking.
 }
 
@@ -166,7 +166,8 @@ void ABattleTeam::SetImmieForBattle(AImmieCharacter* ImmieCharacter)
 		ImmieCharacter->PossessForBattle(Controller);
 	}
 
-	ActiveImmie = ImmieCharacter;
+
+	SetActiveImmie(ImmieCharacter);
 	iLog("Immie is now active " + ActiveImmie->GetFName().ToString());
 }
 
@@ -178,7 +179,12 @@ void ABattleTeam::RemoveActiveImmieFromBattle()
 
 	ActiveImmie->UnPossessForBattle();
 	ActiveImmie->SetImmieEnabled(false);
-	ActiveImmie = nullptr;
+	SetActiveImmie(nullptr);
+}
+
+void ABattleTeam::SetActiveImmie_Implementation(AImmieCharacter* NewActiveImmie)
+{
+	ActiveImmie = NewActiveImmie;
 }
 
 AAbilityActor* ABattleTeam::SpawnAbilityActor(TSubclassOf<AAbilityActor> AbilityActorClass, UAbility* Ability, const FTransform& SpawnTransform)

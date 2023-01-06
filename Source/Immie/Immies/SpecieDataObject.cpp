@@ -6,6 +6,7 @@
 #include <Immie/ImmieCore.h>
 #include <Immie/Game/Global/Managers/TypeDataManager.h>
 #include <Immie/Game/Global/Managers/AbilityDataManager.h>
+#include <Immie/Game/Global/Managers/ConfigDataManager.h>
 
 #define SPECIE_DO_JSON_FIELD_TYPES "Types"
 #define SPECIE_DO_JSON_FIELD_BASE_HEALTH "BaseHealth"
@@ -74,10 +75,44 @@ void USpecieDataObject::CheckClassesValid()
 void USpecieDataObject::LoadSpecieJsonData(const FJsonObjectBP& Json, bool LoadJsonLearnsets)
 {
     TypeBitmask = GetTypeDataManager()->GetTypeBitmaskFromJsonArray(Json.GetArrayField(SPECIE_DO_JSON_FIELD_TYPES));
-    BaseStats.Health = Json.GetIntegerField(SPECIE_DO_JSON_FIELD_BASE_HEALTH);
-    BaseStats.Attack = Json.GetIntegerField(SPECIE_DO_JSON_FIELD_BASE_ATTACK);
-    BaseStats.Defense = Json.GetIntegerField(SPECIE_DO_JSON_FIELD_BASE_DEFENSE);
-    BaseStats.Speed = Json.GetIntegerField(SPECIE_DO_JSON_FIELD_BASE_SPEED);
+
+    const uint8 MaxBaseStat = GetConfigDataManager()->GetMaxBaseStat();
+
+    uint8 BaseHealth = Json.GetIntegerField(SPECIE_DO_JSON_FIELD_BASE_HEALTH);
+    if (BaseHealth > MaxBaseStat) {
+      ULogger::Log("Base health of " + FString::FromInt(BaseHealth) + " is greater than the maximum allowed base stat of " + FString::FromInt(MaxBaseStat), LogVerbosity_Error);
+      BaseStats.Health = MaxBaseStat;
+    }
+    else {
+      BaseStats.Health = BaseHealth;
+    }
+
+    uint8 BaseAttack = Json.GetIntegerField(SPECIE_DO_JSON_FIELD_BASE_ATTACK);
+    if (BaseAttack > MaxBaseStat) {
+      ULogger::Log("Base attack of " + FString::FromInt(BaseAttack) + " is greater than the maximum allowed base stat of " + FString::FromInt(MaxBaseStat), LogVerbosity_Error);
+      BaseStats.Attack = MaxBaseStat;
+    }
+    else {
+      BaseStats.Attack = BaseAttack;
+    }
+
+    uint8 BaseDefense = Json.GetIntegerField(SPECIE_DO_JSON_FIELD_BASE_DEFENSE);
+    if (BaseDefense > MaxBaseStat) {
+      ULogger::Log("Base defense of " + FString::FromInt(BaseDefense) + " is greater than the maximum allowed base stat of " + FString::FromInt(MaxBaseStat), LogVerbosity_Error);
+      BaseStats.Defense = MaxBaseStat;
+    }
+    else {
+      BaseStats.Defense = BaseDefense;
+    }
+
+    uint8 BaseSpeed = Json.GetIntegerField(SPECIE_DO_JSON_FIELD_BASE_SPEED);
+    if (BaseSpeed > MaxBaseStat) {
+      ULogger::Log("Base speed of " + FString::FromInt(BaseSpeed) + " is greater than the maximum allowed base stat of " + FString::FromInt(MaxBaseStat), LogVerbosity_Error);
+      BaseStats.Speed = MaxBaseStat;
+    }
+    else {
+      BaseStats.Speed = BaseSpeed;
+    }
 
     if (LoadJsonLearnsets) {
         FJsonObjectBP AbilityLearnsets;

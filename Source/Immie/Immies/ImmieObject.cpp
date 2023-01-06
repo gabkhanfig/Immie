@@ -5,7 +5,9 @@
 #include <Immie/Game/Global/Managers/TypeDataManager.h>
 #include <Immie/Game/Global/Managers/AbilityDataManager.h>
 #include <Immie/Game/Global/Managers/SpecieDataManager.h>
+#include <Immie/Game/Global/Managers/ConfigDataManager.h>
 #include <Immie/Immies/SpecieDataObject.h>
+#include <Immie/ImmieCore.h>
 
 #define JSON_FIELD_SPECIE "Specie"
 #define JSON_FIELD_DISPLAY_NAME "DisplayName"
@@ -23,7 +25,7 @@ UImmie::UImmie()
 {
     SpecieId = INVALID_SPECIE_ID;
     Health = 0;
-    Xp = 0;
+    Xp = 1;
     StatLevels = { 0, 0, 0, 0 };
     AbilityIds.Reserve(MAX_ABILITY_COUNT);
     AbilityIds.Init(0, MAX_ABILITY_COUNT);
@@ -58,38 +60,75 @@ void UImmie::LoadJsonData(int _SpecieId, const FJsonObjectBP& Json)
         DisplayName = Json.GetStringField(JSON_FIELD_SPECIE);
     }
 
-    constexpr int MaxXp = 1000000; // TODO: Replace with read-in value from a json
+    const int MaxXp = GetConfigDataManager()->GetMaxXp();
     Json.TryGetIntegerField(JSON_FIELD_XP, Xp, true, 0);
-    if (Xp < 0)
-        Xp = 0;
-    if (Xp > MaxXp)
-        Xp = MaxXp;
+    if (Xp < 1) {
+      ULogger::Log("Immie object xp in json is lower than 1", LogVerbosity_Error);
+      Xp = 1;
+    }
+    if (Xp > MaxXp) {
+      ULogger::Log("Immie object xp in json is greater than " + FString::FromInt(MaxXp), LogVerbosity_Error);
+      Xp = MaxXp;
+    }
+        
 
-    constexpr uint8 MaxStatLevel = 3; // TODO: Replace with read-in value from a json
+    const uint8 MaxStatLevel = GetConfigDataManager()->GetMaxStatLevel();
 
     int _StatLevelHealth;
     Json.TryGetIntegerField(JSON_FIELD_HEALTH_LEVEL, _StatLevelHealth, true, 0);
-    StatLevels.Health = _StatLevelHealth;
-    if (StatLevels.Health > MaxStatLevel)
-        StatLevels.Health = 0;
+    if (_StatLevelHealth > MaxStatLevel) {
+      ULogger::Log("Immie object json health stat level is greater than " + FString::FromInt(MaxStatLevel), LogVerbosity_Error);
+      StatLevels.Health = MaxStatLevel;
+    }
+    else if (_StatLevelHealth < 0) {
+      ULogger::Log("Immie object json health stat level is not allowed to be negative", LogVerbosity_Error);
+      StatLevels.Health = 0;
+    }
+    else {
+      StatLevels.Health = _StatLevelHealth;
+    }
 
     int _StatLevelAttack;
     Json.TryGetIntegerField(JSON_FIELD_ATTACK_LEVEL, _StatLevelAttack, true, 0);
-    StatLevels.Attack = _StatLevelAttack;
-    if (StatLevels.Attack > MaxStatLevel)
-        StatLevels.Attack = 0;
+    if (_StatLevelAttack > MaxStatLevel) {
+      ULogger::Log("Immie object json attack stat level is greater than " + FString::FromInt(MaxStatLevel), LogVerbosity_Error);
+      StatLevels.Attack = MaxStatLevel;
+    }
+    else if (_StatLevelAttack < 0) {
+      ULogger::Log("Immie object json attack stat level is not allowed to be negative", LogVerbosity_Error);
+      StatLevels.Attack = 0;
+    }
+    else {
+      StatLevels.Attack = _StatLevelAttack;
+    }
 
     int _StatLevelDefense;
     Json.TryGetIntegerField(JSON_FIELD_DEFENSE_LEVEL, _StatLevelDefense, true, 0);
-    StatLevels.Defense = _StatLevelDefense;
-    if (StatLevels.Defense > MaxStatLevel)
-        StatLevels.Defense = 0;
+    if (_StatLevelDefense > MaxStatLevel) {
+      ULogger::Log("Immie object json defense stat level is greater than " + FString::FromInt(MaxStatLevel), LogVerbosity_Error);
+      StatLevels.Defense = MaxStatLevel;
+    }
+    else if (_StatLevelDefense < 0) {
+      ULogger::Log("Immie object json defense stat level is not allowed to be negative", LogVerbosity_Error);
+      StatLevels.Defense = 0;
+    }
+    else {
+      StatLevels.Defense = _StatLevelDefense;
+    }
 
     int _StatLevelSpeed;
     Json.TryGetIntegerField(JSON_FIELD_SPEED_LEVEL, _StatLevelSpeed, true, 0);
-    StatLevels.Speed = _StatLevelSpeed;
-    if (StatLevels.Speed > MaxStatLevel)
-        StatLevels.Speed = 0;
+    if (_StatLevelHealth > MaxStatLevel) {
+      ULogger::Log("Immie object json speed stat level is greater than " + FString::FromInt(MaxStatLevel), LogVerbosity_Error);
+      StatLevels.Speed = MaxStatLevel;
+    }
+    else if (_StatLevelSpeed < 0) {
+      ULogger::Log("Immie object json speed stat level is not allowed to be negative", LogVerbosity_Error);
+      StatLevels.Speed = 0;
+    }
+    else {
+      StatLevels.Speed = _StatLevelSpeed;
+    }
 
     // Below the other stat stuff due to the max health calculation requiring them.
     const float MaxHealth = GetMaxHealth();

@@ -6,6 +6,7 @@
 #include <Immie/Game/Global/Managers/TypeDataManager.h>
 #include <Immie/Game/Global/Managers/AbilityDataManager.h>
 #include <Immie/Game/Global/Managers/SpecieDataManager.h>
+#include <Immie/Game/Global/Managers/ConfigDataManager.h>
 
 #define ABILITY_DO_JSON_FIELD_TYPES "Types"
 #define ABILITY_DO_JSON_FIELD_ABILITY_FLAGS "AbilityFlags"
@@ -109,30 +110,47 @@ void UAbilityDataObject::LoadAbilityJsonData(const FJsonObjectBP& Json)
 	Json.TryGetFloatField(ABILITY_DO_JSON_FIELD_RANGE, Range);
 	Json.TryGetFloatField(ABILITY_DO_JSON_FIELD_MAX_DELAY, MaxDelay, true, DEFAULT_MAX_DELAY);
 
-#define CHECK_BASE_STAT_RANGE(TempVariable, BaseStatVariable) \
-if (TempVariable > BASE_STAT_MAX || TempVariable < 0) {	\
-	iLog("Base stat of " + FString::FromInt(TempVariable) + " is out of base stat range.", LogVerbosity_Error);	\
-	BaseStatVariable = 0;	\
-}	\
-else {	\
-	BaseStatVariable = TempVariable;	\
-}
+	const uint8 MaxBaseStat = GetConfigDataManager()->GetMaxBaseStat();
 
 	int _BaseHealth = 0;
-	Json.TryGetIntegerField(ABILITY_DO_JSON_FIELD_BASE_HEALTH, _BaseHealth);
-	CHECK_BASE_STAT_RANGE(_BaseHealth, BaseStats.Health);
+	Json.TryGetIntegerField(ABILITY_DO_JSON_FIELD_BASE_HEALTH, _BaseHealth); 
+	if (_BaseHealth > MaxBaseStat) {
+		ULogger::Log("Base health of " + FString::FromInt(_BaseHealth) + " is greater than the maximum allowed base stat of " + FString::FromInt(MaxBaseStat), LogVerbosity_Error);
+		BaseStats.Health = MaxBaseStat;
+	}
+	else {
+		BaseStats.Health = _BaseHealth;
+	}
 
 	int _BaseAttack = 0;
 	Json.TryGetIntegerField(ABILITY_DO_JSON_FIELD_BASE_ATTACK, _BaseAttack);
-	CHECK_BASE_STAT_RANGE(_BaseAttack, BaseStats.Attack);
+	if (_BaseAttack > MaxBaseStat) {
+		ULogger::Log("Base attack of " + FString::FromInt(_BaseAttack) + " is greater than the maximum allowed base stat of " + FString::FromInt(MaxBaseStat), LogVerbosity_Error);
+		BaseStats.Attack = MaxBaseStat;
+	}
+	else {
+		BaseStats.Attack = _BaseAttack;
+	}
 
 	int _BaseDefense = 0;
 	Json.TryGetIntegerField(ABILITY_DO_JSON_FIELD_BASE_DEFENSE, _BaseDefense);
-	CHECK_BASE_STAT_RANGE(_BaseDefense, BaseStats.Defense);
+	if (_BaseDefense > MaxBaseStat) {
+		ULogger::Log("Base defense of " + FString::FromInt(_BaseDefense) + " is greater than the maximum allowed base stat of " + FString::FromInt(MaxBaseStat), LogVerbosity_Error);
+		BaseStats.Defense = MaxBaseStat;
+	}
+	else {
+		BaseStats.Defense = _BaseDefense;
+	}
 
 	int _BaseSpeed = 0;
 	Json.TryGetIntegerField(ABILITY_DO_JSON_FIELD_BASE_SPEED, _BaseSpeed);
-	CHECK_BASE_STAT_RANGE(_BaseSpeed, BaseStats.Speed);
+	if (_BaseSpeed > MaxBaseStat) {
+		ULogger::Log("Base speed of " + FString::FromInt(_BaseSpeed) + " is greater than the maximum allowed base stat of " + FString::FromInt(MaxBaseStat), LogVerbosity_Error);
+		BaseStats.Speed = MaxBaseStat;
+	}
+	else {
+		BaseStats.Speed = _BaseSpeed;
+	}
 
 	Json.TryGetFloatField(ABILITY_DO_JSON_FIELD_RELATIVE_HEALTH, RelativeStats.Health);
 	Json.TryGetFloatField(ABILITY_DO_JSON_FIELD_RELATIVE_ATTACK, RelativeStats.Attack);

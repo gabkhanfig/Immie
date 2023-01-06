@@ -41,6 +41,18 @@ protected:
 
 	virtual void BeginPlay() override;
 
+	UFUNCTION(BlueprintNativeEvent, DisplayName = "Create Team")
+		/* Creates the Immie characters for the team. By default just creates Immie characters from the passed in team data. Can be fully overridden in blueprint. */
+		void BP_CreateTeam(const FBattleTeamInit& TeamData);
+
+	UFUNCTION(BlueprintImplementableEvent, DisplayName = "Initialize Team")
+		/* Blueprint side initialization for team. By default, Immies will be spawned in along with their subobjects, however this functionality can be overridden. See BP_CreateTeam() native event. */
+		void BP_InitializeTeam(const FBattleTeamInit& TeamData);
+
+	UFUNCTION(NetMulticast, Reliable)
+		/* Synchronizes the team's subobjects (not the Immies). */
+		void SyncClientSubobjects(ABattleInstance* BattleInstanceObject, AController* ControllerObject, const TArray<AImmieCharacter*>& TeamCharacterObjects);
+
 	UFUNCTION(BlueprintCallable)
 		/* Creates a team of Immie characters from an array of Immie objects. */
 		void CreateTeamFromImmies(const TArray<UImmie*>& TeamImmies);
@@ -53,6 +65,14 @@ protected:
 		/* Perform client battle ticking on all of the battle actors on this team. */
 		void ClientBattleTickBattleActors(float DeltaTime);
 
+	UFUNCTION(NetMulticast, Reliable)
+		/*  */
+		void SetActiveImmie(AImmieCharacter* NewActiveImmie);
+
+	UFUNCTION(BlueprintImplementableEvent, DisplayName = "Sync To Clients")
+		/* Blueprint sided client syncing. Check ABattleTeam::SyncToClients() to see what is already handled. */
+		void BP_SyncClientTeam();
+
 public:	
 
 	ABattleTeam(); 
@@ -62,30 +82,14 @@ public:
 	/* Initialize this team given provided initial data. */
 	void InitializeTeam(ABattleInstance* _BattleInstance, const FBattleTeamInit& TeamData);
 
-	UFUNCTION(BlueprintNativeEvent, DisplayName = "Create Team")
-		/* Creates the Immie characters for the team. By default just creates Immie characters from the passed in team data. Can be fully overridden in blueprint. */
-		void BP_CreateTeam(const FBattleTeamInit& TeamData);
-
-	UFUNCTION(BlueprintImplementableEvent, DisplayName = "Initialize Team")
-		/* Blueprint side initialization for team. By default, Immies will be spawned in along with their subobjects, however this functionality can be overridden. See BP_CreateTeam() native event. */
-		void BP_InitializeTeam(const FBattleTeamInit& TeamData);
-
 	/* Set all of the subobject variables for all clients for all team relevant objects. */
 	void SetClientSubobjects();
-
-	UFUNCTION(NetMulticast, Reliable)
-		/* Synchronizes the team's subobjects (not the Immies). */
-		void SyncClientSubobjects(ABattleInstance* BattleInstanceObject, AController* ControllerObject, const TArray<AImmieCharacter*>& TeamCharacterObjects);
 
 	/* Check all client-relevant subobjects and see if they are valid. */
 	bool ValidSubobjects();
 
 	/* Syncronizes team data with the clients. */
 	void SyncClientTeam();
-
-	UFUNCTION(BlueprintImplementableEvent, DisplayName = "Sync To Clients")
-		/* Blueprint sided client syncing. Check ABattleTeam::SyncToClients() to see what is already handled. */
-		void BP_SyncClientTeam();
 
 	UFUNCTION(BlueprintCallable)
 		/**/

@@ -15,6 +15,7 @@ Build/
 Content/*
 Content/Data/Saves/*
 !Content/Data/GameData
+!Content/Data/config.json
 DerivedDataCache/
 Images/
 Intermediate/

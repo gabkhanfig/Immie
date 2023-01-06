@@ -9,5 +9,3 @@
 #include <Immie/Util/Log/Logger.h>
 #include <Immie/Util/String/StringUtils.h>
 #include <Immie/Game/Global/ImmieGlobal.h>
-
-#define BASE_STAT_MAX 100
