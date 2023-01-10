@@ -10,7 +10,7 @@
 
 class IBattleActor;
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS()
 class IMMIE_API UDamageComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -53,6 +53,10 @@ public:
 	UFUNCTION(BlueprintPure)
 		/* SHOULD be valid on replicated instances. */
 		TScriptInterface<IBattleActor> GetBattleActor();
+
+	static float ExecuteAmount(FBattleDamage& Values, float DeltaTime);
+
+	static float GetMultiplierThisTick(const FBattleDamage& Values);
 
 		
 };

@@ -145,7 +145,8 @@ void UAbility::InformClientsInputPress_Implementation()
 void UAbility::BP_OnInputPress_Implementation(bool HasBattleAuthority, FAbilityFlags AbilityFlags)
 {
 	if (HasBattleAuthority) {
-		SpawnAbilityActor(FTransform::Identity);
+		AAbilityActor* actor = SpawnAbilityActor(GetImmieCharacter()->GetTransform());
+		//actor->DestroyAbilityActor();
 	}
 }
 
@@ -198,6 +199,11 @@ AAbilityActor* UAbility::SpawnAbilityActorFromClass(TSubclassOf<AAbilityActor> A
 	return GetTeam()->SpawnAbilityActor(AbilityActorClass, this, SpawnTransform);
 }
 
+float UAbility::TimeDamageMultiplier_Implementation(float ElapsedTime) const
+{
+	return 1;
+}
+
 void UAbility::AuthorityBattleTick(float DeltaTime)
 {
 }
@@ -215,7 +221,7 @@ AImmieCharacter* UAbility::GetImmieCharacter() const
 
 ABattleTeam* UAbility::GetTeam() const
 {
-	return GetImmieCharacter()->GetTeam();
+	return IBattleActor::Execute_GetTeam(GetImmieCharacter());
 }
 
 ABattleInstance* UAbility::GetBattleInstance() const
@@ -286,6 +292,11 @@ float UAbility::GetDamageDuration() const
 float UAbility::GetHealingPower() const
 {
 	return GetAbilityDataObject()->GetHealingPower();
+}
+
+float UAbility::GetHealingDuration() const
+{
+	return GetAbilityDataObject()->GetHealingDuration();
 }
 
 float UAbility::GetSpeed() const

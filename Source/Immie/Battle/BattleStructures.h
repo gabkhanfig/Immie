@@ -108,5 +108,5 @@ struct FBattleDamage
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/* Whether this instance should be deleted. */
-		bool bGarbage;
+		bool Garbage;
 };

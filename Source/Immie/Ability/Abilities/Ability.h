@@ -146,6 +146,10 @@ public:
 	/* Client active battle ticking for this ability. */
 	void ClientBattleTick(float DeltaTime);
 
+	UFUNCTION(BlueprintPure, BlueprintNativeEvent)
+		/* Damage or healing multiplier for damage components by damage or healing instigated by this ability. */
+		float TimeDamageMultiplier(float ElapsedTime) const;
+
 	UFUNCTION(BlueprintPure)
 		/* Get the id number of this ability. */
 		FORCEINLINE int GetAbilityId() const { return AbilityId; }
@@ -213,6 +217,10 @@ public:
 	UFUNCTION(BlueprintPure)
 		/**/
 		float GetHealingPower() const;
+
+	UFUNCTION(BlueprintPure)
+		/**/
+		float GetHealingDuration() const;
 
 	UFUNCTION(BlueprintPure)
 		/**/

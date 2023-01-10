@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include <Immie/Util/Json/BlueprintJsonObject.h>
+#include <Immie/Core/Structures.h>
 #include "AbilityDataTypes.generated.h"
 
 #define INVALID_ABILITY_ID -1
@@ -24,11 +25,19 @@ struct FAbilityInstigatorDamage
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/**/
-		TArray<UImmieType*> Types;
+		TArray<UImmieType*> Type;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/**/
 		float Power;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		/**/
+		float AttackerStat;
+
+	UPROPERTY()
+		/**/
+		float DefenderStat;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/**/

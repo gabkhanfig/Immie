@@ -15,7 +15,7 @@ class UDamageComponent;
 class ADummyAbilityActor;
 
 UCLASS()
-/* Actor object representing in world abilities. Do not call destroy manually, instead call destroy through owning team, which keeps track of all team ability actors. */
+/* Actor object representing in world abilities. Ensure calling AAbilityActor::DestroyAbilityActor() rather than AAbilityActor::Destroy(). */
 class IMMIE_API AAbilityActor : public AActor, public IBattleActor
 {
 	GENERATED_BODY()
@@ -44,6 +44,10 @@ protected:
 		/* Only exists on client. */
 		ADummyAbilityActor* Dummy;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		/* Components of this Immie character that can collide with ability actors. */
+		TArray<UPrimitiveComponent*> AbilityColliders;
+
 protected:
 
 	/* Actors begin play. Note that not all objects and values will be initialized by the time this executes. */
@@ -69,6 +73,26 @@ protected:
 		/* Called when this ability actor is about to be destroyed. The dummy is already informed prior to this event. */
 		void BP_OnAbilityActorDestroy();
 
+	UFUNCTION(BlueprintCallable)
+		/* Add a component as a valid ability collider. */
+		void AddAbilityCollider(UPrimitiveComponent* AbilityCollider);
+
+	UFUNCTION(BlueprintCallable)
+		/* Called when any of this ability actor's colliders have begun collision with another actor. */
+		void OnCollision(UPrimitiveComponent* ThisOverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherActorComponent);
+
+	UFUNCTION(BlueprintNativeEvent)
+		/* Executes after AAbilityActor::OnCollision(). Can have base functionality overridden in blueprints. See "call to parent" functionality in blueprints. */
+		void OnBattleActorCollision(const TScriptInterface<IBattleActor>& BattleActor, UPrimitiveComponent* ThisComponent, UPrimitiveComponent* OtherComponent);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+		/* Event for handling ability actor collision with an ally battle actor. Can have base functionality overridden in blueprints. See "call to parent" functionality in blueprints. */
+		void OnAllyCollision(const TScriptInterface<IBattleActor>& Ally, UPrimitiveComponent* ThisComponent, UPrimitiveComponent* OtherComponent);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+		/* Event for handling ability actor collision with an enemy battle actor. Can have base functionality overridden in blueprints. See "call to parent" functionality in blueprints. */
+		void OnEnemyCollision(const TScriptInterface<IBattleActor>& Enemy, UPrimitiveComponent* ThisComponent, UPrimitiveComponent* OtherComponent);
+
 public:	
 
 	/**/
@@ -81,14 +105,17 @@ public:
 		/* Prefer this to AAbilityActor::Destroy() */
 		void DestroyAbilityActor();
 
-	/* Should be called right before this ability actor is fully destroyed. */
-	void OnAbilityActorDestroy();
+	UFUNCTION(NetMulticast, Reliable)
+		/* Should be called right before this ability actor is fully destroyed. */
+		void OnAbilityActorDestroy();
  
 	/* Set the ability that "owns" this ability actor. Not the same as the actors actual owner. */
 	void SetAbility(UAbility* _Ability);
 
 	/* Set the active stats from the corresponding ability component at the moment this ability actor was spawned. */
 	void SetSpawnedActiveStats(FBattleStats _SpawnedActiveStats);
+
+	void SetDamageComponent(UDamageComponent* _DamageComponent);
 
 	/* Initialize this ability actor for battle. */
 	void InitializeForBattle();
@@ -98,9 +125,6 @@ public:
 
 	/* Called when the server will serialize this ability actor to clients. */
 	virtual void OnSerializeNewActor(class FOutBunch& OutBunch) override;
-
-	/**/
-	virtual UDamageComponent* GetDamageComponent_Implementation() const;
 
 	UFUNCTION(BlueprintPure)
 		/* Get the ability that "owns" this ability actor. Not the same as the actors actual owner. */
@@ -113,10 +137,6 @@ public:
 	UFUNCTION(BlueprintPure)
 		/* Get the Immie character that owns this ability. */
 		AImmieCharacter* GetImmieCharacter() const;
-
-	UFUNCTION(BlueprintPure)
-		/* Get this abilities battle team. */
-		ABattleTeam* GetTeam() const;
 
 	UFUNCTION(BlueprintPure)
 		/* Get the battle instance that owns the battle this ability actor is participating in. */
@@ -152,6 +172,10 @@ public:
 
 	UFUNCTION(BlueprintPure)
 		/**/
+		float GetHealingDuration() const;
+
+	UFUNCTION(BlueprintPure)
+		/**/
 		float GetSpeed() const;
 
 	UFUNCTION(BlueprintPure)
@@ -178,4 +202,24 @@ public:
 		/**/
 		FBattleStats GetAbilityActiveStats() const;
 
+	/**/
+	virtual UDamageComponent* GetDamageComponent_Implementation() const;
+
+	virtual bool IsValidAbilityCollider_Implementation(UPrimitiveComponent* Collider) const override;
+
+	virtual bool CanBeHealedByAbilityActor_Implementation(AAbilityActor* AbilityActor) const override;
+
+	virtual bool CanBeDamagedByAbilityActor_Implementation(AAbilityActor* AbilityActor) const override;
+
+	virtual FBattleStats GetBattleActorActiveStats_Implementation() const override;
+
+	virtual ABattleTeam* GetTeam_Implementation() const override;
+
+	virtual bool BP_IsAlly_Implementation(const TScriptInterface<IBattleActor>& OtherBattleActor) const override;
+
+	virtual void AuthorityBattleTick_Implementation(float DeltaTime) override;
+
+	virtual void BattleActorIncreaseHealth_Implementation(float Amount) override;
+
+	virtual void BattleActorDecreaseHealth_Implementation(float Amount) override;
 };

@@ -10,8 +10,9 @@
 class UDamageComponent;
 class UImmieType;
 class UAbility;
+class ABattleTeam;
 
-UINTERFACE(MinimalAPI, Blueprintable)
+UINTERFACE(Blueprintable)
 /* DO NOT MODIFY. */
 class UBattleActor : public UInterface
 {
@@ -31,16 +32,42 @@ protected:
 public:
 
 	UFUNCTION(BlueprintPure, BlueprintNativeEvent)
-		/**/
+		/* Call with IBattleActor::Execute_GetDamageComponent(). */
 		UDamageComponent* GetDamageComponent() const;
 
 	UFUNCTION(BlueprintPure, BlueprintNativeEvent)
-		/* Get the total healing an ability will do. Does not factor in healing over time multipliers. */
+		/* Check if the implemented interface object is using the collider for abilities. Call with IBattleActor::Execute_IsValidAbilityCollider(). */
+		bool IsValidAbilityCollider(UPrimitiveComponent* Collider) const;
+
+	UFUNCTION(BlueprintPure, BlueprintNativeEvent)
+		/* Get the total healing an ability will do. Does not factor in healing over time multipliers. Call with IBattleActor::Execute_TotalHealingFromAbility(). */
 		float TotalHealingFromAbility(const FAbilityInstigatorDamage& AbilityHealing) const;
 
 	UFUNCTION(BlueprintPure, BlueprintNativeEvent)
-		/* Get the total damage an ability will do. Does not factor in damage over time multipliers. */
+		/* Get the total damage an ability will do. Does not factor in damage over time multipliers. Call with IBattleActor::Execute_TotalDamageFromAbility(). */
 		float TotalDamageFromAbility(const FAbilityInstigatorDamage& AbilityDamage) const;
+
+	UFUNCTION(BlueprintPure, BlueprintNativeEvent)
+		/**/
+		bool CanBeHealedByAbilityActor(AAbilityActor* AbilityActor) const;
+
+	UFUNCTION(BlueprintPure, BlueprintNativeEvent)
+		/* Call with IBattleActor::Execute_CanBeDamagedByAbilityActor(). */
+		bool CanBeDamagedByAbilityActor(AAbilityActor* AbilityActor) const;
+
+	UFUNCTION(BlueprintPure, BlueprintNativeEvent)
+		/* Call with IBattleActor::Execute_GetTeam(). */
+		ABattleTeam* GetTeam() const;
+
+	UFUNCTION(BlueprintPure, BlueprintNativeEvent, DisplayName = "Is Ally")
+		/* Check if another battle actor is an ally or not. */
+		bool BP_IsAlly(const TScriptInterface<IBattleActor>& OtherBattleActor) const;
+
+	UFUNCTION(BlueprintPure, BlueprintNativeEvent)
+		/**/
+		FBattleStats GetBattleActorActiveStats() const;
+
+	bool IsAlly(const TScriptInterface<IBattleActor>& OtherBattleActor) const;
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 		/**/
@@ -53,5 +80,13 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 		/* Called to update the visuals of this battle actor. Only executes on non-server-only side. This means clients and standalone. */
 		void UpdateVisuals();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+		/**/
+		void BattleActorIncreaseHealth(float Amount);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+		/**/
+		void BattleActorDecreaseHealth(float Amount);
 
 };

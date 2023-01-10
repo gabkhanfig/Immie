@@ -50,4 +50,8 @@ public:
 		/**/
 		static float ProgressToNextLevel(int Xp);
 
+	UFUNCTION(BlueprintPure)
+		/* Damage formula. Power is the ability power multiplied by any modifiers. AttackerStat is primarily attack, but can technically be any stat, and defender stat is similar.  */
+		static float Damage(float Power, float AttackerStat, float DefenderStat, uint8 AttackerLevel);
+
 };

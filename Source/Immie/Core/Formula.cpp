@@ -96,3 +96,10 @@ float UFormula::ProgressToNextLevel(int Xp)
 
 	return double(Xp - LowerBound) / XpBetweenLevels;
 }
+
+float UFormula::Damage(float Power, float AttackerStat, float DefenderStat, uint8 AttackerLevel)
+{
+	const float Top = Power * AttackerStat * FMath::Sqrt(float(AttackerLevel) / 10.f);
+	const float Bottom = 5.0f * DefenderStat;
+	return FMath::CeilToFloat(Top / Bottom);
+}

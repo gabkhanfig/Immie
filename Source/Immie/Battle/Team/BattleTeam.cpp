@@ -10,6 +10,7 @@
 #include <Immie/Controller/Player/ImmiePlayerController.h>
 #include <Immie/Ability/Actor/AbilityActor.h>
 #include <Kismet/GameplayStatics.h>
+#include <Immie/Battle/Components/DamageComponent.h>
 
 ABattleTeam::ABattleTeam()
 {
@@ -194,8 +195,12 @@ AAbilityActor* ABattleTeam::SpawnAbilityActor(TSubclassOf<AAbilityActor> Ability
 		(AbilityActorClass, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 
 	check(IsValid(AbilityActor));
+	UDamageComponent* DamageComponent = UDamageComponent::NewDamageComponent(AbilityActor);
+
 	AbilityActor->SetAbility(Ability);
 	AbilityActor->SetSpawnedActiveStats(Ability->GetActiveStats());
+	AbilityActor->SetDamageComponent(DamageComponent);
+
 	AbilityActors.Add(AbilityActor);
 
 	UGameplayStatics::FinishSpawningActor(AbilityActor, SpawnTransform);

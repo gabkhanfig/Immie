@@ -190,6 +190,10 @@ public:
 
 	UFUNCTION(BlueprintPure)
 		/**/
+		float GetHealingDuration() const { return HealingDuration; }
+
+	UFUNCTION(BlueprintPure)
+		/**/
 		float GetSpeed() const { return Speed; }
 
 	UFUNCTION(BlueprintPure)

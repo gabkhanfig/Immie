@@ -48,4 +48,6 @@ struct FBattleStats
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/**/
 		float Speed;
+
+	FBattleStats();
 };

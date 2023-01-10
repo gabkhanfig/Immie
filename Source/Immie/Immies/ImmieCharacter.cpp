@@ -55,6 +55,9 @@ AImmieCharacter::AImmieCharacter(const FObjectInitializer& ObjectInitializer)
 	bEnabled = true;
 	Abilities.Reserve(MAX_ABILITY_COUNT);
 	Team = nullptr;
+
+	// TODO remove this later
+	AbilityColliders.Add(GetCapsuleComponent());
 }
 
 void AImmieCharacter::BeginPlay()
@@ -115,6 +118,9 @@ void AImmieCharacter::StopCrouching()
 void AImmieCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	const FLinearColor Color = { 0.5, 0.6, 0.2, 1 };
+	ULogger::DisplayLog("Name: " + GetImmieObject()->GetDisplayName(), LogVerbosity_Display, 0, Color);
+	ULogger::DisplayLog("Health: " + FString::SanitizeFloat(GetActiveStats().Health), LogVerbosity_Display, 0, Color);
 }
 
 void AImmieCharacter::AuthorityBattleTick_Implementation(float DeltaTime)
@@ -129,6 +135,55 @@ void AImmieCharacter::ClientBattleTick_Implementation(float DeltaTime)
 {
 	ClientBattleTickComponents(DeltaTime);
 	IBattleActor::Execute_UpdateVisuals(this);
+}
+
+bool AImmieCharacter::IsValidAbilityCollider_Implementation(UPrimitiveComponent* Collider) const
+{
+	return AbilityColliders.Contains(Collider);
+}
+
+bool AImmieCharacter::CanBeHealedByAbilityActor_Implementation(AAbilityActor* AbilityActor) const
+{
+	return true;
+}
+
+bool AImmieCharacter::CanBeDamagedByAbilityActor_Implementation(AAbilityActor* AbilityActor) const
+{
+	return true;
+}
+
+FBattleStats AImmieCharacter::GetBattleActorActiveStats_Implementation() const
+{
+	return GetActiveStats();
+}
+
+ABattleTeam* AImmieCharacter::GetTeam_Implementation() const
+{
+	return Team;
+}
+
+bool AImmieCharacter::BP_IsAlly_Implementation(const TScriptInterface<IBattleActor>& OtherBattleActor) const
+{
+	return IsAlly(OtherBattleActor);
+}
+
+void AImmieCharacter::BattleActorIncreaseHealth_Implementation(float Amount)
+{
+	checkf(Amount >= 0, TEXT("Increasing battle actor health by negative value is not allowed"));
+	ActiveStats.Health += Amount;
+	if (ActiveStats.Health > InitialStats.Health) {
+		ActiveStats.Health = InitialStats.Health;
+	}
+}
+
+void AImmieCharacter::BattleActorDecreaseHealth_Implementation(float Amount)
+{
+	checkf(Amount >= 0, TEXT("Decreasing battle actor health by negative value is not allowed"));
+	ActiveStats.Health -= Amount;
+	if (ActiveStats.Health < 0) {
+		ActiveStats.Health = 0;
+		iLog("Immie dead");
+	}
 }
 
 void AImmieCharacter::AuthorityBattleTickComponents(float DeltaTime)
@@ -156,6 +211,11 @@ void AImmieCharacter::SetImmieObjectFromJsonString(const FString& JsonString)
 		ImmieObject = UImmie::NewImmieObject(this, SpecieId);
 		ImmieObject->LoadJsonData(SpecieId, ImmieJson);
 	}
+}
+
+void AImmieCharacter::AddAbilityCollider(UPrimitiveComponent* AbilityCollider)
+{
+	AbilityColliders.Add(AbilityCollider);
 }
 
 void AImmieCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -400,12 +460,12 @@ UDamageComponent* AImmieCharacter::GetDamageComponent_Implementation() const
 
 float AImmieCharacter::TotalHealingFromAbility_Implementation(const FAbilityInstigatorDamage& AbilityHealing) const
 {
-	return 0.0f;
+	return 1;
 }
 
 float AImmieCharacter::TotalDamageFromAbility_Implementation(const FAbilityInstigatorDamage& AbilityDamage) const
 {
-	return 0.0f;
+	return 1;
 }
 
 void AImmieCharacter::SetImmieEnabled_Implementation(bool NewEnabled)

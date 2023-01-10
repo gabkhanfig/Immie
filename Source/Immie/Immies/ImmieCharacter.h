@@ -69,6 +69,10 @@ protected:
 		/* The potentially modified stats of this Immie. Health is the current health. Attack, defense, and speed are all the stat values with modifiers. Replicated via RPC. */
 		FBattleStats ActiveStats;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Battle")
+		/* Components of this Immie character that can collide with ability actors. */
+		TArray<UPrimitiveComponent*> AbilityColliders;
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -165,7 +169,12 @@ protected:
 		/* Perform client battle ticking on the components this Immie character owns. */
 		void ClientBattleTickComponents(float DeltaTime);
 
+	/**/
 	void SetImmieObjectFromJsonString(const FString& JsonString);
+
+	UFUNCTION(BlueprintCallable)
+		/* Add a component as a valid ability collider. */
+		void AddAbilityCollider(UPrimitiveComponent* AbilityCollider);
 
 public:	
 
@@ -230,10 +239,6 @@ public:
 		/**/
 		FName GetSpecieName() const;
 
-	UFUNCTION(BlueprintPure)
-		/**/
-		inline ABattleTeam* GetTeam() const { return Team; }
-
 	UFUNCTION(BlueprintPure, Category = "Battle")
 		/**/
 		ABattleInstance* GetBattleInstance() const;
@@ -272,5 +277,21 @@ public:
 	virtual void AuthorityBattleTick_Implementation(float DeltaTime) override;
 
 	virtual void ClientBattleTick_Implementation(float DeltaTime) override;
+
+	virtual bool IsValidAbilityCollider_Implementation(UPrimitiveComponent* Collider) const override;
+
+	virtual bool CanBeHealedByAbilityActor_Implementation(AAbilityActor* AbilityActor) const override;
+
+	virtual bool CanBeDamagedByAbilityActor_Implementation(AAbilityActor* AbilityActor) const override;
+
+	virtual FBattleStats GetBattleActorActiveStats_Implementation() const override;
+
+	virtual ABattleTeam* GetTeam_Implementation() const override;
+
+	virtual bool BP_IsAlly_Implementation(const TScriptInterface<IBattleActor>& OtherBattleActor) const override;
+
+	virtual void BattleActorIncreaseHealth_Implementation(float Amount) override;
+
+	virtual void BattleActorDecreaseHealth_Implementation(float Amount) override;
 
 };

@@ -308,7 +308,7 @@ void UImmie::SetLevel(uint8 NewLevel)
 
 float UImmie::GetMaxHealth(bool UseBaseStatOverride, uint8 BaseHealth) const
 {
-    if (UseBaseStatOverride) {
+    if (!UseBaseStatOverride) {
         BaseHealth = GetSpecieDataManager()->GetSpecieBaseStats(SpecieId).Health;
     }
 
@@ -317,7 +317,7 @@ float UImmie::GetMaxHealth(bool UseBaseStatOverride, uint8 BaseHealth) const
 
 float UImmie::GetAttack(bool UseBaseStatOverride, uint8 BaseAttack) const
 {
-    if (UseBaseStatOverride) {
+    if (!UseBaseStatOverride) {
         BaseAttack = GetSpecieDataManager()->GetSpecieBaseStats(SpecieId).Attack;
     }
 
@@ -326,7 +326,7 @@ float UImmie::GetAttack(bool UseBaseStatOverride, uint8 BaseAttack) const
 
 float UImmie::GetDefense(bool UseBaseStatOverride, uint8 BaseDefense) const
 {
-    if (UseBaseStatOverride) {
+    if (!UseBaseStatOverride) {
         BaseDefense = GetSpecieDataManager()->GetSpecieBaseStats(SpecieId).Defense;
     }
 
@@ -335,7 +335,7 @@ float UImmie::GetDefense(bool UseBaseStatOverride, uint8 BaseDefense) const
 
 float UImmie::GetSpeed(bool UseBaseStatOverride, uint8 BaseSpeed) const
 {
-    if (UseBaseStatOverride) {
+    if (!UseBaseStatOverride) {
         BaseSpeed = GetSpecieDataManager()->GetSpecieBaseStats(SpecieId).Speed;
     }
 
