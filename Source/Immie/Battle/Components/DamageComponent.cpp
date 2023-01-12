@@ -20,7 +20,7 @@ UDamageComponent* UDamageComponent::NewDamageComponent(TScriptInterface<IBattleA
 
 void UDamageComponent::AddHealing(const FAbilityInstigatorDamage& AbilityHealing)
 {
-	float TotalHealing = IBattleActor::Execute_TotalHealingFromAbility(GetBattleActor().GetObject(), AbilityHealing);
+	float TotalHealing = GetBattleActor()->TotalHealingFromAbility(AbilityHealing);
 	FBattleDamage HealingData;
 	HealingData.Ability = AbilityHealing.Instigator;
 	HealingData.Amount = TotalHealing;
@@ -32,7 +32,7 @@ void UDamageComponent::AddHealing(const FAbilityInstigatorDamage& AbilityHealing
 
 void UDamageComponent::AddDamage(const FAbilityInstigatorDamage& AbilityDamage)
 {
-	float TotalDamage = IBattleActor::Execute_TotalDamageFromAbility(GetBattleActor().GetObject(), AbilityDamage);
+	float TotalDamage = GetBattleActor()->TotalDamageFromAbility(AbilityDamage);
 	FBattleDamage DamageData;
 	DamageData.Ability = AbilityDamage.Instigator;
 	DamageData.Amount = TotalDamage;
@@ -53,7 +53,7 @@ void UDamageComponent::AuthorityBattleTick(float DeltaTime)
 		}
 
 		const float Amount = UDamageComponent::ExecuteAmount(Healing[i], DeltaTime);
-		IBattleActor::Execute_BattleActorIncreaseHealth(GetBattleActor().GetObject(), Amount);
+		GetBattleActor()->IncreaseHealth(Amount);
 	}
 
 
@@ -65,7 +65,7 @@ void UDamageComponent::AuthorityBattleTick(float DeltaTime)
 		}
 
 		const float Amount = UDamageComponent::ExecuteAmount(Damage[i], DeltaTime);
-		IBattleActor::Execute_BattleActorDecreaseHealth(GetBattleActor().GetObject(), Amount);
+		GetBattleActor()->DecreaseHealth(Amount);
 	}
 }
 

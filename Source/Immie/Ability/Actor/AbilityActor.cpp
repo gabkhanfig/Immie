@@ -12,9 +12,6 @@
 #include <Kismet/GameplayStatics.h>
 #include <Immie/Immies/ImmieCharacter.h>
 
-/* Simple macro to get the team. */
-#define Team IBattleActor::Execute_GetTeam(this)
-
 AAbilityActor::AAbilityActor()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -58,10 +55,8 @@ ADummyAbilityActor* AAbilityActor::CreateDummyActor()
 
 	const FTransform SpawnTransform = GetDummySpawnTransform();
 
-	// Uses team as owner to allow custom death animations / effects.
 	ADummyAbilityActor* DummyActor = GetWorld()->SpawnActorDeferred<ADummyAbilityActor>
-		(DummyActorClass, SpawnTransform, Team, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-
+		(DummyActorClass, SpawnTransform, GetTeam(), nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 	check(IsValid(DummyActor));
 	DummyActor->SetAbilityActor(this);
 	UGameplayStatics::FinishSpawningActor(DummyActor, SpawnTransform);
@@ -89,12 +84,13 @@ void AAbilityActor::OnCollision(UPrimitiveComponent* ThisOverlappedComponent, AA
 		return;
 	}
 
-	const bool IsValidAbilityCollider = IBattleActor::Execute_IsValidAbilityCollider(OtherActor, OtherActorComponent);
+	TScriptInterface<IBattleActor> BattleActor = Cast<UBattleActor>(OtherActor);
+	const bool IsValidAbilityCollider = BattleActor->IsValidAbilityCollider(OtherActorComponent);
 	if (!IsValidAbilityCollider) {
 		return;
 	}
 
-	OnBattleActorCollision(OtherActor, ThisOverlappedComponent, OtherActorComponent);
+	OnBattleActorCollision(BattleActor, ThisOverlappedComponent, OtherActorComponent);
 }
 
 void AAbilityActor::OnBattleActorCollision_Implementation(const TScriptInterface<IBattleActor>& BattleActor, UPrimitiveComponent* ThisComponent, UPrimitiveComponent* OtherComponent)
@@ -114,11 +110,11 @@ void AAbilityActor::OnAllyCollision_Implementation(const TScriptInterface<IBattl
 		return;
 	}
 
-	if (!IBattleActor::Execute_CanBeHealedByAbilityActor(Ally.GetObject(), this)) {
+	if (Ally->CanBeHealedByAbilityActor(this)) {
 		return;
 	}
 
-	UDamageComponent* AllyDamageComponent = IBattleActor::Execute_GetDamageComponent(Ally.GetObject());
+	UDamageComponent* AllyDamageComponent = Ally->GetDamageComponent();
 	if (!IsValid(AllyDamageComponent)) {
 		iLog("Invalid ally damage component in AAbilityActor::OnAllyCollision().", LogVerbosity_Error);
 		return;
@@ -128,7 +124,7 @@ void AAbilityActor::OnAllyCollision_Implementation(const TScriptInterface<IBattl
 	Healing.Instigator = GetAbility();
 	Healing.Type = GetAbility()->GetType();
 	Healing.AttackerStat = GetActiveStats().Attack;
-	Healing.DefenderStat = IBattleActor::Execute_GetBattleActorActiveStats(Ally.GetObject()).Defense;
+	Healing.DefenderStat = Ally->GetActiveStats().Defense;
 	Healing.Duration = GetAbility()->GetHealingDuration();
 	Healing.InstigatorLevel = GetImmieCharacter()->GetImmieLevel();
 	Healing.Multiplier = 1;
@@ -145,11 +141,11 @@ void AAbilityActor::OnEnemyCollision_Implementation(const TScriptInterface<IBatt
 		return;
 	}
 
-	if (!IBattleActor::Execute_CanBeDamagedByAbilityActor(Enemy.GetObject(), this)) {
+	if (Enemy->CanBeDamagedByAbilityActor(this)) {
 		return;
 	}
 
-	UDamageComponent* EnemyDamageComponent = IBattleActor::Execute_GetDamageComponent(Enemy.GetObject());
+	UDamageComponent* EnemyDamageComponent = Enemy->GetDamageComponent();
 	if (!IsValid(EnemyDamageComponent)) {
 		iLog("Invalid enemy damage component in AAbilityActor::OnEnemyCollision().", LogVerbosity_Error);
 		return;
@@ -159,7 +155,7 @@ void AAbilityActor::OnEnemyCollision_Implementation(const TScriptInterface<IBatt
 	Damage.Instigator = GetAbility();
 	Damage.Type = GetAbility()->GetType();
 	Damage.AttackerStat = GetActiveStats().Attack;
-	Damage.DefenderStat = IBattleActor::Execute_GetBattleActorActiveStats(Enemy.GetObject()).Defense;
+	Damage.DefenderStat = Enemy->GetActiveStats().Defense;
 	Damage.Duration = GetAbility()->GetHealingDuration();
 	Damage.InstigatorLevel = GetImmieCharacter()->GetImmieLevel();
 	Damage.Multiplier = 1;
@@ -176,12 +172,12 @@ void AAbilityActor::Tick(float DeltaTime)
 
 void AAbilityActor::DestroyAbilityActor()
 {
-	Team->RemoveAbilityActor(this);
+	//Team->RemoveAbilityActor(this);
 }
 
 void AAbilityActor::OnAbilityActorDestroy_Implementation()
 {
-	ABattleTeam* _Team = Team;
+	ABattleTeam* _Team = nullptr;//Team;
 	checkf(IsValid(_Team), TEXT("Team is not valid when ability actor is attempting to be destroyed."));
 	if (IsValid(Dummy)) {
 		Dummy->OnAbilityActorDestroy();
@@ -231,46 +227,36 @@ void AAbilityActor::OnSerializeNewActor(FOutBunch& OutBunch)
 	OutBunch << SpawnedActiveStats.Speed;
 }
 
-UDamageComponent* AAbilityActor::GetDamageComponent_Implementation() const
+UDamageComponent* AAbilityActor::GetDamageComponent() const
 {
 	return DamageComponent;
 }
 
-bool AAbilityActor::IsValidAbilityCollider_Implementation(UPrimitiveComponent* Collider) const
+bool AAbilityActor::IsValidAbilityCollider(UPrimitiveComponent* Collider) const
 {
 	return AbilityColliders.Contains(Collider);
 }
 
-bool AAbilityActor::CanBeHealedByAbilityActor_Implementation(AAbilityActor* AbilityActor) const
+bool AAbilityActor::CanBeHealedByAbilityActor(AAbilityActor* AbilityActor) const
 {
 	return true;
 }
 
-bool AAbilityActor::CanBeDamagedByAbilityActor_Implementation(AAbilityActor* AbilityActor) const
+bool AAbilityActor::CanBeDamagedByAbilityActor(AAbilityActor* AbilityActor) const
 {
 	return true;
 }
 
-FBattleStats AAbilityActor::GetBattleActorActiveStats_Implementation() const
-{
-	return GetActiveStats();
-}
-
-ABattleTeam* AAbilityActor::GetTeam_Implementation() const
+ABattleTeam* AAbilityActor::GetTeam() const
 {
 	return GetAbility()->GetTeam();
 }
 
-bool AAbilityActor::BP_IsAlly_Implementation(const TScriptInterface<IBattleActor>& OtherBattleActor) const
-{
-	return IsAlly(OtherBattleActor);
-}
-
-void AAbilityActor::AuthorityBattleTick_Implementation(float DeltaTime)
+void AAbilityActor::AuthorityBattleTick(float DeltaTime)
 {
 }
 
-void AAbilityActor::BattleActorIncreaseHealth_Implementation(float Amount)
+void AAbilityActor::IncreaseHealth(float Amount)
 {
 	checkf(Amount >= 0, TEXT("Increasing battle actor health by negative value is not allowed"));
 	ActiveStats.Health += Amount;
@@ -279,7 +265,7 @@ void AAbilityActor::BattleActorIncreaseHealth_Implementation(float Amount)
 	}
 }
 
-void AAbilityActor::BattleActorDecreaseHealth_Implementation(float Amount)
+void AAbilityActor::DecreaseHealth(float Amount)
 {
 	checkf(Amount >= 0, TEXT("Decreasing battle actor health by negative value is not allowed"));
 	ActiveStats.Health -= Amount;
@@ -299,11 +285,6 @@ AImmieCharacter* AAbilityActor::GetImmieCharacter() const
 {
 	return GetAbility()->GetImmieCharacter();
 }
-
-//ABattleTeam* AAbilityActor::GetTeam() const
-//{
-//	return GetAbility()->GetTeam();
-//}
 
 ABattleInstance* AAbilityActor::GetBattleInstance() const
 {
@@ -363,6 +344,11 @@ float AAbilityActor::GetRange() const
 TArray<UImmieType*> AAbilityActor::GetType()
 {
 	return GetAbility()->GetType();
+}
+
+FBattleStats AAbilityActor::GetActiveStats() const
+{
+	return ActiveStats;
 }
 
 FBattleStats AAbilityActor::GetAbilityInitialStats() const

@@ -123,51 +123,41 @@ void AImmieCharacter::Tick(float DeltaTime)
 	ULogger::DisplayLog("Health: " + FString::SanitizeFloat(GetActiveStats().Health), LogVerbosity_Display, 0, Color);
 }
 
-void AImmieCharacter::AuthorityBattleTick_Implementation(float DeltaTime)
+void AImmieCharacter::AuthorityBattleTick(float DeltaTime)
 {
 	AuthorityBattleTickComponents(DeltaTime);
 	if (!IsRunningDedicatedServer()) {
-		IBattleActor::Execute_UpdateVisuals(this);
+		UpdateVisuals();
 	}
 }
 
-void AImmieCharacter::ClientBattleTick_Implementation(float DeltaTime)
+void AImmieCharacter::ClientBattleTick(float DeltaTime)
 {
 	ClientBattleTickComponents(DeltaTime);
-	IBattleActor::Execute_UpdateVisuals(this);
+	UpdateVisuals();
 }
 
-bool AImmieCharacter::IsValidAbilityCollider_Implementation(UPrimitiveComponent* Collider) const
+bool AImmieCharacter::IsValidAbilityCollider(UPrimitiveComponent* Collider) const
 {
 	return AbilityColliders.Contains(Collider);
 }
 
-bool AImmieCharacter::CanBeHealedByAbilityActor_Implementation(AAbilityActor* AbilityActor) const
+bool AImmieCharacter::CanBeHealedByAbilityActor(AAbilityActor* AbilityActor) const
 {
 	return true;
 }
 
-bool AImmieCharacter::CanBeDamagedByAbilityActor_Implementation(AAbilityActor* AbilityActor) const
+bool AImmieCharacter::CanBeDamagedByAbilityActor(AAbilityActor* AbilityActor) const
 {
 	return true;
 }
 
-FBattleStats AImmieCharacter::GetBattleActorActiveStats_Implementation() const
-{
-	return GetActiveStats();
-}
-
-ABattleTeam* AImmieCharacter::GetTeam_Implementation() const
+ABattleTeam* AImmieCharacter::GetTeam() const
 {
 	return Team;
 }
 
-bool AImmieCharacter::BP_IsAlly_Implementation(const TScriptInterface<IBattleActor>& OtherBattleActor) const
-{
-	return IsAlly(OtherBattleActor);
-}
-
-void AImmieCharacter::BattleActorIncreaseHealth_Implementation(float Amount)
+void AImmieCharacter::IncreaseHealth(float Amount)
 {
 	checkf(Amount >= 0, TEXT("Increasing battle actor health by negative value is not allowed"));
 	ActiveStats.Health += Amount;
@@ -176,7 +166,7 @@ void AImmieCharacter::BattleActorIncreaseHealth_Implementation(float Amount)
 	}
 }
 
-void AImmieCharacter::BattleActorDecreaseHealth_Implementation(float Amount)
+void AImmieCharacter::DecreaseHealth(float Amount)
 {
 	checkf(Amount >= 0, TEXT("Decreasing battle actor health by negative value is not allowed"));
 	ActiveStats.Health -= Amount;
@@ -453,17 +443,17 @@ ABattleInstance* AImmieCharacter::GetBattleInstance() const
 	return Team->GetBattleInstance();
 }
 
-UDamageComponent* AImmieCharacter::GetDamageComponent_Implementation() const
+UDamageComponent* AImmieCharacter::GetDamageComponent() const
 {
 	return DamageComponent;
 }
 
-float AImmieCharacter::TotalHealingFromAbility_Implementation(const FAbilityInstigatorDamage& AbilityHealing) const
+float AImmieCharacter::TotalHealingFromAbility(const FAbilityInstigatorDamage& AbilityHealing) const
 {
 	return 1;
 }
 
-float AImmieCharacter::TotalDamageFromAbility_Implementation(const FAbilityInstigatorDamage& AbilityDamage) const
+float AImmieCharacter::TotalDamageFromAbility(const FAbilityInstigatorDamage& AbilityDamage) const
 {
 	return 1;
 }
@@ -476,3 +466,7 @@ void AImmieCharacter::SetImmieEnabled_Implementation(bool NewEnabled)
 	bEnabled = NewEnabled;
 }
 
+FBattleStats AImmieCharacter::GetActiveStats() const
+{
+	return ActiveStats;
+}

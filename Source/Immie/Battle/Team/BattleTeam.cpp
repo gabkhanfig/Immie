@@ -39,23 +39,21 @@ void ABattleTeam::CreateTeamFromImmies(const TArray<UImmie*>& TeamImmies)
 
 void ABattleTeam::AuthorityBattleTickBattleActors(float DeltaTime)
 {
-	IBattleActor::Execute_AuthorityBattleTick(ActiveImmie, DeltaTime);
+	ActiveImmie->AuthorityBattleTick(DeltaTime);
 
 	for (int i = 0; i < AbilityActors.Num(); i++) {
 		// Should be valid
 		AAbilityActor* Actor = AbilityActors[i];
 		checkf(IsValid(Actor), TEXT("Ability Actor should be valid for authority battle tick. See if AAbilityActor::Destroy() was called anywhere. Use AAbilityActor::DestroyAbilityActor() instead."));
-		IBattleActor::Execute_AuthorityBattleTick(Actor, DeltaTime);
-
+		Actor->AuthorityBattleTick(DeltaTime);
 	}
 }
 
 void ABattleTeam::ClientBattleTickBattleActors(float DeltaTime)
 {
 	if (IsValid(ActiveImmie)) {
-		IBattleActor::Execute_ClientBattleTick(ActiveImmie, DeltaTime);
+		ActiveImmie->ClientBattleTick(DeltaTime);
 	}
-	
 	// Client ability actors do not execute client battle tick. DummyAbilityActor::Tick() should handle any client relevant ticking.
 }
 

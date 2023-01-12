@@ -263,35 +263,28 @@ public:
 		/**/
 		inline FBattleStats GetInitialStats() const { return InitialStats; }
 
-	UFUNCTION(BlueprintPure, Category = "Battle")
-		/**/
-		inline FBattleStats GetActiveStats() const { return ActiveStats; }
+	virtual UDamageComponent* GetDamageComponent() const override;
 
-	/**/
-	virtual UDamageComponent* GetDamageComponent_Implementation() const override;
+	virtual float TotalHealingFromAbility(const FAbilityInstigatorDamage& AbilityHealing) const override;
 
-	virtual float TotalHealingFromAbility_Implementation(const FAbilityInstigatorDamage& AbilityHealing) const override;
+	virtual float TotalDamageFromAbility(const FAbilityInstigatorDamage& AbilityDamage) const override;
 
-	virtual float TotalDamageFromAbility_Implementation(const FAbilityInstigatorDamage& AbilityDamage) const override;
+	virtual void AuthorityBattleTick(float DeltaTime) override;
 
-	virtual void AuthorityBattleTick_Implementation(float DeltaTime) override;
+	virtual void ClientBattleTick(float DeltaTime) override;
 
-	virtual void ClientBattleTick_Implementation(float DeltaTime) override;
+	virtual bool IsValidAbilityCollider(UPrimitiveComponent* Collider) const override;
 
-	virtual bool IsValidAbilityCollider_Implementation(UPrimitiveComponent* Collider) const override;
+	virtual bool CanBeHealedByAbilityActor(AAbilityActor* AbilityActor) const override;
 
-	virtual bool CanBeHealedByAbilityActor_Implementation(AAbilityActor* AbilityActor) const override;
+	virtual bool CanBeDamagedByAbilityActor(AAbilityActor* AbilityActor) const override;
 
-	virtual bool CanBeDamagedByAbilityActor_Implementation(AAbilityActor* AbilityActor) const override;
+	virtual FBattleStats GetActiveStats() const override;
 
-	virtual FBattleStats GetBattleActorActiveStats_Implementation() const override;
+	virtual ABattleTeam* GetTeam() const override;
 
-	virtual ABattleTeam* GetTeam_Implementation() const override;
+	virtual void IncreaseHealth(float Amount) override;
 
-	virtual bool BP_IsAlly_Implementation(const TScriptInterface<IBattleActor>& OtherBattleActor) const override;
-
-	virtual void BattleActorIncreaseHealth_Implementation(float Amount) override;
-
-	virtual void BattleActorDecreaseHealth_Implementation(float Amount) override;
+	virtual void DecreaseHealth(float Amount) override;
 
 };

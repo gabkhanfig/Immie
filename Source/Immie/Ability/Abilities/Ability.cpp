@@ -221,7 +221,7 @@ AImmieCharacter* UAbility::GetImmieCharacter() const
 
 ABattleTeam* UAbility::GetTeam() const
 {
-	return IBattleActor::Execute_GetTeam(GetImmieCharacter());
+	return GetImmieCharacter()->GetTeam();
 }
 
 ABattleInstance* UAbility::GetBattleInstance() const

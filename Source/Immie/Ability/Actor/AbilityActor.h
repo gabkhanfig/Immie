@@ -192,10 +192,6 @@ public:
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		FBattleStats GetActiveStats() const { return ActiveStats; }
-
-	UFUNCTION(BlueprintPure)
-		/**/
 		FBattleStats GetAbilityInitialStats() const;
 
 	UFUNCTION(BlueprintPure)
@@ -203,23 +199,21 @@ public:
 		FBattleStats GetAbilityActiveStats() const;
 
 	/**/
-	virtual UDamageComponent* GetDamageComponent_Implementation() const;
+	virtual UDamageComponent* GetDamageComponent() const;
 
-	virtual bool IsValidAbilityCollider_Implementation(UPrimitiveComponent* Collider) const override;
+	virtual bool IsValidAbilityCollider(UPrimitiveComponent* Collider) const override;
 
-	virtual bool CanBeHealedByAbilityActor_Implementation(AAbilityActor* AbilityActor) const override;
+	virtual bool CanBeHealedByAbilityActor(AAbilityActor* AbilityActor) const override;
 
-	virtual bool CanBeDamagedByAbilityActor_Implementation(AAbilityActor* AbilityActor) const override;
+	virtual bool CanBeDamagedByAbilityActor(AAbilityActor* AbilityActor) const override;
 
-	virtual FBattleStats GetBattleActorActiveStats_Implementation() const override;
+	virtual ABattleTeam* GetTeam() const override;
 
-	virtual ABattleTeam* GetTeam_Implementation() const override;
+	virtual void AuthorityBattleTick(float DeltaTime) override;
 
-	virtual bool BP_IsAlly_Implementation(const TScriptInterface<IBattleActor>& OtherBattleActor) const override;
+	virtual void IncreaseHealth(float Amount) override;
 
-	virtual void AuthorityBattleTick_Implementation(float DeltaTime) override;
+	virtual void DecreaseHealth(float Amount) override;
 
-	virtual void BattleActorIncreaseHealth_Implementation(float Amount) override;
-
-	virtual void BattleActorDecreaseHealth_Implementation(float Amount) override;
+	virtual FBattleStats GetActiveStats() const override;
 };
