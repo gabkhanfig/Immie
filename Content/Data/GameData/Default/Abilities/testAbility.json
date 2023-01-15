@@ -9,6 +9,7 @@
     "InitialUses": 1,
     "MaxCooldown": 2,
     "InitialCooldown": 1.7,
+    "DamagePower": 10,
     "AbilityFlags": {
         "DoesDamage": true,
         "VisualDummy": true

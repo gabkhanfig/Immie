@@ -24,7 +24,11 @@ struct FAbilityInstigatorDamage
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/**/
-		TArray<UImmieType*> Type;
+		TArray<UImmieType*> InstigatorType;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		/**/
+		TArray<UImmieType*> DefenderType;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/**/

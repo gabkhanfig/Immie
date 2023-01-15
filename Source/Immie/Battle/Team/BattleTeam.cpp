@@ -19,6 +19,9 @@ ABattleTeam::ABattleTeam()
 	bAlwaysRelevant = true;
 	bNetLoadOnClient = true;
 
+	SetActorHiddenInGame(true);
+	SetActorEnableCollision(false);
+
 	ActiveImmie = nullptr;
 }
 

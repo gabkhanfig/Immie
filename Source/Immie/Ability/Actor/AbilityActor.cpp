@@ -11,6 +11,7 @@
 #include <Immie/Battle/Team/BattleTeam.h>
 #include <Kismet/GameplayStatics.h>
 #include <Immie/Immies/ImmieCharacter.h>
+#include <Immie/Type/ImmieType.h>
 
 AAbilityActor::AAbilityActor()
 {
@@ -84,7 +85,7 @@ void AAbilityActor::OnCollision(UPrimitiveComponent* ThisOverlappedComponent, AA
 		return;
 	}
 
-	TScriptInterface<IBattleActor> BattleActor = Cast<UBattleActor>(OtherActor);
+	TScriptInterface<IBattleActor> BattleActor = OtherActor;
 	const bool IsValidAbilityCollider = BattleActor->IsValidAbilityCollider(OtherActorComponent);
 	if (!IsValidAbilityCollider) {
 		return;
@@ -122,15 +123,23 @@ void AAbilityActor::OnAllyCollision_Implementation(const TScriptInterface<IBattl
 
 	FAbilityInstigatorDamage Healing;
 	Healing.Instigator = GetAbility();
-	Healing.Type = GetAbility()->GetType();
-	Healing.AttackerStat = GetActiveStats().Attack;
+	Healing.InstigatorType = GetAbility()->GetType();
+	Healing.Power = GetHealingPower();
+
+	if (AbilityFlags.BaseStats || AbilityFlags.RelativeStats) {
+		Healing.AttackerStat = this->GetActiveStats().Attack;
+	}
+	else {
+		Healing.AttackerStat = GetImmieCharacter()->GetActiveStats().Attack;
+	}
+	
 	Healing.DefenderStat = Ally->GetActiveStats().Defense;
+	Healing.DefenderType = Ally->GetType();
 	Healing.Duration = GetAbility()->GetHealingDuration();
 	Healing.InstigatorLevel = GetImmieCharacter()->GetImmieLevel();
 	Healing.Multiplier = 1;
 	AllyDamageComponent->AddHealing(Healing);
 
-	iLog("Did healing. Now destroying...");
 	DestroyAbilityActor();
 }
 
@@ -141,7 +150,7 @@ void AAbilityActor::OnEnemyCollision_Implementation(const TScriptInterface<IBatt
 		return;
 	}
 
-	if (Enemy->CanBeDamagedByAbilityActor(this)) {
+	if (!Enemy->CanBeDamagedByAbilityActor(this)) {
 		return;
 	}
 
@@ -153,15 +162,23 @@ void AAbilityActor::OnEnemyCollision_Implementation(const TScriptInterface<IBatt
 
 	FAbilityInstigatorDamage Damage;
 	Damage.Instigator = GetAbility();
-	Damage.Type = GetAbility()->GetType();
-	Damage.AttackerStat = GetActiveStats().Attack;
+	Damage.InstigatorType = GetAbility()->GetType();
+	Damage.Power = GetDamagePower();
+
+	if (AbilityFlags.BaseStats || AbilityFlags.RelativeStats) {
+		Damage.AttackerStat = this->GetActiveStats().Attack;
+	}
+	else {
+		Damage.AttackerStat = GetImmieCharacter()->GetActiveStats().Attack;
+	}
+
 	Damage.DefenderStat = Enemy->GetActiveStats().Defense;
+	Damage.DefenderType = Enemy->GetType();
 	Damage.Duration = GetAbility()->GetHealingDuration();
 	Damage.InstigatorLevel = GetImmieCharacter()->GetImmieLevel();
 	Damage.Multiplier = 1;
 	EnemyDamageComponent->AddDamage(Damage);
 
-	iLog("Did damage. Now destroying...");
 	DestroyAbilityActor();
 }
 
@@ -172,12 +189,12 @@ void AAbilityActor::Tick(float DeltaTime)
 
 void AAbilityActor::DestroyAbilityActor()
 {
-	//Team->RemoveAbilityActor(this);
+	GetTeam()->RemoveAbilityActor(this);
 }
 
 void AAbilityActor::OnAbilityActorDestroy_Implementation()
 {
-	ABattleTeam* _Team = nullptr;//Team;
+	ABattleTeam* _Team = GetTeam();
 	checkf(IsValid(_Team), TEXT("Team is not valid when ability actor is attempting to be destroyed."));
 	if (IsValid(Dummy)) {
 		Dummy->OnAbilityActorDestroy();
@@ -193,6 +210,7 @@ void AAbilityActor::SetAbility(UAbility* _Ability)
 void AAbilityActor::SetSpawnedActiveStats(FBattleStats _SpawnedActiveStats)
 {
 	SpawnedActiveStats = _SpawnedActiveStats;
+	ActiveStats = SpawnedActiveStats;
 }
 
 void AAbilityActor::SetDamageComponent(UDamageComponent* _DamageComponent)
@@ -253,6 +271,10 @@ ABattleTeam* AAbilityActor::GetTeam() const
 }
 
 void AAbilityActor::AuthorityBattleTick(float DeltaTime)
+{
+}
+
+void AAbilityActor::ClientBattleTick(float DeltaTime)
 {
 }
 
@@ -341,14 +363,33 @@ float AAbilityActor::GetRange() const
 	return GetAbility()->GetRange();
 }
 
-TArray<UImmieType*> AAbilityActor::GetType()
+TArray<UImmieType*> AAbilityActor::GetType() const
 {
 	return GetAbility()->GetType();
+}
+
+void AAbilityActor::UpdateVisuals()
+{
 }
 
 FBattleStats AAbilityActor::GetActiveStats() const
 {
 	return ActiveStats;
+}
+
+float AAbilityActor::TotalHealingFromAbility(const FAbilityInstigatorDamage& AbilityHealing) const
+{
+	// TODO properly implement healing thats not just the opposite of damage.
+	const float UnmodifiedDamageMultiplier = UFormula::Damage(AbilityHealing.Power, AbilityHealing.AttackerStat, AbilityHealing.DefenderStat, AbilityHealing.InstigatorLevel);
+	const float TypeDamageMultiplier = UImmieType::TotalTypeDamageMultiplier(AbilityHealing.InstigatorType, AbilityHealing.DefenderType);
+	return UnmodifiedDamageMultiplier * TypeDamageMultiplier;
+}
+
+float AAbilityActor::TotalDamageFromAbility(const FAbilityInstigatorDamage& AbilityDamage) const
+{
+	const float UnmodifiedDamageMultiplier = UFormula::Damage(AbilityDamage.Power, AbilityDamage.AttackerStat, AbilityDamage.DefenderStat, AbilityDamage.InstigatorLevel);
+	const float TypeDamageMultiplier = UImmieType::TotalTypeDamageMultiplier(AbilityDamage.InstigatorType, AbilityDamage.DefenderType);
+	return UnmodifiedDamageMultiplier * TypeDamageMultiplier;
 }
 
 FBattleStats AAbilityActor::GetAbilityInitialStats() const

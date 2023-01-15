@@ -157,6 +157,11 @@ ABattleTeam* AImmieCharacter::GetTeam() const
 	return Team;
 }
 
+TArray<UImmieType*> AImmieCharacter::GetType() const
+{
+	return Type;
+}
+
 void AImmieCharacter::IncreaseHealth(float Amount)
 {
 	checkf(Amount >= 0, TEXT("Increasing battle actor health by negative value is not allowed"));
@@ -174,6 +179,10 @@ void AImmieCharacter::DecreaseHealth(float Amount)
 		ActiveStats.Health = 0;
 		iLog("Immie dead");
 	}
+}
+
+void AImmieCharacter::UpdateVisuals()
+{
 }
 
 void AImmieCharacter::AuthorityBattleTickComponents(float DeltaTime)
@@ -450,12 +459,17 @@ UDamageComponent* AImmieCharacter::GetDamageComponent() const
 
 float AImmieCharacter::TotalHealingFromAbility(const FAbilityInstigatorDamage& AbilityHealing) const
 {
-	return 1;
+	// TODO properly implement healing thats not just the opposite of damage.
+	const float UnmodifiedDamageMultiplier = UFormula::Damage(AbilityHealing.Power, AbilityHealing.AttackerStat, AbilityHealing.DefenderStat, AbilityHealing.InstigatorLevel);
+	const float TypeDamageMultiplier = UImmieType::TotalTypeDamageMultiplier(AbilityHealing.InstigatorType, AbilityHealing.DefenderType);
+	return UnmodifiedDamageMultiplier * TypeDamageMultiplier;
 }
 
 float AImmieCharacter::TotalDamageFromAbility(const FAbilityInstigatorDamage& AbilityDamage) const
 {
-	return 1;
+	const float UnmodifiedDamageMultiplier = UFormula::Damage(AbilityDamage.Power, AbilityDamage.AttackerStat, AbilityDamage.DefenderStat, AbilityDamage.InstigatorLevel);
+	const float TypeDamageMultiplier = UImmieType::TotalTypeDamageMultiplier(AbilityDamage.InstigatorType, AbilityDamage.DefenderType);
+	return UnmodifiedDamageMultiplier * TypeDamageMultiplier;
 }
 
 void AImmieCharacter::SetImmieEnabled_Implementation(bool NewEnabled)

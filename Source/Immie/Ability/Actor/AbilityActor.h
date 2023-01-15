@@ -13,6 +13,7 @@ class UAbility;
 class AImmieCharacter;
 class UDamageComponent;
 class ADummyAbilityActor;
+class UImmieType;
 
 UCLASS()
 /* Actor object representing in world abilities. Ensure calling AAbilityActor::DestroyAbilityActor() rather than AAbilityActor::Destroy(). */
@@ -184,10 +185,6 @@ public:
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		TArray<UImmieType*> GetType();
-
-	UFUNCTION(BlueprintPure)
-		/**/
 		FBattleStats GetSpawnedActiveStats() const { return SpawnedActiveStats; }
 
 	UFUNCTION(BlueprintPure)
@@ -211,9 +208,19 @@ public:
 
 	virtual void AuthorityBattleTick(float DeltaTime) override;
 
+	virtual void ClientBattleTick(float DeltaTime) override;
+
 	virtual void IncreaseHealth(float Amount) override;
 
 	virtual void DecreaseHealth(float Amount) override;
 
 	virtual FBattleStats GetActiveStats() const override;
+
+	virtual float TotalHealingFromAbility(const FAbilityInstigatorDamage& AbilityHealing) const override;
+
+	virtual float TotalDamageFromAbility(const FAbilityInstigatorDamage& AbilityDamage) const override;
+
+	virtual TArray<UImmieType*> GetType() const override;
+
+	virtual void UpdateVisuals() override;
 };

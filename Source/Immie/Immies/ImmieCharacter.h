@@ -245,10 +245,6 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "Battle")
 		/**/
-		inline TArray<UImmieType*> GetType() const { return Type; }
-
-	UFUNCTION(BlueprintPure, Category = "Battle")
-		/**/
 		inline TArray<UAbility*> GetAbilities() const { return Abilities; }
 
 	UFUNCTION(BlueprintPure, Category = "Battle")
@@ -283,8 +279,12 @@ public:
 
 	virtual ABattleTeam* GetTeam() const override;
 
+	virtual TArray<UImmieType*> GetType() const override;
+
 	virtual void IncreaseHealth(float Amount) override;
 
 	virtual void DecreaseHealth(float Amount) override;
+
+	virtual void UpdateVisuals() override;
 
 };
