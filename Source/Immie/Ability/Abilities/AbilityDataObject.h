@@ -95,6 +95,10 @@ protected:
 		float MaxDelay;
 
 	UPROPERTY(BlueprintReadOnly)
+		/**/
+		float Gravity;
+
+	UPROPERTY(BlueprintReadOnly)
 		/* This ability's own base stats. Not it's owning specie. */
 		FBaseStats BaseStats;
 
@@ -151,7 +155,6 @@ public:
 		/**/
 		UClass* GetDummyActorClass() const { return DummyActorClass; }
 
-
 	UFUNCTION(BlueprintPure)
 		/**/
 		FAbilityFlags GetAbilityFlags() const { return AbilityFlags; }
@@ -203,6 +206,10 @@ public:
 	UFUNCTION(BlueprintPure)
 		/**/
 		float GetMaxDelay() const { return MaxDelay; }
+
+	UFUNCTION(BlueprintPure)
+		/**/
+		float GetGravity() const { return Gravity; }
 
 	UFUNCTION(BlueprintPure)
 		/**/

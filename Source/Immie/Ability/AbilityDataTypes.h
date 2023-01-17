@@ -104,6 +104,10 @@ struct FAbilityFlags
 		/**/
 		uint8 VisualDummy : 1;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		/**/
+		uint8 Projectile : 1;
+
 private:
 
 	static bool GetJsonAbilityFlag(const FJsonObjectBP& JsonObject, const FString& FlagName);

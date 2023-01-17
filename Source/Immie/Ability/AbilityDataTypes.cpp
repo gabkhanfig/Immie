@@ -21,6 +21,7 @@ FAbilityFlags FAbilityFlags::LoadJsonAbilityFlags(const FJsonObjectBP& JsonObjec
     LOAD_JSON_FLAG(BaseStats);
     LOAD_JSON_FLAG(RelativeStats);
     LOAD_JSON_FLAG(VisualDummy);
+    LOAD_JSON_FLAG(Projectile);
 
     return Flags;
 }
@@ -35,6 +36,7 @@ FJsonObjectBP FAbilityFlags::ToJson()
     SET_JSON_FLAG(BaseStats);
     SET_JSON_FLAG(RelativeStats);
     SET_JSON_FLAG(VisualDummy);
+    SET_JSON_FLAG(Projectile);
 
     return Json;
 }

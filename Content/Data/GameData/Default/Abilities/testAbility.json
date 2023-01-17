@@ -10,8 +10,10 @@
     "MaxCooldown": 2,
     "InitialCooldown": 1.7,
     "DamagePower": 10,
+    "Speed": 100,
     "AbilityFlags": {
         "DoesDamage": true,
-        "VisualDummy": true
+        "VisualDummy": true,
+        "Projectile": true
     }
 }

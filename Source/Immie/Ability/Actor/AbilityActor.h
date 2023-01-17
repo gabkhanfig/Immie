@@ -49,6 +49,14 @@ protected:
 		/* Components of this Immie character that can collide with ability actors. */
 		TArray<UPrimitiveComponent*> AbilityColliders;
 
+	UPROPERTY(BlueprintReadWrite)
+		/**/
+		class UMovementComponent* MovementComponent;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		/**/
+		class UProjectileMovementComponent* ProjectileComponent;
+
 protected:
 
 	/* Actors begin play. Note that not all objects and values will be initialized by the time this executes. */
@@ -95,6 +103,10 @@ protected:
 		void OnEnemyCollision(const TScriptInterface<IBattleActor>& Enemy, UPrimitiveComponent* ThisComponent, UPrimitiveComponent* OtherComponent);
 
 public:	
+
+	UFUNCTION(BlueprintCallable)
+		/* Works for dummy abilities. */
+		static void EnableAbilityProjectileComponent(AActor* AbilityActor, UAbilityDataObject* AbilityDataObject, UProjectileMovementComponent* ProjMovement, AImmieCharacter* ImmieCharacter);
 
 	/**/
 	AAbilityActor();

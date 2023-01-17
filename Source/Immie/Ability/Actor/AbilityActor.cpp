@@ -12,6 +12,21 @@
 #include <Kismet/GameplayStatics.h>
 #include <Immie/Immies/ImmieCharacter.h>
 #include <Immie/Type/ImmieType.h>
+#include <GameFramework/ProjectileMovementComponent.h>
+#include <Components/ArrowComponent.h>
+#include "Camera/CameraComponent.h"
+
+void AAbilityActor::EnableAbilityProjectileComponent(AActor* AbilityActor, UAbilityDataObject* AbilityDataObject, UProjectileMovementComponent* ProjMovement, AImmieCharacter* ImmieCharacter)
+{
+	checkf(ProjMovement, TEXT("Projectile movement component for ability actor must not be null"));
+	ProjMovement->ProjectileGravityScale = AbilityDataObject->GetGravity();
+	//ProjMovement->Velocity = { 0, 0, 100 };
+	//ProjMovement->InitialSpeed = AbilityDataObject->GetSpeed();
+	//ProjMovement->MaxSpeed = AbilityDataObject->GetSpeed();
+	ProjMovement->SetComponentTickEnabled(true);
+	const FVector Velocity = ImmieCharacter->GetFollowCamera()->GetComponentRotation().Vector() * AbilityDataObject->GetSpeed();
+	ProjMovement->Velocity = Velocity;
+}
 
 AAbilityActor::AAbilityActor()
 {
@@ -19,6 +34,16 @@ AAbilityActor::AAbilityActor()
 	bReplicates = true;
 	bAlwaysRelevant = true;
 	bNetLoadOnClient = true;
+
+	RootComponent = CreateDefaultSubobject<UArrowComponent>(TEXT("Root Component"));
+
+	ProjectileComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
+	ProjectileComponent->UpdatedComponent = RootComponent;
+	ProjectileComponent->SetComponentTickEnabled(false);
+	ProjectileComponent->InitialSpeed = 0;
+	ProjectileComponent->MaxSpeed = 0;
+	ProjectileComponent->ProjectileGravityScale = 0;
+	ProjectileComponent->bRotationFollowsVelocity;
 }
 
 void AAbilityActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const 
@@ -221,6 +246,11 @@ void AAbilityActor::SetDamageComponent(UDamageComponent* _DamageComponent)
 void AAbilityActor::InitializeForBattle()
 {
 	ActiveStats = SpawnedActiveStats;
+
+	if (GetAbilityFlags().Projectile) {
+		MovementComponent = ProjectileComponent;
+		AAbilityActor::EnableAbilityProjectileComponent(this, GetAbilityDataObject(), ProjectileComponent, GetImmieCharacter());
+	}
 
 	InformSpawn();
 }

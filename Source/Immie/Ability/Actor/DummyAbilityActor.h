@@ -19,7 +19,15 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 		/* The actual ability actor that has battle relevance. */
 		AAbilityActor* AbilityActor;
+
+	UPROPERTY(BlueprintReadWrite)
+		/**/
+		class UMovementComponent* MovementComponent;
 	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		/**/
+		class UProjectileMovementComponent* ProjectileComponent;
+
 public:	
 	// Sets default values for this actor's properties
 	ADummyAbilityActor();
@@ -29,7 +37,7 @@ protected:
 	/* AbilityActor can be assumed to be valid at this point. */
 	virtual void BeginPlay() override;
 
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintNativeEvent)
 		/* Called when the actual ability actor is being destroyed, not necessarily this dummy actor. */
 		void BP_OnAbilityActorDestroy();
 

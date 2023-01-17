@@ -21,6 +21,7 @@
 #define ABILITY_DO_JSON_FIELD_SPEED "Speed"
 #define ABILITY_DO_JSON_FIELD_RANGE "Range"
 #define ABILITY_DO_JSON_FIELD_MAX_DELAY "MaxDelay"
+#define ABILITY_DO_JSON_FIELD_GRAVITY "Gravity"
 #define ABILITY_DO_JSON_FIELD_BASE_HEALTH "BaseHealth"
 #define ABILITY_DO_JSON_FIELD_BASE_ATTACK "BaseAttack"
 #define ABILITY_DO_JSON_FIELD_BASE_DEFENSE "BaseDefense"
@@ -109,6 +110,7 @@ void UAbilityDataObject::LoadAbilityJsonData(const FJsonObjectBP& Json)
 	Json.TryGetFloatField(ABILITY_DO_JSON_FIELD_SPEED, Speed);
 	Json.TryGetFloatField(ABILITY_DO_JSON_FIELD_RANGE, Range);
 	Json.TryGetFloatField(ABILITY_DO_JSON_FIELD_MAX_DELAY, MaxDelay, true, DEFAULT_MAX_DELAY);
+	Json.TryGetFloatField(ABILITY_DO_JSON_FIELD_GRAVITY, Gravity);
 
 	const uint8 MaxBaseStat = GetConfigDataManager()->GetMaxBaseStat();
 
