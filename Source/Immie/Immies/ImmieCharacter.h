@@ -16,6 +16,7 @@ class ABattleTeam;
 class USpecieDataObject;
 class UCameraComponent;
 class UImmieMovementComponent;
+class UImmieBattleHud;
 
 UCLASS()
 class IMMIE_API AImmieCharacter : public ACharacter, public IBattleActor
@@ -72,6 +73,14 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Battle")
 		/* Components of this Immie character that can collide with ability actors. */
 		TArray<UPrimitiveComponent*> AbilityColliders;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Battle")
+		/* The class used to instantiate the battle hud for this Immie character. */
+		TSubclassOf<UImmieBattleHud> BattleHudClass;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Battle")
+		/* The battle hud this Immie character is using (must be controlled by local controller). */
+		UImmieBattleHud* BattleHud;
 
 protected:
 
@@ -176,6 +185,9 @@ protected:
 		/* Add a component as a valid ability collider. */
 		void AddAbilityCollider(UPrimitiveComponent* AbilityCollider);
 
+	/* Sets BattleHud to a valid instance. */
+	void CreateBattleHud();
+
 public:	
 
 	AImmieCharacter(const FObjectInitializer& ObjectInitializer);
@@ -258,6 +270,20 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Battle")
 		/**/
 		inline FBattleStats GetInitialStats() const { return InitialStats; }
+
+	UFUNCTION(BlueprintPure, Category = "Battle")
+		/**/
+		inline float GetMaxHealth() const { return InitialStats.Health; }
+
+	UFUNCTION(BlueprintPure, Category = "Battle")
+		/**/
+		inline float GetCurrentHealth() const { return ActiveStats.Health; }
+
+
+
+	UFUNCTION(BlueprintPure)
+		/**/
+		bool IsControlledByLocalPlayer() const;
 
 	virtual UDamageComponent* GetDamageComponent() const override;
 

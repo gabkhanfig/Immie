@@ -168,9 +168,7 @@ void ABattleTeam::SetImmieForBattle(AImmieCharacter* ImmieCharacter)
 		ImmieCharacter->PossessForBattle(Controller);
 	}
 
-
 	SetActiveImmie(ImmieCharacter);
-	iLog("Immie is now active " + ActiveImmie->GetFName().ToString());
 }
 
 void ABattleTeam::RemoveActiveImmieFromBattle()

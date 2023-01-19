@@ -20,9 +20,6 @@ void AAbilityActor::EnableAbilityProjectileComponent(AActor* AbilityActor, UAbil
 {
 	checkf(ProjMovement, TEXT("Projectile movement component for ability actor must not be null"));
 	ProjMovement->ProjectileGravityScale = AbilityDataObject->GetGravity();
-	//ProjMovement->Velocity = { 0, 0, 100 };
-	//ProjMovement->InitialSpeed = AbilityDataObject->GetSpeed();
-	//ProjMovement->MaxSpeed = AbilityDataObject->GetSpeed();
 	ProjMovement->SetComponentTickEnabled(true);
 	const FVector Velocity = ImmieCharacter->GetFollowCamera()->GetComponentRotation().Vector() * AbilityDataObject->GetSpeed();
 	ProjMovement->Velocity = Velocity;

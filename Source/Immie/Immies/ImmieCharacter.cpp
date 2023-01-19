@@ -24,6 +24,7 @@
 #include <Immie/Movement/ImmieMovementComponent.h>
 #include <Immie/Controller/Player/ImmiePlayerController.h>
 #include <Immie/Type/ImmieType.h>
+#include <Immie/Battle/UI/ImmieBattleHud.h>
 
 AImmieCharacter::AImmieCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UImmieMovementComponent>(ACharacter::CharacterMovementComponentName))
@@ -217,6 +218,22 @@ void AImmieCharacter::AddAbilityCollider(UPrimitiveComponent* AbilityCollider)
 	AbilityColliders.Add(AbilityCollider);
 }
 
+void AImmieCharacter::CreateBattleHud()
+{
+	if (!IsValid(BattleHudClass)) {
+		return;
+	}
+
+	iLog(BattleHudClass->GetName());
+
+	AImmiePlayerController* ImmieController = Cast<AImmiePlayerController>(GetController());
+	checkf(ImmieController, TEXT("Attempting to create a battle hud using an invalid immie player controller"));
+
+	BattleHud = CreateWidget<UImmieBattleHud>(ImmieController, BattleHudClass);
+	BattleHud->SetImmieCharacter(this);
+	BattleHud->AddToViewport(100);
+}
+
 void AImmieCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -291,6 +308,11 @@ void AImmieCharacter::PossessForBattle(AController* NewController)
 
 void AImmieCharacter::ClientPossessedByPlayerController_Implementation(AImmiePlayerController* PlayerController)
 {
+	if (IsControlledByLocalPlayer()) {
+		CreateBattleHud();
+	}
+
+
 	BP_ClientPossessedByPlayerController(PlayerController);
 }
 
@@ -450,6 +472,12 @@ bool AImmieCharacter::BP_AllClientBattleSubobjectsValid_Implementation()
 ABattleInstance* AImmieCharacter::GetBattleInstance() const
 {
 	return Team->GetBattleInstance();
+}
+
+bool AImmieCharacter::IsControlledByLocalPlayer() const
+{
+	AImmiePlayerController* ImmieController = Cast<AImmiePlayerController>(GetController());
+	return ImmieController != nullptr && ImmieController == GetBattleInstance()->GetLocalPlayerController();
 }
 
 UDamageComponent* AImmieCharacter::GetDamageComponent() const

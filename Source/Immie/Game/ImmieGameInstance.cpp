@@ -35,6 +35,8 @@ void UImmieGameInstance::InitializeGameDataManagers()
 
 void UImmieGameInstance::Init()
 {
+	Super::Init();
+
 	_ImmieGameInstance = this;
 	InitializeGameDataManagers();
 

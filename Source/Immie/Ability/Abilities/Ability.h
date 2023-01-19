@@ -254,5 +254,12 @@ public:
 		/**/
 		FORCEINLINE TArray<UImmieType*> GetType() const { return Type; }
 
+	UFUNCTION(BlueprintPure)
+		/**/
+		FORCEINLINE float GetCurrentCooldown() const { return CurrentCooldown; }
+
+	UFUNCTION(BlueprintPure)
+		/**/
+		FORCEINLINE int GetCurrentUses() const { return CurrentUses; }
 
 };
