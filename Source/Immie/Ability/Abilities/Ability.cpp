@@ -27,6 +27,8 @@ UAbility::UAbility()
 	AbilityId = INVALID_ABILITY_ID;
 	bInputHeld = false; 
 	CurrentDelay = 0;
+	CurrentCooldown = 0;
+	CurrentUses = 0;
 }
 
 void UAbility::BeginPlay()
@@ -144,9 +146,12 @@ void UAbility::InformClientsInputPress_Implementation()
 
 void UAbility::BP_OnInputPress_Implementation(bool HasBattleAuthority, FAbilityFlags AbilityFlags)
 {
-	if (HasBattleAuthority) {
+	if (!CanAbilityBeUsed()) return;
+	DecrementUses();
+	if (!HasBattleAuthority) return;
+
+	if (AbilityFlags.Projectile) {
 		AAbilityActor* actor = SpawnAbilityActor(GetImmieCharacter()->GetTransform());
-		//actor->DestroyAbilityActor();
 	}
 }
 
@@ -199,6 +204,27 @@ AAbilityActor* UAbility::SpawnAbilityActorFromClass(TSubclassOf<AAbilityActor> A
 	return GetTeam()->SpawnAbilityActor(AbilityActorClass, this, SpawnTransform);
 }
 
+void UAbility::DecrementUses()
+{
+	CurrentUses -= 1;
+	if (CurrentUses < 0) {
+		CurrentUses = 0;
+	}
+
+	CurrentCooldown = GetMaxCooldown();
+}
+
+void UAbility::StepCooldown(float DeltaTime)
+{
+	if (CurrentCooldown <= 0) return;
+
+	CurrentCooldown -= DeltaTime;
+	if (CurrentCooldown <= 0) {
+		CurrentCooldown = 0;
+		CurrentUses = GetMaxUses();
+	}
+}
+
 float UAbility::TimeDamageMultiplier_Implementation(float ElapsedTime) const
 {
 	return 1;
@@ -206,16 +232,24 @@ float UAbility::TimeDamageMultiplier_Implementation(float ElapsedTime) const
 
 void UAbility::AuthorityBattleTick(float DeltaTime)
 {
+	StepCooldown(DeltaTime);
 }
 
 void UAbility::ClientBattleTick(float DeltaTime)
 {
+	StepCooldown(DeltaTime);
+}
+
+bool UAbility::CanAbilityBeUsed_Implementation() const
+{
+	if (CurrentUses > 0) {
+		return true;
+	}
+	return false;
 }
 
 AImmieCharacter* UAbility::GetImmieCharacter() const
 {
-	//return Cast<AImmieCharacter>(GetOwner());
-	// Avoid the overhead from above.
 	return (AImmieCharacter*)GetOwner();
 }
 

@@ -54,7 +54,6 @@ void ADummyAbilityActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	FVector location = GetActorLocation();
-	iLog("Dummy location: " + location.ToString(), LogVerbosity_Display, 0);
 }
 
 void ADummyAbilityActor::OnAbilityActorDestroy()

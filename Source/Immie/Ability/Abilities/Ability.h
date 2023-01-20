@@ -94,7 +94,7 @@ protected:
 		void InformClientsInputPress();
 
 	UFUNCTION(BlueprintNativeEvent, DisplayName = "On Input Press")
-		/**/
+		/* By default, this decrements the amount of uses this ability has on both authority and non-authority sides. */
 		void BP_OnInputPress(bool HasBattleAuthority, FAbilityFlags AbilityFlags);
 
 	/* Execute what should happen when this ability input is released. */
@@ -119,6 +119,12 @@ protected:
 	UFUNCTION(BlueprintCallable)
 		/* Spawns and initializes an ability actor from a provided class. */
 		AAbilityActor* SpawnAbilityActorFromClass(TSubclassOf<AAbilityActor> AbilityActorClass, const FTransform& SpawnTransform);
+
+	UFUNCTION(BlueprintCallable)
+		/**/
+		void DecrementUses();
+
+	void StepCooldown(float DeltaTime);
 
 public:	
 
@@ -149,6 +155,10 @@ public:
 	UFUNCTION(BlueprintPure, BlueprintNativeEvent)
 		/* Damage or healing multiplier for damage components by damage or healing instigated by this ability. */
 		float TimeDamageMultiplier(float ElapsedTime) const;
+
+	UFUNCTION(BlueprintPure, BlueprintNativeEvent)
+		/**/
+		bool CanAbilityBeUsed() const;
 
 	UFUNCTION(BlueprintPure)
 		/* Get the id number of this ability. */

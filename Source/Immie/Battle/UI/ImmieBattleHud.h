@@ -85,7 +85,7 @@ public:
 		/**/
 		FString GetAbilityCurrentCooldownString(const UAbility* Ability) const;
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category = "Immie")
 		/**/
 		FLinearColor GetColorForImmieHealth() const;
 
