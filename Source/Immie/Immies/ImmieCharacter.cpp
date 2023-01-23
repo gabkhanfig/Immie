@@ -56,6 +56,7 @@ AImmieCharacter::AImmieCharacter(const FObjectInitializer& ObjectInitializer)
 	bEnabled = true;
 	Abilities.Reserve(MAX_ABILITY_COUNT);
 	Team = nullptr;
+	BattleHud = nullptr;
 
 	// TODO remove this later
 	AbilityColliders.Add(GetCapsuleComponent());
@@ -126,6 +127,8 @@ void AImmieCharacter::Tick(float DeltaTime)
 
 void AImmieCharacter::AuthorityBattleTick(float DeltaTime)
 {
+	// Is already checked for if is alive by battle team. 
+
 	AuthorityBattleTickComponents(DeltaTime);
 	if (!IsRunningDedicatedServer()) {
 		UpdateVisuals();
@@ -178,7 +181,6 @@ void AImmieCharacter::DecreaseHealth(float Amount)
 	ActiveStats.Health -= Amount;
 	if (ActiveStats.Health < 0) {
 		ActiveStats.Health = 0;
-		iLog("Immie dead");
 	}
 }
 
@@ -312,7 +314,6 @@ void AImmieCharacter::ClientPossessedByPlayerController_Implementation(AImmiePla
 		CreateBattleHud();
 	}
 
-
 	BP_ClientPossessedByPlayerController(PlayerController);
 }
 
@@ -322,10 +323,8 @@ void AImmieCharacter::UnPossessForBattle()
 		return;
 	}
 
-	const bool IsPlayerController = GetController()->IsPlayerController();
-	if (IsPlayerController) {
-		AImmiePlayerController* ImmiePlayerController = Cast<AImmiePlayerController>(GetController());
-		ClientPossessedByPlayerController(ImmiePlayerController);
+	AImmiePlayerController* ImmiePlayerController = Cast<AImmiePlayerController>(GetController());
+	if (IsValid(ImmiePlayerController)) {
 	}
 	GetController()->UnPossess();
 }
@@ -452,6 +451,14 @@ bool AImmieCharacter::AllClientBattleSubobjectsValid()
 	
 	const bool IsValidBlueprintSubobjects = BP_AllClientBattleSubobjectsValid();
 	return IsValidBlueprintSubobjects;
+}
+
+void AImmieCharacter::OnRemoveFromBattle()
+{
+	if (IsValid(BattleHud)) {
+		BattleHud->RemoveFromParent();
+	}
+	BattleHud = nullptr;
 }
 
 int AImmieCharacter::GetSpecieId() const

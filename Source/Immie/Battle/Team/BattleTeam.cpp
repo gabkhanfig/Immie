@@ -23,6 +23,7 @@ ABattleTeam::ABattleTeam()
 	SetActorEnableCollision(false);
 
 	ActiveImmie = nullptr;
+	bTeamAlive = true;
 }
 
 void ABattleTeam::BeginPlay()
@@ -40,9 +41,42 @@ void ABattleTeam::CreateTeamFromImmies(const TArray<UImmie*>& TeamImmies)
 	}
 }
 
+TArray<AImmieCharacter*> ABattleTeam::AllBattleReadyImmies(bool IncludeActiveImmie) const
+{
+	TArray<AImmieCharacter*> Immies;
+	for (int i = 0; i < Team.Num(); i++) {
+		AImmieCharacter* Immie = Team[i];
+		if (IncludeActiveImmie) {
+			if (Immie == ActiveImmie) continue;
+		}
+
+		if (Immie->GetCurrentHealth() > 0) {
+			Immies.Add(Immie);
+		}
+	}
+	return Immies;
+}
+
+bool ABattleTeam::SwapInNextImmie()
+{
+	RemoveActiveImmieFromBattle();
+	const TArray<AImmieCharacter*> BattleReadyImmies = AllBattleReadyImmies(false);
+	if (BattleReadyImmies.Num() == 0) return false;
+	SetImmieForBattle(BattleReadyImmies[0]);
+	return true;
+}
+
 void ABattleTeam::AuthorityBattleTickBattleActors(float DeltaTime)
 {
-	ActiveImmie->AuthorityBattleTick(DeltaTime);
+	const bool ActiveImmieAlive = ActiveImmie->GetCurrentHealth() > 0;
+	if (ActiveImmieAlive) {
+		ActiveImmie->AuthorityBattleTick(DeltaTime);
+	}
+	else {
+		if (!SwapInNextImmie()) {
+			bTeamAlive = false;
+		}
+	}
 
 	for (int i = 0; i < AbilityActors.Num(); i++) {
 		// Should be valid
@@ -177,6 +211,7 @@ void ABattleTeam::RemoveActiveImmieFromBattle()
 		return;
 	}
 
+	ActiveImmie->OnRemoveFromBattle();
 	ActiveImmie->UnPossessForBattle();
 	ActiveImmie->SetImmieEnabled(false);
 	SetActiveImmie(nullptr);

@@ -39,6 +39,12 @@ void AImmieGameMode::StartSingleplayerBattle()
 		Immie->SetDisplayName("some display name idk");
 		Immie->SetHealth(10000);
 		Team.Team.Add(Immie);
+
+		UImmie* Immie2 = UImmie::NewImmieObject(this, 0);
+		Immie2->SetDisplayName("oh my");
+		Immie2->SetHealth(10000);
+		Team.Team.Add(Immie2);
+
 		Team.TeamType = EBattleTeamType::BattleTeam_PlayerSingleplayer;
 		Teams.Add(Team);
 	}

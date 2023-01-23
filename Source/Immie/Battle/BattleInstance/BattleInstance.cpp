@@ -193,8 +193,18 @@ void ABattleInstance::SetFirstImmiesForBattle()
 
 void ABattleInstance::AuthorityBattleTick(float DeltaTime)
 {
+	int AliveTeamCount = 0;
 	for (int i = 0; i < Teams.Num(); i++) {
+		if (!Teams[i]->IsTeamAlive()) {
+			//iLog("team isn't alive. not authority ticking it");
+			continue;
+		}
+
+		AliveTeamCount++;
 		Teams[i]->AuthorityBattleTick(DeltaTime);
+	}
+	if (AliveTeamCount == 0) {
+		iLog("dead teams");
 	}
 }
 

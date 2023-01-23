@@ -94,7 +94,8 @@ protected:
 		void InformClientsInputPress();
 
 	UFUNCTION(BlueprintNativeEvent, DisplayName = "On Input Press")
-		/* By default, this decrements the amount of uses this ability has on both authority and non-authority sides. */
+		/* By default, this decrements the amount of uses this ability has on both authority and non-authority sides. 
+		Executes if the ability can be used, given whatever conditions is set by the ability object. See CanAbilityBeUsed Blueprint Native Event. */
 		void BP_OnInputPress(bool HasBattleAuthority, FAbilityFlags AbilityFlags);
 
 	/* Execute what should happen when this ability input is released. */
@@ -109,7 +110,7 @@ protected:
 		void InformClientsInputRelease();
 
 	UFUNCTION(BlueprintNativeEvent, DisplayName = "On Input Release")
-		/* Blueprint sided handling for when this ability has it's input released. Executes on all clients and server. Ensure checking correct battle authority. See UAbility::HasBattleAuthority() */
+		/* Blueprint sided handling for when this ability has it's input released. Executes on all clients and server. */
 		void BP_OnInputRelease(bool HasBattleAuthority, FAbilityFlags AbilityFlags);
 
 	UFUNCTION(BlueprintCallable)
@@ -121,10 +122,23 @@ protected:
 		AAbilityActor* SpawnAbilityActorFromClass(TSubclassOf<AAbilityActor> AbilityActorClass, const FTransform& SpawnTransform);
 
 	UFUNCTION(BlueprintCallable)
-		/**/
+		/* Should only execute on battle authority side. Decrements the amount of uses, and sets the current cooldown to be the max cooldown. */
 		void DecrementUses();
 
 	void StepCooldown(float DeltaTime);
+
+	UFUNCTION(NetMulticast, Reliable)
+		/**/
+		void SetCurrentUses(int NewCurrentUses);
+
+	UFUNCTION(NetMulticast, Reliable)
+		/**/
+		void SetCurrentCooldown(float NewCurrentCooldown);
+
+	UFUNCTION(BlueprintImplementableEvent, DisplayName = "On Immie Character Disable")
+		/* Blueprint sided execution */
+		void BP_OnImmieCharacterDisable();
+
 
 public:	
 
@@ -159,6 +173,10 @@ public:
 	UFUNCTION(BlueprintPure, BlueprintNativeEvent)
 		/**/
 		bool CanAbilityBeUsed() const;
+
+	UFUNCTION(BlueprintCallable)
+		/**/
+		void OnImmieCharacterDisable();
 
 	UFUNCTION(BlueprintPure)
 		/* Get the id number of this ability. */

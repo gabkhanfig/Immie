@@ -37,6 +37,9 @@ private:
 
 	TArray<AAbilityActor*> AbilityActors;
 
+	/* If the team is current alive. */
+	uint8 bTeamAlive : 1;
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -72,6 +75,16 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, DisplayName = "Sync To Clients")
 		/* Blueprint sided client syncing. Check ABattleTeam::SyncToClients() to see what is already handled. */
 		void BP_SyncClientTeam();
+
+	UFUNCTION(BlueprintPure)
+		/**/
+		TArray<AImmieCharacter*> AllBattleReadyImmies(bool IncludeActiveImmie = false) const;
+
+	UFUNCTION(BlueprintCallable)
+		/**/
+		bool SwapInNextImmie();
+
+
 
 public:	
 
@@ -134,6 +147,10 @@ public:
 	UFUNCTION(BlueprintPure)
 		/**/
 		FORCEINLINE AImmieCharacter* GetImmieCharacter(int Index) const { return Team[Index]; }
+
+	UFUNCTION(BlueprintPure)
+		/**/
+		FORCEINLINE bool IsTeamAlive() const { return bTeamAlive; }
 
 
 

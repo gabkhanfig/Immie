@@ -98,14 +98,6 @@ void UAbility::SyncToClients()
 	BP_SyncToClients();
 }
 
-void UAbility::InputPress()
-{
-	ExecuteInputPress();
-	if (!HasBattleAuthority()) {
-		ServerInputPress();
-	}
-}
-
 void UAbility::SyncClientAbilityData_Implementation(int _AbilityId, FBattleStats _InitialStats, FBattleStats _ActiveStats, const TArray<UImmieType*>& _Type, float _CurrentCooldown, int _CurrentUses, float _CurrentDelay)
 {
 	AbilityId = _AbilityId;
@@ -116,6 +108,17 @@ void UAbility::SyncClientAbilityData_Implementation(int _AbilityId, FBattleStats
 	CurrentCooldown = _CurrentCooldown;
 	CurrentUses = _CurrentUses;
 	CurrentDelay = _CurrentDelay;
+}
+
+void UAbility::InputPress()
+{
+	//ExecuteInputPress();
+	if (!HasBattleAuthority()) {
+		ServerInputPress();
+	}
+	else {
+		ExecuteInputPress();
+	}
 }
 
 void UAbility::ExecuteInputPress()
@@ -137,31 +140,36 @@ void UAbility::InformClientsInputPress_Implementation()
 	}
 
 	// If this is multicasted back to the player who made the rpc originally, do not continue
-	if (Cast<AController>(GetBattleInstance()->GetLocalPlayerController()) == GetImmieCharacter()->GetController()) {
-		return;
+	//if (Cast<AController>(GetBattleInstance()->GetLocalPlayerController()) == GetImmieCharacter()->GetController()) {
+	//	return;
+	//}
+	if (CanAbilityBeUsed()) {
+		ExecuteInputPress();
 	}
-
-	ExecuteInputPress();
 }
 
 void UAbility::BP_OnInputPress_Implementation(bool HasBattleAuthority, FAbilityFlags AbilityFlags)
 {
-	if (!CanAbilityBeUsed()) return;
-	DecrementUses();
+	//if (!CanAbilityBeUsed()) return;
 	if (!HasBattleAuthority) return;
+
+	DecrementUses();
 
 	if (AbilityFlags.Projectile) {
 		AAbilityActor* actor = SpawnAbilityActor(GetImmieCharacter()->GetTransform());
 	}
+	//FDateTime t = FDateTime::UtcNow();
+	//iLog(t.ToString());
 }
 
 void UAbility::InputRelease()
 {
-	ExecuteInputRelease();
 	if (!HasBattleAuthority()) {
 		ServerInputRelease();
 	}
-
+	else {
+		ExecuteInputRelease();
+	}
 }
 
 void UAbility::ExecuteInputRelease()
@@ -183,9 +191,9 @@ void UAbility::InformClientsInputRelease_Implementation()
 	}
 
 	// If this is multicasted back to the player who made the rpc originally, do not continue
-	if (Cast<AController>(GetBattleInstance()->GetLocalPlayerController()) == GetImmieCharacter()->GetController()) {
-		return;
-	}
+	//if (Cast<AController>(GetBattleInstance()->GetLocalPlayerController()) == GetImmieCharacter()->GetController()) {
+	//	return;
+	//}
 
 	ExecuteInputRelease();
 }
@@ -206,23 +214,35 @@ AAbilityActor* UAbility::SpawnAbilityActorFromClass(TSubclassOf<AAbilityActor> A
 
 void UAbility::DecrementUses()
 {
-	CurrentUses -= 1;
-	if (CurrentUses < 0) {
-		CurrentUses = 0;
-	}
-
-	CurrentCooldown = GetMaxCooldown();
+	SetCurrentUses(FMath::Max(0, CurrentUses - 1));
+	SetCurrentCooldown(GetMaxCooldown());
 }
 
 void UAbility::StepCooldown(float DeltaTime)
 {
 	if (CurrentCooldown <= 0) return;
 
-	CurrentCooldown -= DeltaTime;
-	if (CurrentCooldown <= 0) {
-		CurrentCooldown = 0;
-		CurrentUses = GetMaxUses();
+	float NewCurrentCooldown = CurrentCooldown;
+
+	NewCurrentCooldown -= DeltaTime;
+	if (NewCurrentCooldown > 0) {
+		SetCurrentCooldown(NewCurrentCooldown);
+		return;
 	}
+	else {
+		SetCurrentCooldown(0);
+		SetCurrentUses(GetMaxUses());
+	}
+}
+
+void UAbility::SetCurrentUses_Implementation(int NewCurrentUses)
+{
+	CurrentUses = NewCurrentUses;
+}
+
+void UAbility::SetCurrentCooldown_Implementation(float NewCurrentCooldown)
+{
+	CurrentCooldown = NewCurrentCooldown;
 }
 
 float UAbility::TimeDamageMultiplier_Implementation(float ElapsedTime) const
@@ -237,7 +257,6 @@ void UAbility::AuthorityBattleTick(float DeltaTime)
 
 void UAbility::ClientBattleTick(float DeltaTime)
 {
-	StepCooldown(DeltaTime);
 }
 
 bool UAbility::CanAbilityBeUsed_Implementation() const
@@ -246,6 +265,13 @@ bool UAbility::CanAbilityBeUsed_Implementation() const
 		return true;
 	}
 	return false;
+}
+
+void UAbility::OnImmieCharacterDisable()
+{
+	bInputHeld = false;
+	CurrentDelay = 0;
+	BP_OnImmieCharacterDisable();
 }
 
 AImmieCharacter* UAbility::GetImmieCharacter() const
