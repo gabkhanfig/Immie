@@ -226,8 +226,6 @@ void AImmieCharacter::CreateBattleHud()
 		return;
 	}
 
-	iLog(BattleHudClass->GetName());
-
 	AImmiePlayerController* ImmieController = Cast<AImmiePlayerController>(GetController());
 	checkf(ImmieController, TEXT("Attempting to create a battle hud using an invalid immie player controller"));
 

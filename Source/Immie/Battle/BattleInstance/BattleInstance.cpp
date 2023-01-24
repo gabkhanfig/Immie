@@ -203,8 +203,9 @@ void ABattleInstance::AuthorityBattleTick(float DeltaTime)
 		AliveTeamCount++;
 		Teams[i]->AuthorityBattleTick(DeltaTime);
 	}
-	if (AliveTeamCount == 0) {
-		iLog("dead teams");
+	if (AliveTeamCount == 1 || AliveTeamCount == 0) {
+		// win
+		IncrementBattleStep();
 	}
 }
 
@@ -233,14 +234,12 @@ void ABattleInstance::AuthorityBattleStepSpawned_Implementation()
 
 void ABattleInstance::AuthorityBattleStepCreateManagers_Implementation()
 {
-	iLog("creating managers");
 	CreateBattleManagers();
 	IncrementBattleStep();
 }
 
 void ABattleInstance::AuthorityBattleStepInitializeManagers_Implementation()
 {
-	iLog("initializing managers");
 	InitializeBattleManagers();
 
 	// Don't need to perform client syncing if not networked.
@@ -255,7 +254,6 @@ void ABattleInstance::AuthorityBattleStepInitializeManagers_Implementation()
 
 void ABattleInstance::AuthorityBattleStepSetClientManagers_Implementation()
 {
-	iLog("setting client managers");
 	SetClientManagers(BattleTypeManager, BattleAbilityManager, BattleSpecieManager);
 	IncrementBattleStep();
 }
@@ -263,7 +261,6 @@ void ABattleInstance::AuthorityBattleStepSetClientManagers_Implementation()
 void ABattleInstance::AuthorityBattleStepSyncClientManagers_Implementation()
 {
 	if (AllClientsHaveValidManagers()) {
-		iLog("Clients have valid managers. Syncing");
 		SyncClientManagers();
 		IncrementBattleStep();
 	}
@@ -271,14 +268,12 @@ void ABattleInstance::AuthorityBattleStepSyncClientManagers_Implementation()
 
 void ABattleInstance::AuthorityBattleStepCreateTeams_Implementation()
 {
-	iLog("creating teams");
 	CreateTeams();
 	IncrementBattleStep();
 }
 
 void ABattleInstance::AuthorityBattleStepInitializeTeams_Implementation()
 {
-	iLog("initializing teams");
 	InitializeTeams();
 
 	// Don't need to perform client syncing if not networked.
@@ -293,7 +288,6 @@ void ABattleInstance::AuthorityBattleStepInitializeTeams_Implementation()
 
 void ABattleInstance::AuthorityBattleStepSetClientTeams_Implementation()
 {
-	iLog("setting client teams");
 	SetClientTeams(Teams);
 	for (int i = 0; i < Teams.Num(); i++) {
 		Teams[i]->SetClientSubobjects();
@@ -311,7 +305,6 @@ void ABattleInstance::AuthorityBattleStepSyncClientTeams_Implementation()
 
 void ABattleInstance::AuthorityBattleStepFinalizeInitialization_Implementation()
 {
-	iLog("finalizing initialization");
 	FinalizeInitialization();
 }
 
@@ -328,6 +321,21 @@ void ABattleInstance::AuthorityBattleStepBattleRunning_Implementation(float Delt
 
 void ABattleInstance::AuthorityBattleStepEndBattle_Implementation()
 {
+	// At this point, only one or zero teams should be alive.
+	int WinningTeam = -1;
+	for (int i = 0; i < Teams.Num(); i++) {
+		if (Teams[i]->IsTeamAlive()) {
+			WinningTeam = i;
+			break;
+		}
+	}
+
+	for (int i = 0; i < Teams.Num(); i++) {
+		ABattleTeam* Team = Teams[i];
+		Team->OnBattleEnd(WinningTeam == i);
+		Team->Destroy();
+	}
+	IncrementBattleStep();
 }
 
 void ABattleInstance::AuthorityBattleStepDestroy_Implementation()
@@ -551,10 +559,15 @@ ABattleInstance* ABattleInstance::NewBattleInstance(AActor* _Owner, FName Battle
 void ABattleInstance::BattleInit(const TArray<FBattleTeamInit>& _InitTeams)
 {
 	InitTeams = _InitTeams;
-
 	const int TeamCount = InitTeams.Num();
-	Teams.Reserve(TeamCount);
 
+	if (TeamCount < 2) {
+		iLog("Amount of teams for a battle cannot be less than 2!", LogVerbosity_Error);
+		Destroy();
+		return;
+	}
+
+	Teams.Reserve(TeamCount);
 	if (bNetworkBattle) {
 		ClientsValidSpawnedManagers.Init(false, TeamCount);
 		ClientsValidTeamObjects.Init(false, TeamCount);

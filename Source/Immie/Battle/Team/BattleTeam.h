@@ -128,9 +128,17 @@ public:
 		/* Client sided battle ticking for this team and the actors and objects it owns. By default calls ticking on them. Can be overridden in blueprints. */
 		void ClientBattleTick(float DeltaTime);
 
+	UFUNCTION(BlueprintCallable)
+		/**/
+		void DestroyBattleActors();
+
+	UFUNCTION(BlueprintCallable)
+		/**/
+		void OnBattleEnd(bool Winner);
+
 	UFUNCTION(BlueprintPure)
 		/* Returns the type of team this is. Override this for all blueprint child classes. */
-		EBattleTeamType GetBattleTeamType();
+		TEnumAsByte<EBattleTeamType> GetBattleTeamType() const { return TeamType; };
 
 	UFUNCTION(BlueprintPure)
 		/**/

@@ -18,7 +18,6 @@ AImmieGameMode::AImmieGameMode()
 void AImmieGameMode::BeginPlay()
 {
 	Super::BeginPlay();
-	iLog("immie game mode sayin hello!");
 }
 
 void AImmieGameMode::Tick(float DeltaTime)
@@ -30,7 +29,6 @@ void AImmieGameMode::Tick(float DeltaTime)
 
 void AImmieGameMode::StartSingleplayerBattle()
 {
-	iLog("Gonna start the singleplayer battle");
 	ABattleInstance* Battle = ABattleInstance::NewBattleInstance(this, "Singleplayer", { 0, 0, 0 }); 
 	TArray<FBattleTeamInit> Teams;
 	for (int i = 0; i < 2; i++) {
@@ -40,10 +38,10 @@ void AImmieGameMode::StartSingleplayerBattle()
 		Immie->SetHealth(10000);
 		Team.Team.Add(Immie);
 
-		UImmie* Immie2 = UImmie::NewImmieObject(this, 0);
-		Immie2->SetDisplayName("oh my");
-		Immie2->SetHealth(10000);
-		Team.Team.Add(Immie2);
+		//UImmie* Immie2 = UImmie::NewImmieObject(this, 0);
+		//Immie2->SetDisplayName("oh my");
+		//Immie2->SetHealth(10000);
+		//Team.Team.Add(Immie2);
 
 		Team.TeamType = EBattleTeamType::BattleTeam_PlayerSingleplayer;
 		Teams.Add(Team);
