@@ -61,7 +61,7 @@ protected:
 		uint8 bUseOverride : 1;
 
 	UPROPERTY(BlueprintReadWrite)
-		/* If the battle is currently paused or not. */
+		/* If the battle is currently paused or not. TODO implement. */
 		uint8 bPaused : 1;
 
 	UPROPERTY(BlueprintReadWrite)

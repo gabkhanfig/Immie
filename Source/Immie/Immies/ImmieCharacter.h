@@ -188,6 +188,10 @@ protected:
 	/* Sets BattleHud to a valid instance. */
 	void CreateBattleHud();
 
+	UFUNCTION(NetMulticast, Reliable)
+		/**/
+		void UpdateActiveStats(FBattleStats NewActiveStats);
+
 public:	
 
 	AImmieCharacter(const FObjectInitializer& ObjectInitializer);

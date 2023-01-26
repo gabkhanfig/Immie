@@ -275,19 +275,24 @@ void ABattleTeam::DestroyBattleActors()
 	}
 }
 
-void ABattleTeam::OnBattleEnd(bool Winner)
+void ABattleTeam::OnBattleEnd_Implementation(bool Winner)
 {
-	DestroyBattleActors();
+	if (HasAuthority()) {
+		DestroyBattleActors();
+	}
+
 	AImmiePlayerController* AsPlayerController = Cast<AImmiePlayerController>(Controller);
 	const bool IsLocalPlayer = AsPlayerController && AsPlayerController == GetBattleInstance()->GetLocalPlayerController();
 	if (!IsLocalPlayer) {
 		return;
 	}
 
-	if (Winner) {
-		iLog("Winner!");
-	}
-	else {
-		iLog("not win :<");
-	}
+	if (!IsRunningDedicatedServer()) {
+		if (Winner) {
+			iLog("Winner!");
+		}
+		else {
+			iLog("not win :<");
+		}
+	}		
 }

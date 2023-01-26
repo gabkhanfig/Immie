@@ -330,6 +330,14 @@ void ABattleInstance::AuthorityBattleStepEndBattle_Implementation()
 		}
 	}
 
+	if (WinningTeam == -1) {
+		ULogger::Log("Battle has ended. Draw!");
+	}
+	else {
+		ULogger::Log("Battle has ended. Winning Team: " + FString::FromInt(WinningTeam));
+	}
+	
+
 	for (int i = 0; i < Teams.Num(); i++) {
 		ABattleTeam* Team = Teams[i];
 		Team->OnBattleEnd(WinningTeam == i);

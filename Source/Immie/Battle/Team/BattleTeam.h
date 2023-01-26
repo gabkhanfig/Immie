@@ -132,7 +132,7 @@ public:
 		/**/
 		void DestroyBattleActors();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, NetMulticast, Reliable)
 		/**/
 		void OnBattleEnd(bool Winner);
 

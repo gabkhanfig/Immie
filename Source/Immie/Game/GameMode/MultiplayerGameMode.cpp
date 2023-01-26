@@ -62,6 +62,13 @@ void AMultiplayerGameMode::StartMultiplayerBattle()
 		ULogger::Log("Successfully parsed team");
 		BattleTeams.Add(BattleTeam);
 	}
+	FBattleTeamInit Team;
+	UImmie* Immie = UImmie::NewImmieObject(this, 0);
+	Immie->SetDisplayName("some display name idk");
+	Immie->SetHealth(10000);
+	Team.Team.Add(Immie);
+	Team.TeamType = EBattleTeamType::BattleTeam_PlayerSingleplayer;
+	BattleTeams.Add(Team);
 
 	Battle->BattleInit(BattleTeams);
 }

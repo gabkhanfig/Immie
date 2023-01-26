@@ -127,11 +127,22 @@ void AImmieCharacter::Tick(float DeltaTime)
 
 void AImmieCharacter::AuthorityBattleTick(float DeltaTime)
 {
+	FBattleStats PreviousActiveStats = ActiveStats;
+
 	// Is already checked for if is alive by battle team. 
 
 	AuthorityBattleTickComponents(DeltaTime);
 	if (!IsRunningDedicatedServer()) {
 		UpdateVisuals();
+	}
+
+	if (
+		ActiveStats.Health != PreviousActiveStats.Health ||
+		ActiveStats.Attack != PreviousActiveStats.Attack ||
+		ActiveStats.Defense != PreviousActiveStats.Defense ||
+		ActiveStats.Speed != PreviousActiveStats.Speed) 
+	{
+		UpdateActiveStats(ActiveStats);
 	}
 }
 
@@ -232,6 +243,11 @@ void AImmieCharacter::CreateBattleHud()
 	BattleHud = CreateWidget<UImmieBattleHud>(ImmieController, BattleHudClass);
 	BattleHud->SetImmieCharacter(this);
 	BattleHud->AddToViewport(100);
+}
+
+void AImmieCharacter::UpdateActiveStats_Implementation(FBattleStats NewActiveStats)
+{
+	ActiveStats = NewActiveStats;
 }
 
 void AImmieCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
