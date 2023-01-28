@@ -37,6 +37,14 @@ enum EBattleStep
 	BattleStep_Destroy = 13							UMETA(DisplayName = "Destroy")
 };
 
+UENUM(BlueprintType)
+enum EBattleTeamWinState
+{
+	BattleTeamWinState_Win UMETA(DisplayName = "Win"),
+	BattleTeamWinState_Lose UMETA(DisplayName = "Lose"),
+	BattleTeamWinState_Draw UMETA(DisplayName = "Draw"),
+};
+
 USTRUCT(BlueprintType)
 struct FBattleTeamInit 
 {

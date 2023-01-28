@@ -16,7 +16,8 @@ void UAbilityDataManager::SetAbilityNamesAndIds()
 	Index = AbilityNames.Add(AbilityName);\
 	AbilityIds.Add(AbilityName, Index);
 
-	DefineAbilityName("testAbility");
+	//DefineAbilityName("testAbility");
+	DefineAbilityName("fireball");
 }
 
 void UAbilityDataManager::LoadDefaultGameData()
@@ -42,7 +43,7 @@ FString UAbilityDataManager::LoadAbilityJsonFileToString(FName AbilityName, cons
 UClass* UAbilityDataManager::LoadAbilityDataObjectClass(FName AbilityName)
 {
 	const FString AbilityCapitalizedName = UStringUtils::ToUpperFirstLetter(AbilityName.ToString());
-	const FString DataObjectClassReferenceString = UAbilityDataObject::GetAbilitiesBlueprintFolder() + AbilityCapitalizedName + "/" + AbilityCapitalizedName + "DataObject_BP." + AbilityCapitalizedName + "DataObject_BP_C'";
+	const FString DataObjectClassReferenceString = UAbilityDataObject::GetAbilitiesBlueprintFolder() + AbilityCapitalizedName + "/BP_" + AbilityCapitalizedName + "DataObject.BP_" + AbilityCapitalizedName + "DataObject_C'";
 	UClass* DataObjectClass = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *DataObjectClassReferenceString));
 
 	if (!IsValid(DataObjectClass)) {

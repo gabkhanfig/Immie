@@ -37,7 +37,7 @@ void ABattleInstance::BeginPlay()
 	Super::BeginPlay();
 
 	if (IsRunningDedicatedServer()) {
-		check(bNetworkBattle);
+		checkf(bNetworkBattle, TEXT("Any battle instance running on a dedicated server must have the flag bNetworkBattle set to true"));
 		if (!bUseOverride) {
 			bUseOverride = true;
 		}
@@ -120,10 +120,9 @@ void ABattleInstance::CreateTeams()
 {
 	for (int i = 0; i < InitTeams.Num(); i++) {
 		UClass* TeamClass = GetBattleDataManager()->GetTeamClass(InitTeams[i].TeamType);
-		//check(TeamClass);
+		checkf(TeamClass, TEXT("Invalid battle team class for battle"));
 		FTransform SpawnTransform = FTransform(InitTeams[i].SpawnRotation, InitTeams[i].SpawnLocation, { 1, 1, 1 });
 		ABattleTeam* Team = GetWorld()->SpawnActorDeferred<ABattleTeam>(TeamClass, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-		//check(Team);
 		UGameplayStatics::FinishSpawningActor(Team, SpawnTransform);
 		Teams.Add(Team);
 	}
@@ -340,7 +339,17 @@ void ABattleInstance::AuthorityBattleStepEndBattle_Implementation()
 
 	for (int i = 0; i < Teams.Num(); i++) {
 		ABattleTeam* Team = Teams[i];
-		Team->OnBattleEnd(WinningTeam == i);
+		TEnumAsByte<EBattleTeamWinState> WinState;
+		if (WinningTeam == -1) {
+			WinState = EBattleTeamWinState::BattleTeamWinState_Draw;
+		}
+		else if (WinningTeam == i) {
+			WinState = EBattleTeamWinState::BattleTeamWinState_Win;
+		}
+		else {
+			WinState = EBattleTeamWinState::BattleTeamWinState_Lose;
+		}
+		Team->OnBattleEnd(WinState);
 		Team->Destroy();
 	}
 	IncrementBattleStep();

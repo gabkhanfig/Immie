@@ -42,7 +42,7 @@ FString USpecieDataManager::LoadSpecieJsonFileToString(FName SpecieName, const F
 UClass* USpecieDataManager::LoadSpecieDataObjectClass(FName SpecieName)
 {
 	const FString SpecieString = FName::NameToDisplayString(SpecieName.ToString(), false);
-	const FString DataObjectClassReferenceString = USpecieDataObject::GetImmiesBlueprintFolder() + SpecieString + "/" + SpecieString + "DataObject_BP." + SpecieString + "DataObject_BP_C'";
+	const FString DataObjectClassReferenceString = USpecieDataObject::GetImmiesBlueprintFolder() + SpecieString + "/BP_" + SpecieString + "DataObject.BP_" + SpecieString + "DataObject_C'";
 	UClass* DataObjectClass = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *DataObjectClassReferenceString));
 
 	if (!IsValid(DataObjectClass)) {

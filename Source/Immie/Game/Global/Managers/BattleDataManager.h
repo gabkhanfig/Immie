@@ -28,18 +28,18 @@ private:
 		/**/
 		TMap<TEnumAsByte<EBattleTeamType>, UClass*> TeamClasses;
 
-protected:
-
-	virtual void LoadDefaultGameData() override;
-
 public:
 
+	/**/
 	void RegisterBattleInstanceClasses(TMap<FName, UClass*>* MapOut);
 
-	void RegisterBattleInstanceClass(FName Name, const FString& ClassBlueprintName, TMap<FName, UClass*>* MapOut);
-
+	/**/
 	void RegisterTeamClasses(TMap<TEnumAsByte<EBattleTeamType>, UClass*>* MapOut);
 
+	/**/
+	void RegisterBattleInstanceClass(FName Name, const FString& ClassBlueprintName, TMap<FName, UClass*>* MapOut);
+
+	/**/
 	void RegisterTeamClass(TEnumAsByte<EBattleTeamType> TeamType, const FString& ClassBlueprintName, TMap<TEnumAsByte<EBattleTeamType>, UClass*>* MapOut);
 
 	UFUNCTION(BlueprintPure)
@@ -50,5 +50,8 @@ public:
 		/**/
 		UClass* GetTeamClass(TEnumAsByte<EBattleTeamType> TeamType);
 
+protected:
+
+	virtual void LoadDefaultGameData() override;
 
 };

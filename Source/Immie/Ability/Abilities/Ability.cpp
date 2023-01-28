@@ -25,10 +25,10 @@ UAbility::UAbility()
 	SetIsReplicatedByDefault(true);
 
 	AbilityId = INVALID_ABILITY_ID;
-	bInputHeld = false; 
-	CurrentDelay = 0;
+	bInputHeld = false;
 	CurrentCooldown = 0;
 	CurrentUses = 0;
+	HoldDuration = 0;
 }
 
 void UAbility::BeginPlay()
@@ -94,11 +94,11 @@ void UAbility::InitializeForBattle()
 
 void UAbility::SyncToClients()
 {
-	SyncClientAbilityData(AbilityId, InitialStats, ActiveStats, Type, CurrentCooldown, CurrentUses, CurrentDelay);
+	SyncClientAbilityData(AbilityId, InitialStats, ActiveStats, Type, CurrentCooldown, CurrentUses);
 	BP_SyncToClients();
 }
 
-void UAbility::SyncClientAbilityData_Implementation(int _AbilityId, FBattleStats _InitialStats, FBattleStats _ActiveStats, const TArray<UImmieType*>& _Type, float _CurrentCooldown, int _CurrentUses, float _CurrentDelay)
+void UAbility::SyncClientAbilityData_Implementation(int _AbilityId, FBattleStats _InitialStats, FBattleStats _ActiveStats, const TArray<UImmieType*>& _Type, float _CurrentCooldown, int _CurrentUses)
 {
 	AbilityId = _AbilityId;
 	AbilityDataObject = GetBattleInstance()->GetBattleAbilityManager()->GetAbilityDataObject(AbilityId);
@@ -107,7 +107,6 @@ void UAbility::SyncClientAbilityData_Implementation(int _AbilityId, FBattleStats
 	Type = _Type;
 	CurrentCooldown = _CurrentCooldown;
 	CurrentUses = _CurrentUses;
-	CurrentDelay = _CurrentDelay;
 }
 
 void UAbility::InputPress()
@@ -124,6 +123,7 @@ void UAbility::InputPress()
 void UAbility::ExecuteInputPress()
 {
 	bInputHeld = true;
+	HoldDuration = 0;
 	BP_OnInputPress(HasBattleAuthority(), GetAbilityFlags());
 }
 
@@ -174,7 +174,8 @@ void UAbility::InputRelease()
 
 void UAbility::ExecuteInputRelease()
 {
-	bInputHeld = false;
+	bInputHeld = false; 
+	HoldDuration = 0;
 	BP_OnInputRelease(HasBattleAuthority(), GetAbilityFlags());
 }
 
@@ -220,7 +221,7 @@ void UAbility::DecrementUses()
 
 void UAbility::StepCooldown(float DeltaTime)
 {
-	if (CurrentCooldown <= 0) return;
+	if (CurrentCooldown == 0) return;
 
 	float NewCurrentCooldown = CurrentCooldown;
 
@@ -252,11 +253,19 @@ float UAbility::TimeDamageMultiplier_Implementation(float ElapsedTime) const
 
 void UAbility::AuthorityBattleTick(float DeltaTime)
 {
+	if (bInputHeld) {
+		HoldDuration += DeltaTime;
+	}
 	StepCooldown(DeltaTime);
+	BP_AuthorityBattleTick(DeltaTime);
 }
 
 void UAbility::ClientBattleTick(float DeltaTime)
 {
+	if (bInputHeld) {
+		HoldDuration += DeltaTime;
+	}
+	BP_ClientBattleTick(DeltaTime);
 }
 
 bool UAbility::CanAbilityBeUsed_Implementation() const
@@ -270,7 +279,7 @@ bool UAbility::CanAbilityBeUsed_Implementation() const
 void UAbility::OnImmieCharacterDisable()
 {
 	bInputHeld = false;
-	CurrentDelay = 0;
+	HoldDuration = 0;
 	BP_OnImmieCharacterDisable();
 }
 

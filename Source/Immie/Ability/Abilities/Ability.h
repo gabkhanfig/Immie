@@ -53,8 +53,8 @@ protected:
 		int CurrentUses;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Battle|Input")
-		/**/
-		float CurrentDelay;
+		/* How long has the user input been held down. Kept track on server and client sides. */
+		float HoldDuration;
 
 protected:
 
@@ -68,8 +68,7 @@ protected:
 			FBattleStats _ActiveStats,
 			const TArray<UImmieType*>& _Type, 
 			float _CurrentCooldown, 
-			int _CurrentUses,
-			float _CurrentDelay
+			int _CurrentUses
 		);
 
 	UFUNCTION(BlueprintImplementableEvent, DisplayName = "Initialize For Battle")
@@ -139,6 +138,13 @@ protected:
 		/* Blueprint sided execution */
 		void BP_OnImmieCharacterDisable();
 
+	UFUNCTION(BlueprintImplementableEvent, DisplayName = "Authority Battle Tick")
+		/* Blueprint sided authority battle ticking. See UAbility::AuthorityBattleTick() for what is called prior to this event executing. */
+		void BP_AuthorityBattleTick(float DeltaTime);
+
+	UFUNCTION(BlueprintImplementableEvent, DisplayName = "Client Battle Tick")
+		/* Blueprint sided client battle ticking. See UAbility::ClientBattleTick() for what is called prior to this event executing. */
+		void BP_ClientBattleTick(float DeltaTime);
 
 public:	
 

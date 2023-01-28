@@ -40,6 +40,9 @@ class ADummyAbilityActor;
 
 UAbilityDataObject::UAbilityDataObject()
 {
+	AbilityClass = nullptr;
+	ActorClass = nullptr;
+	DummyActorClass = nullptr;
 }
 
 void UAbilityDataObject::LoadClasses()
@@ -51,19 +54,23 @@ void UAbilityDataObject::LoadClasses()
 
 	const FString AbilityCapitalizedName = UStringUtils::ToUpperFirstLetter(AbilityName.ToString());
 
-	const FString AbilityClassReferenceString = GetAbilitiesBlueprintFolder() + AbilityCapitalizedName + "/" + AbilityCapitalizedName + "_BP." + AbilityCapitalizedName + "_BP_C'";
+	const FString AbilityClassReferenceString = GetAbilitiesBlueprintFolder() + AbilityCapitalizedName + "/BP_" + AbilityCapitalizedName + ".BP_" + AbilityCapitalizedName + "_C'";
 	UClass* AbilityClassReference = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *AbilityClassReferenceString));
+	checkf(IsValid(AbilityClassReference), TEXT("Ability data object failed to load the required ability component UClass"));
+	ULogger::Log("Loaded UClass for ability component " + AbilityName.ToString());
 	AbilityClass = AbilityClassReference;
 
-	const FString ActorClassReferenceString = GetAbilitiesBlueprintFolder() + AbilityCapitalizedName + "/" + AbilityCapitalizedName + "Actor_BP." + AbilityCapitalizedName + "Actor_BP_C'";
+	const FString ActorClassReferenceString = GetAbilitiesBlueprintFolder() + AbilityCapitalizedName + "/BP_" + AbilityCapitalizedName + "Actor.BP_" + AbilityCapitalizedName + "Actor_C'";
 	UClass* ActorClassReference = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *ActorClassReferenceString));
 	if (IsValid(ActorClassReference)) {
+		ULogger::Log("Loaded UClass for ability actor " + AbilityName.ToString());
 		ActorClass = ActorClassReference;
 	}
 
-	const FString DummyActorClassReferenceString = GetAbilitiesBlueprintFolder() + AbilityCapitalizedName + "/Dummy" + AbilityCapitalizedName + "Actor_BP.Dummy" + AbilityCapitalizedName + "Actor_BP_C'";
+	const FString DummyActorClassReferenceString = GetAbilitiesBlueprintFolder() + AbilityCapitalizedName + "/BP_" + AbilityCapitalizedName + "DummyActor.BP_" + AbilityCapitalizedName + "DummyActor_C'";
 	UClass* DummyActorClassReference = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *DummyActorClassReferenceString));
 	if (IsValid(DummyActorClassReference)) {
+		ULogger::Log("Loaded UClass for dummy ability actor  " + AbilityName.ToString());
 		DummyActorClass = DummyActorClassReference;
 	}
 }

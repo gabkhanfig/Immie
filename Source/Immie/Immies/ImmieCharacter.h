@@ -189,7 +189,7 @@ protected:
 	void CreateBattleHud();
 
 	UFUNCTION(NetMulticast, Reliable)
-		/**/
+		/* Update active stats to all clients. */
 		void UpdateActiveStats(FBattleStats NewActiveStats);
 
 public:	

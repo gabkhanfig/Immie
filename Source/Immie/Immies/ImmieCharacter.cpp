@@ -136,12 +136,7 @@ void AImmieCharacter::AuthorityBattleTick(float DeltaTime)
 		UpdateVisuals();
 	}
 
-	if (
-		ActiveStats.Health != PreviousActiveStats.Health ||
-		ActiveStats.Attack != PreviousActiveStats.Attack ||
-		ActiveStats.Defense != PreviousActiveStats.Defense ||
-		ActiveStats.Speed != PreviousActiveStats.Speed) 
-	{
+	if (ActiveStats != PreviousActiveStats) {
 		UpdateActiveStats(ActiveStats);
 	}
 }

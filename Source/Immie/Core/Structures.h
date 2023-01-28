@@ -26,6 +26,18 @@ struct FBaseStats
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/**/
 		uint8 Speed;
+
+	bool operator == (const FBaseStats& other) {
+		return
+			Health == other.Health &&
+			Attack == other.Attack &&
+			Defense == other.Defense &&
+			Speed == other.Speed;
+	}
+
+	bool operator != (const FBaseStats& other) {
+		return !(*this == other);
+	}
 };
 
 USTRUCT(BlueprintType)
@@ -33,7 +45,7 @@ struct FBattleStats
 {
 	GENERATED_BODY()
 
-		UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/**/
 		float Health;
 
@@ -50,4 +62,16 @@ struct FBattleStats
 		float Speed;
 
 	FBattleStats();
+
+	bool operator == (const FBattleStats& other) {
+		return
+			Health == other.Health &&
+			Attack == other.Attack &&
+			Defense == other.Defense &&
+			Speed == other.Speed;
+	}
+
+	bool operator != (const FBattleStats& other) {
+		return !(*this == other);
+	}
 };

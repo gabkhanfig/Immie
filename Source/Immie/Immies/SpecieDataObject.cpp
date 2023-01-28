@@ -42,11 +42,13 @@ void USpecieDataObject::LoadClasses()
 
     FString SpecieString = FName::NameToDisplayString(SpecieName.ToString(), false);
 
-    const FString CharacterClassReferenceString = GetImmiesBlueprintFolder() + SpecieString + "/" + SpecieString + "Character_BP." + SpecieString + "Character_BP_C'";
-    const FString ObjectClassReferenceString = GetImmiesBlueprintFolder() + SpecieString + "/" + SpecieString + "Object_BP." + SpecieString + "Object_BP_C'";
+    const FString ObjectClassReferenceString = GetImmiesBlueprintFolder() + SpecieString + "/BP_" + SpecieString + "Object.BP_" + SpecieString + "Object_C'";
+    const FString CharacterClassReferenceString = GetImmiesBlueprintFolder() + SpecieString + "/BP_" + SpecieString + "Character.BP_" + SpecieString + "Character_C'";
 
     UClass* SpecieObjectClass = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *ObjectClassReferenceString));
+    checkf(IsValid(SpecieObjectClass), TEXT("Failed to load specie object UClass"));
     UClass* SpecieCharacterClass = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *CharacterClassReferenceString));
+    checkf(IsValid(SpecieCharacterClass), TEXT("Failed to load specie character UClass"));
 
     ObjectClass = SpecieObjectClass;
     CharacterClass = SpecieCharacterClass;

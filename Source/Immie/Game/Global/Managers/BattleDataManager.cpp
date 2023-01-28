@@ -14,8 +14,16 @@ void UBattleDataManager::LoadDefaultGameData()
 
 void UBattleDataManager::RegisterBattleInstanceClasses(TMap<FName, UClass*>* MapOut)
 {
-	RegisterBattleInstanceClass("Singleplayer", "SingleplayerBattleInstance_BP", MapOut);
-	RegisterBattleInstanceClass("Multiplayer", "MultiplayerBattleInstance_BP", MapOut);
+	RegisterBattleInstanceClass("Singleplayer", "BP_SingleplayerBattleInstance", MapOut);
+	RegisterBattleInstanceClass("Multiplayer", "BP_MultiplayerBattleInstance", MapOut);
+}
+
+void UBattleDataManager::RegisterTeamClasses(TMap<TEnumAsByte<EBattleTeamType>, UClass*>* MapOut)
+{
+	RegisterTeamClass(EBattleTeamType::BattleTeam_PlayerSingleplayer, "BP_PlayerSingleplayerBattleTeam", MapOut);
+	RegisterTeamClass(EBattleTeamType::BattleTeam_PlayerMultiplayer, "BP_PlayerMultiplayerBattleTeam", MapOut);
+	RegisterTeamClass(EBattleTeamType::BattleTeam_Wild, "BP_WildBattleTeam", MapOut);
+	RegisterTeamClass(EBattleTeamType::BattleTeam_Trainer, "BP_TrainerBattleTeam", MapOut);
 }
 
 void UBattleDataManager::RegisterBattleInstanceClass(FName Name, const FString& ClassBlueprintName, TMap<FName, UClass*>* MapOut)
@@ -36,12 +44,6 @@ void UBattleDataManager::RegisterBattleInstanceClass(FName Name, const FString& 
 	MapOut->Add(Name, Class);
 }
 
-void UBattleDataManager::RegisterTeamClasses(TMap<TEnumAsByte<EBattleTeamType>, UClass*>* MapOut)
-{
-	RegisterTeamClass(EBattleTeamType::BattleTeam_PlayerSingleplayer, "PlayerSingleplayerBattleTeam_BP", MapOut);
-	RegisterTeamClass(EBattleTeamType::BattleTeam_PlayerMultiplayer, "PlayerMultiplayerBattleTeam_BP", MapOut);
-}
-
 void UBattleDataManager::RegisterTeamClass(TEnumAsByte<EBattleTeamType> TeamType, const FString& ClassBlueprintName, TMap<TEnumAsByte<EBattleTeamType>, UClass*>* MapOut)
 {
 	const FString TeamsBlueprintFolder = "/Script/Engine.Blueprint'/Game/Battle/Team/";
@@ -51,7 +53,7 @@ void UBattleDataManager::RegisterTeamClass(TEnumAsByte<EBattleTeamType> TeamType
 	const bool ValidClass = IsValid(TeamClass);
 
 	if (!ValidClass) {
-		iLog("Invalid UClass for team name " + ClassBlueprintName);
+		iLog("Invalid UClass for battle team name " + ClassBlueprintName, LogVerbosity_Error);
 		return;
 	}
 
@@ -65,10 +67,9 @@ UClass* UBattleDataManager::GetBattleInstanceClass(FName Name)
 	if (Found) {
 		return *Found;
 	}
-	else {
-		iLog("Unable to find battle instance UClass for name " + Name.ToString());
-		return nullptr;
-	}
+
+	iLog("Unable to find battle instance UClass for name " + Name.ToString(), LogVerbosity_Error);
+	return nullptr;
 }
 
 UClass* UBattleDataManager::GetTeamClass(TEnumAsByte<EBattleTeamType> TeamType)
@@ -77,8 +78,7 @@ UClass* UBattleDataManager::GetTeamClass(TEnumAsByte<EBattleTeamType> TeamType)
 	if (Found) {
 		return *Found;
 	}
-	else {
-		iLog("Unable to find team UClass for team type " + FString::FromInt(TeamType));
-		return nullptr;
-	}
+
+	iLog("Unable to find team UClass for battle team type " + FString::FromInt(TeamType), LogVerbosity_Error);
+	return nullptr;
 }

@@ -1,0 +1,19 @@
+{
+    "Types": [
+        {
+            "Type": "fire"
+        }
+    ],
+    "BaseHealth": 100,
+    "MaxUses": 8,
+    "InitialUses": 8,
+    "MaxCooldown": 2,
+    "InitialCooldown": 1.7,
+    "DamagePower": 10,
+    "Speed": 800,
+    "AbilityFlags": {
+        "DoesDamage": true,
+        "VisualDummy": true,
+        "Projectile": true
+    }
+}

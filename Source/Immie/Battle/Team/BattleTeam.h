@@ -84,7 +84,10 @@ protected:
 		/**/
 		bool SwapInNextImmie();
 
-
+	UFUNCTION(BlueprintImplementableEvent, DisplayName = "On Battle End")
+		/* Blueprint sided handling for when a battle ends. WinState is the state of this team's win condition. 
+		IsLocalPlayerTeam is if this team's controller is using the local player controller, and is not running on a dedicated server. */
+		void BP_OnBattleEnd(EBattleTeamWinState WinState, bool IsLocalPlayerTeam);
 
 public:	
 
@@ -132,9 +135,9 @@ public:
 		/**/
 		void DestroyBattleActors();
 
-	UFUNCTION(BlueprintCallable, NetMulticast, Reliable)
+	UFUNCTION(NetMulticast, Reliable)
 		/**/
-		void OnBattleEnd(bool Winner);
+		void OnBattleEnd(EBattleTeamWinState WinState);
 
 	UFUNCTION(BlueprintPure)
 		/* Returns the type of team this is. Override this for all blueprint child classes. */
@@ -159,7 +162,5 @@ public:
 	UFUNCTION(BlueprintPure)
 		/**/
 		FORCEINLINE bool IsTeamAlive() const { return bTeamAlive; }
-
-
 
 };
