@@ -295,7 +295,7 @@ AImmieCharacter* AImmieCharacter::NewImmieCharacter(AActor* _Owner, const FTrans
 	AImmieCharacter* SpawnedImmie = 
 		_Owner->GetWorld()->SpawnActorDeferred<AImmieCharacter>(ImmieCharacterClass, Transform, _Owner, nullptr, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
 
-	check(IsValid(SpawnedImmie));
+	checkf(IsValid(SpawnedImmie), TEXT("Spawned immie character must be valid"));
 	SpawnedImmie->ImmieObject = _ImmieObject;
 
 	if (!EnabledOnSpawn) {
