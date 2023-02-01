@@ -14,4 +14,8 @@ class IMMIE_API UImmieMovementComponent : public UCharacterMovementComponent
 {
 	GENERATED_BODY()
 	
+
+public:
+
+	UImmieMovementComponent();
 };

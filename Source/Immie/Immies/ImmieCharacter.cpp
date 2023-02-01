@@ -39,15 +39,6 @@ AImmieCharacter::AImmieCharacter(const FObjectInitializer& ObjectInitializer)
 	bUseControllerRotationYaw = true;
 	bUseControllerRotationRoll = false;
 
-	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
-	GetCharacterMovement()->RotationRate = FRotator(0.0f, 900.0f, 0.0f); // ...at this rotation rate
-	GetCharacterMovement()->JumpZVelocity = 1200.f; //I like this
-	GetCharacterMovement()->AirControl = 0.6; //I like this
-	GetCharacterMovement()->GravityScale = 3.f; //I like this
-
-	GetCharacterMovement()->MaxWalkSpeed = 900.f;
-	GetCharacterMovement()->MaxFlySpeed = 500.f;
-
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
 	FollowCamera->SetupAttachment(RootComponent);
 	FollowCamera->bUsePawnControlRotation = true;
@@ -462,7 +453,7 @@ bool AImmieCharacter::AllClientBattleSubobjectsValid()
 	return IsValidBlueprintSubobjects;
 }
 
-void AImmieCharacter::OnRemoveFromBattle()
+void AImmieCharacter::OnRemoveFromBattle_Implementation()
 {
 	if (IsValid(BattleHud)) {
 		BattleHud->RemoveFromParent();

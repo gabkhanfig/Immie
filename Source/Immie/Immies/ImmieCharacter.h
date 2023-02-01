@@ -239,7 +239,9 @@ public:
 	/* Checks if this Immie character has all valid subobjects on the clients end (technically can be called on the server or singleplayer). */
 	bool AllClientBattleSubobjectsValid();
 
-	void OnRemoveFromBattle();
+	UFUNCTION(NetMulticast, Reliable)
+		/**/
+		void OnRemoveFromBattle();
 
 	UFUNCTION(BlueprintPure)
 		/* Get the camera component for this Immie character. */

@@ -152,6 +152,7 @@ void UAbility::BP_OnInputPress_Implementation(bool HasBattleAuthority, FAbilityF
 {
 	//if (!CanAbilityBeUsed()) return;
 	if (!HasBattleAuthority) return;
+	if (!CanAbilityBeUsed()) return;
 
 	DecrementUses();
 
