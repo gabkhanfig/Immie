@@ -7,14 +7,18 @@
 #include <Immie/Ability/Abilities/Ability.h>
 #include <Immie/Type/ImmieType.h>
 
+UImmieBattleHud::UImmieBattleHud(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+	FullHealthbar = FLinearColor(0, 1, 0.26);
+	HalfHealthbar = FLinearColor(0.95, 0.7, 0.1);
+	QuarterHealthbar = FLinearColor(1, 0.04, 0.06);
+	NoneHealthbar = FLinearColor(0.7, 0.01, 0.02);
+}
+
 void UImmieBattleHud::SetImmieCharacter(AImmieCharacter* _ImmieCharacter)
 {
 	ImmieCharacter = _ImmieCharacter;
-}
-
-void UImmieBattleHud::NativeConstruct()
-{
-	Super::NativeConstruct();
 }
 
 float UImmieBattleHud::GetHealthPercent() const
@@ -95,23 +99,18 @@ FLinearColor UImmieBattleHud::GetColorForImmieHealth() const
 	return GetColorForHealthPercent(GetHealthPercent());
 }
 
-FLinearColor UImmieBattleHud::GetColorForHealthPercent(float Percent)
+FLinearColor UImmieBattleHud::GetColorForHealthPercent(float Percent) const
 {
-	static const FLinearColor Full = FLinearColor(0, 1, 0.26);
-	static const FLinearColor Half = FLinearColor(0.95, 0.7, 0.1);
-	static const FLinearColor Quarter = FLinearColor(1, 0.04, 0.06);
-	static const FLinearColor None = FLinearColor(0.7, 0.01, 0.02);
-
 	if (Percent > 0.5) {
-		return FLinearColor::LerpUsingHSV(Half, Full, (Percent - 0.5) * 2);
+		return FLinearColor::LerpUsingHSV(HalfHealthbar, FullHealthbar, (Percent - 0.5) * 2);
 	}
 	else if (Percent > 0.25) {
-		return FLinearColor::LerpUsingHSV(Quarter, Half, (Percent - 0.25) * 4);
+		return FLinearColor::LerpUsingHSV(QuarterHealthbar, HalfHealthbar, (Percent - 0.25) * 4);
 	}
 	else if (Percent > 0) {
-		return FLinearColor::LerpUsingHSV(None, Quarter, (Percent - 0.25) * 4);
+		return FLinearColor::LerpUsingHSV(NoneHealthbar, QuarterHealthbar, Percent * 4);
 	}
 	else {
-		return None;
+		return NoneHealthbar;
 	}
 }

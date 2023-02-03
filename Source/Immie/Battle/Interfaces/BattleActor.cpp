@@ -54,9 +54,19 @@ bool IBattleActor::IsAlly(const TScriptInterface<IBattleActor>& OtherBattleActor
   return Team != nullptr && Team == OtherBattleActor->GetTeam();
 }
 
+FBattleStats IBattleActor::BattleActorGetInitialStats() const
+{
+  return GetInitialStats();
+}
+
 FBattleStats IBattleActor::BattleActorGetActiveStats() const
 {
   return GetActiveStats();
+}
+
+FString IBattleActor::BattleActorGetDisplayName() const
+{
+  return GetDisplayName();
 }
 
 void IBattleActor::BattleActorAuthorityBattleTick(float DeltaTime)

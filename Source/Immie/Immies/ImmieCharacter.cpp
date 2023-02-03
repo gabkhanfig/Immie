@@ -25,6 +25,7 @@
 #include <Immie/Controller/Player/ImmiePlayerController.h>
 #include <Immie/Type/ImmieType.h>
 #include <Immie/Battle/UI/ImmieBattleHud.h>
+#include <Immie/Battle/UI/FloatingBattleHealthbar.h>
 
 AImmieCharacter::AImmieCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UImmieMovementComponent>(ACharacter::CharacterMovementComponentName))
@@ -42,6 +43,13 @@ AImmieCharacter::AImmieCharacter(const FObjectInitializer& ObjectInitializer)
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
 	FollowCamera->SetupAttachment(RootComponent);
 	FollowCamera->bUsePawnControlRotation = true;
+
+	FloatingBattleHealthbarComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("FloatingBattleHealthbarComponent"));
+	FloatingBattleHealthbarComponent->SetIsReplicated(false);
+	FloatingBattleHealthbarComponent->SetWidgetSpace(EWidgetSpace::Screen);
+	FloatingBattleHealthbarComponent->SetVisibility(false, true);
+	FloatingBattleHealthbarComponent->SetWidget(nullptr);
+	//FloatingBattleHealthBarComponent->SetWidgetClass
 
 	ImmieObject = nullptr;
 	bEnabled = true;
@@ -111,9 +119,6 @@ void AImmieCharacter::StopCrouching()
 void AImmieCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	const FLinearColor Color = { 0.5, 0.6, 0.2, 1 };
-	ULogger::DisplayLog("Name: " + GetImmieObject()->GetDisplayName(), LogVerbosity_Display, 0, Color);
-	ULogger::DisplayLog("Health: " + FString::SanitizeFloat(GetActiveStats().Health), LogVerbosity_Display, 0, Color);
 }
 
 void AImmieCharacter::AuthorityBattleTick(float DeltaTime)
@@ -151,6 +156,11 @@ bool AImmieCharacter::CanBeHealedByAbilityActor(AAbilityActor* AbilityActor) con
 bool AImmieCharacter::CanBeDamagedByAbilityActor(AAbilityActor* AbilityActor) const
 {
 	return true;
+}
+
+FBattleStats AImmieCharacter::GetInitialStats() const
+{
+	return InitialStats;
 }
 
 ABattleTeam* AImmieCharacter::GetTeam() const
@@ -220,15 +230,29 @@ void AImmieCharacter::AddAbilityCollider(UPrimitiveComponent* AbilityCollider)
 void AImmieCharacter::CreateBattleHud()
 {
 	if (!IsValid(BattleHudClass)) {
+		iLog("Battle hud class for Immie must be valid! Specie: " + GetSpecieName().ToString(), LogVerbosity_Error);
 		return;
 	}
 
-	AImmiePlayerController* ImmieController = Cast<AImmiePlayerController>(GetController());
-	checkf(ImmieController, TEXT("Attempting to create a battle hud using an invalid immie player controller"));
-
-	BattleHud = CreateWidget<UImmieBattleHud>(ImmieController, BattleHudClass);
+	BattleHud = CreateWidget<UImmieBattleHud>(Cast<AImmiePlayerController>(GetController()), BattleHudClass);
 	BattleHud->SetImmieCharacter(this);
+	BattleHud->BP_Initialize();
 	BattleHud->AddToViewport(100);
+}
+
+void AImmieCharacter::CreateFloatingHealthBar()
+{
+	if (!IsValid(FloatingBattleHealthbarClass)) {
+		iLog("Floating battle healthbar class for Immie must be valid! Specie: " + GetSpecieName().ToString(), LogVerbosity_Error);
+		return;
+	}
+
+	FloatingBattleHealthbar = CreateWidget<UFloatingBattleHealthbar>(Cast<APlayerController>(GetWorld()->GetFirstPlayerController()), FloatingBattleHealthbarClass);
+	FloatingBattleHealthbar->SetBattleActor(this);
+	FloatingBattleHealthbar->BP_Initialize();
+
+	FloatingBattleHealthbarComponent->SetWidget(FloatingBattleHealthbar);
+	FloatingBattleHealthbarComponent->SetVisibility(true, true);
 }
 
 void AImmieCharacter::UpdateActiveStats_Implementation(FBattleStats NewActiveStats)
@@ -310,9 +334,7 @@ void AImmieCharacter::PossessForBattle(AController* NewController)
 
 void AImmieCharacter::ClientPossessedByPlayerController_Implementation(AImmiePlayerController* PlayerController)
 {
-	if (IsControlledByLocalPlayer()) {
-		CreateBattleHud();
-	}
+
 
 	BP_ClientPossessedByPlayerController(PlayerController);
 }
@@ -453,12 +475,29 @@ bool AImmieCharacter::AllClientBattleSubobjectsValid()
 	return IsValidBlueprintSubobjects;
 }
 
+void AImmieCharacter::OnBeginBattle_Implementation()
+{
+	if (IsControlledByLocalPlayer()) {
+		CreateBattleHud();
+	}
+	else {
+		CreateFloatingHealthBar();
+	}
+}
+
 void AImmieCharacter::OnRemoveFromBattle_Implementation()
 {
 	if (IsValid(BattleHud)) {
 		BattleHud->RemoveFromParent();
 	}
+	if (IsValid(FloatingBattleHealthbar)) {
+		FloatingBattleHealthbar->RemoveFromParent();
+		FloatingBattleHealthbarComponent->SetVisibility(false, true);
+		FloatingBattleHealthbarComponent->SetWidget(nullptr);
+	}
+
 	BattleHud = nullptr;
+	FloatingBattleHealthbar = nullptr;
 }
 
 int AImmieCharacter::GetSpecieId() const
@@ -518,4 +557,9 @@ void AImmieCharacter::SetImmieEnabled_Implementation(bool NewEnabled)
 FBattleStats AImmieCharacter::GetActiveStats() const
 {
 	return ActiveStats;
+}
+
+FString AImmieCharacter::GetDisplayName() const
+{
+	return ImmieObject->GetDisplayName();
 }

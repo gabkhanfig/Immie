@@ -80,9 +80,19 @@ public:
 		virtual bool IsAlly(const TScriptInterface<IBattleActor>& OtherBattleActor) const;
 
 	UFUNCTION(BlueprintPure)
+		/**/
+		virtual FBattleStats BattleActorGetInitialStats() const;
+	virtual FBattleStats GetInitialStats() const = 0;
+
+	UFUNCTION(BlueprintPure)
 		/* DO NOT OVERRIDE. */
 		virtual FBattleStats BattleActorGetActiveStats() const;
 	virtual FBattleStats GetActiveStats() const = 0;
+
+	UFUNCTION(BlueprintPure)
+		/**/
+		virtual FString BattleActorGetDisplayName() const;
+	virtual FString GetDisplayName() const = 0;
 	
 	UFUNCTION(BlueprintCallable)
 		/* DO NOT OVERRIDE. */

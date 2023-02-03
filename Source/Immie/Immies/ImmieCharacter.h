@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include <Immie/ImmieCore.h>
 #include <Immie/Battle/Interfaces/BattleActor.h>
+#include <Components/WidgetComponent.h>
 #include "ImmieCharacter.generated.h"
 
 class UImmie;
@@ -17,6 +18,7 @@ class USpecieDataObject;
 class UCameraComponent;
 class UImmieMovementComponent;
 class UImmieBattleHud;
+class UFloatingBattleHealthbar;
 
 UCLASS()
 class IMMIE_API AImmieCharacter : public ACharacter, public IBattleActor
@@ -81,6 +83,18 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Battle")
 		/* The battle hud this Immie character is using (must be controlled by local controller). */
 		UImmieBattleHud* BattleHud;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		/* See FloatingBattleHealthbarClass to set the UClass properly. */
+		UWidgetComponent* FloatingBattleHealthbarComponent;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Battle")
+		/* The UClass that the floating battle healthbar will use for this Immie character. */
+		TSubclassOf<UFloatingBattleHealthbar> FloatingBattleHealthbarClass;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Battle")
+		/**/
+		UFloatingBattleHealthbar* FloatingBattleHealthbar;
 
 protected:
 
@@ -188,6 +202,9 @@ protected:
 	/* Sets BattleHud to a valid instance. */
 	void CreateBattleHud();
 
+	/**/
+	void CreateFloatingHealthBar();
+
 	UFUNCTION(NetMulticast, Reliable)
 		/* Update active stats to all clients. */
 		void UpdateActiveStats(FBattleStats NewActiveStats);
@@ -240,7 +257,11 @@ public:
 	bool AllClientBattleSubobjectsValid();
 
 	UFUNCTION(NetMulticast, Reliable)
-		/**/
+		/* Called when this Immie character is set to battle. */
+		void OnBeginBattle();
+
+	UFUNCTION(NetMulticast, Reliable)
+		/* Called when this Immie character is removed from battle. */
 		void OnRemoveFromBattle();
 
 	UFUNCTION(BlueprintPure)
@@ -277,17 +298,11 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "Battle")
 		/**/
-		inline FBattleStats GetInitialStats() const { return InitialStats; }
-
-	UFUNCTION(BlueprintPure, Category = "Battle")
-		/**/
 		inline float GetMaxHealth() const { return InitialStats.Health; }
 
 	UFUNCTION(BlueprintPure, Category = "Battle")
 		/**/
 		inline float GetCurrentHealth() const { return ActiveStats.Health; }
-
-
 
 	UFUNCTION(BlueprintPure)
 		/**/
@@ -309,11 +324,15 @@ public:
 
 	virtual bool CanBeDamagedByAbilityActor(AAbilityActor* AbilityActor) const override;
 
+	virtual FBattleStats GetInitialStats() const override;
+
 	virtual FBattleStats GetActiveStats() const override;
 
 	virtual ABattleTeam* GetTeam() const override;
 
 	virtual TArray<UImmieType*> GetType() const override;
+
+	virtual FString GetDisplayName() const override;
 
 	virtual void IncreaseHealth(float Amount) override;
 

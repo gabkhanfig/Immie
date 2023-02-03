@@ -203,6 +203,7 @@ void ABattleTeam::SetImmieForBattle(AImmieCharacter* ImmieCharacter)
 	}
 
 	SetActiveImmie(ImmieCharacter);
+	ImmieCharacter->OnBeginBattle();
 }
 
 void ABattleTeam::RemoveActiveImmieFromBattle()

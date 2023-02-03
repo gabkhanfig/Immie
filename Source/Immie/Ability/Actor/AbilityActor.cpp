@@ -325,6 +325,11 @@ void AAbilityActor::DecreaseHealth(float Amount)
 	}
 }
 
+FBattleStats AAbilityActor::GetInitialStats() const
+{
+	return GetAbilityInitialStats();
+}
+
 int AAbilityActor::GetAbilityId() const
 {
 	return GetAbility()->GetAbilityId();
@@ -393,6 +398,11 @@ float AAbilityActor::GetRange() const
 TArray<UImmieType*> AAbilityActor::GetType() const
 {
 	return GetAbility()->GetType();
+}
+
+FString AAbilityActor::GetDisplayName() const
+{
+	return GetAbilityName().ToString();
 }
 
 void AAbilityActor::UpdateVisuals()

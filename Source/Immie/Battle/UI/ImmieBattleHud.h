@@ -20,18 +20,37 @@ class IMMIE_API UImmieBattleHud : public UUserWidget
 {
 	GENERATED_BODY()
 
-private:
+protected:
 
 	UPROPERTY()
 		/**/
 		AImmieCharacter* ImmieCharacter;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Color")
+		/**/
+		FLinearColor FullHealthbar;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Color")
+		/**/
+		FLinearColor HalfHealthbar;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Color")
+		/**/
+		FLinearColor QuarterHealthbar;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Color")
+		/**/
+		FLinearColor NoneHealthbar;
+
 public:
+
+	UImmieBattleHud(const FObjectInitializer& ObjectInitializer);
 
 	void SetImmieCharacter(AImmieCharacter* _ImmieCharacter);
 
-	/* Called when adding to viewport. */
-	virtual void NativeConstruct() override;
+	UFUNCTION(BlueprintImplementableEvent, DisplayName = "Initialize")
+		/**/
+		void BP_Initialize();
 
 	UFUNCTION(BlueprintPure)
 		/**/
@@ -91,6 +110,6 @@ public:
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		static FLinearColor GetColorForHealthPercent(float Percent);
+		FLinearColor GetColorForHealthPercent(float Percent) const;
 	
 };

@@ -226,6 +226,8 @@ public:
 
 	virtual void DecreaseHealth(float Amount) override;
 
+	virtual FBattleStats GetInitialStats() const override;
+
 	virtual FBattleStats GetActiveStats() const override;
 
 	virtual float TotalHealingFromAbility(const FAbilityInstigatorDamage& AbilityHealing) const override;
@@ -233,6 +235,8 @@ public:
 	virtual float TotalDamageFromAbility(const FAbilityInstigatorDamage& AbilityDamage) const override;
 
 	virtual TArray<UImmieType*> GetType() const override;
+
+	virtual FString GetDisplayName() const override;
 
 	virtual void UpdateVisuals() override;
 };
