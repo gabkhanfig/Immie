@@ -9,6 +9,7 @@ ATrainerPawn::ATrainerPawn()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	BattleTeamType = EBattleTeamType::BattleTeam_Trainer;
 }
 
 // Called when the game starts or when spawned
@@ -30,5 +31,15 @@ void ATrainerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+EBattleTeamType ATrainerPawn::GetBattleTeamType() const
+{
+	return BattleTeamType;
+}
+
+TArray<UImmie*> ATrainerPawn::GetTeam() const
+{
+	return Team;
 }
 

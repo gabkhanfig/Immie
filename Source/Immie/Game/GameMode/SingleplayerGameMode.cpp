@@ -16,7 +16,7 @@ void ASingleplayerGameMode::Tick(float DeltaTime)
 	if (Timer > 0) {
 		Timer -= DeltaTime;
 		if (Timer <= 0) {
-			StartSingleplayerBattle();
+			//StartSingleplayerBattle();
 		}
 	}
 }
