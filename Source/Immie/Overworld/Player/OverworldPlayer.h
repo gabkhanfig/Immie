@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "../Interfaces/Trainer.h"
+#include "../Interfaces/Battler.h"
 #include "OverworldPlayer.generated.h"
 
 UCLASS()
-class IMMIE_API AOverworldPlayer : public ACharacter, public ITrainer
+class IMMIE_API AOverworldPlayer : public ACharacter, public IBattler
 {
 	GENERATED_BODY()
 
@@ -29,9 +29,9 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent)
 		/**/
-		void TrainerCollision(const TScriptInterface<ITrainer>& Trainer, UPrimitiveComponent* ThisOverlappedComponent, UPrimitiveComponent* OtherActorComponent);
+		void TrainerCollision(const TScriptInterface<IBattler>& Trainer, UPrimitiveComponent* ThisOverlappedComponent, UPrimitiveComponent* OtherActorComponent);
 	
-	/* Trainer interface. */
+	/* Battler interface. */
 
 	virtual EBattleTeamType GetBattleTeamType() const override;
 	virtual TArray<UImmie*> GetTeam() const override;

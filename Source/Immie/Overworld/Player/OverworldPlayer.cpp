@@ -42,16 +42,16 @@ void AOverworldPlayer::OnCollision(UPrimitiveComponent* ThisOverlappedComponent,
 		return;
 	}
 
-	const bool ImplementsTrainer = OtherActor->GetClass()->ImplementsInterface(UTrainer::StaticClass());
+	const bool ImplementsTrainer = OtherActor->GetClass()->ImplementsInterface(UBattler::StaticClass());
 	if (!ImplementsTrainer) {
 		return;
 	}
 
-	TScriptInterface<ITrainer> Trainer = OtherActor;
+	TScriptInterface<IBattler> Trainer = OtherActor;
 	TrainerCollision(Trainer, ThisOverlappedComponent, OtherActorComponent);
 }
 
-void AOverworldPlayer::TrainerCollision_Implementation(const TScriptInterface<ITrainer>& Trainer, UPrimitiveComponent* ThisOverlappedComponent, UPrimitiveComponent* OtherActorComponent)
+void AOverworldPlayer::TrainerCollision_Implementation(const TScriptInterface<IBattler>& Trainer, UPrimitiveComponent* ThisOverlappedComponent, UPrimitiveComponent* OtherActorComponent)
 {
 	TArray<FBattleTeamInit> Teams;
 	Teams.Add(GetBattleTeamInit());
@@ -91,7 +91,7 @@ TArray<UImmie*> AOverworldPlayer::GetTeam() const
 
 FBattleTeamInit AOverworldPlayer::GetBattleTeamInit() const
 {
-	FBattleTeamInit TeamInit = ITrainer::GetBattleTeamInit();
+	FBattleTeamInit TeamInit = IBattler::GetBattleTeamInit();
 	TeamInit.Controller = GetController();
 	return TeamInit;
 }
@@ -100,7 +100,7 @@ void AOverworldPlayer::OnBattleEnd()
 {
 	TimerForBattleReady = 10;
 
-	ITrainer::OnBattleEnd();
+	IBattler::OnBattleEnd();
 	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
 	PlayerController->Possess(this);
 }

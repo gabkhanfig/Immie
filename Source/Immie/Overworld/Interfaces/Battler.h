@@ -5,22 +5,20 @@
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "../../Battle/BattleStructures.h"
-#include "Trainer.generated.h"
+#include "Battler.generated.h"
 
 class UImmie;
 
 
 // This class does not need to be modified.
 UINTERFACE(NotBlueprintable)
-class UTrainer : public UInterface
+class UBattler : public UInterface
 {
 	GENERATED_BODY()
 };
 
-/**
- * 
- */
-class IMMIE_API ITrainer
+/* Interface for any class that can "own" a team. These include the player, trainers, and wild Immies. */
+class IMMIE_API IBattler
 {
 	GENERATED_BODY()
 
@@ -30,7 +28,7 @@ public:
 	UFUNCTION(BlueprintPure, DisplayName = "Get Battle Team Type")
 		/**/
 		virtual EBattleTeamType BattleActorGetBattleTeamType() const { return GetBattleTeamType(); }
-	virtual EBattleTeamType GetBattleTeamType() const = 0;
+	virtual EBattleTeamType GetBattleTeamType() const = 0; 
 
 	UFUNCTION(BlueprintPure, DisplayName = "Get Team")
 		/**/

@@ -11,7 +11,7 @@
 #include <Immie/Ability/Actor/AbilityActor.h>
 #include <Kismet/GameplayStatics.h>
 #include <Immie/Battle/Components/DamageComponent.h>
-#include "../../Overworld/Interfaces/Trainer.h"
+#include "../../Overworld/Interfaces/Battler.h"
 
 ABattleTeam::ABattleTeam()
 {

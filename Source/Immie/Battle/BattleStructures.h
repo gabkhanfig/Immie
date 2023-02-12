@@ -7,7 +7,7 @@
 
 class UImmie;
 class UAbility;
-class ITrainer;
+class IBattler;
 
 UENUM(BlueprintType)
 enum EBattleTeamType
@@ -69,7 +69,7 @@ struct FBattleTeamInit
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/* The actor that "owns" the team. */
-		TScriptInterface<ITrainer> Trainer;
+		TScriptInterface<IBattler> Trainer;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/**/

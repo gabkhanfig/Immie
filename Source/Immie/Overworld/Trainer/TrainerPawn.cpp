@@ -32,13 +32,6 @@ void ATrainerPawn::Tick(float DeltaTime)
 
 }
 
-// Called to bind functionality to input
-void ATrainerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
-
 EBattleTeamType ATrainerPawn::GetBattleTeamType() const
 {
 	return BattleTeamType;

@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "../Interfaces/Trainer.h"
+#include "../Interfaces/Battler.h"
 #include "TrainerPawn.generated.h"
 
 UCLASS()
-class IMMIE_API ATrainerPawn : public APawn, public ITrainer
+class IMMIE_API ATrainerPawn : public APawn, public IBattler
 {
 	GENERATED_BODY()
 
@@ -26,18 +26,17 @@ public:
 	// Sets default values for this pawn's properties
 	ATrainerPawn();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	/* Battler interface. */
 
 	virtual EBattleTeamType GetBattleTeamType() const override;
 	virtual TArray<UImmie*> GetTeam() const override;
+
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 
 };

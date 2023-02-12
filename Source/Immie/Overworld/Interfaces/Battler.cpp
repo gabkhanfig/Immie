@@ -1,18 +1,18 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Trainer.h"
+#include "Battler.h"
 
 // Add default functionality here for any ITrainer functions that are not pure virtual.
 
-APawn* ITrainer::GetPawn() const
+APawn* IBattler::GetPawn() const
 {
 	APawn* AsPawn = Cast<APawn>(this->_getUObject());
 	checkf(IsValid(AsPawn), TEXT("Casting a ITrainer to APawn must be valid"));
 	return AsPawn;
 }
 
-FBattleTeamInit ITrainer::GetBattleTeamInit() const
+FBattleTeamInit IBattler::GetBattleTeamInit() const
 {
 	APawn* AsPawn = GetPawn();
 
@@ -25,7 +25,7 @@ FBattleTeamInit ITrainer::GetBattleTeamInit() const
 	return TeamInit;
 }
 
-void ITrainer::Disable()
+void IBattler::Disable()
 {
 	APawn* AsPawn = GetPawn();
 
@@ -34,7 +34,7 @@ void ITrainer::Disable()
 	AsPawn->SetActorTickEnabled(false);
 }
 
-void ITrainer::Enable()
+void IBattler::Enable()
 {
 	APawn* AsPawn = GetPawn();
 
@@ -43,12 +43,12 @@ void ITrainer::Enable()
 	AsPawn->SetActorTickEnabled(true);
 }
 
-void ITrainer::OnBattleStart()
+void IBattler::OnBattleStart()
 {
 	Disable();
 }
 
-void ITrainer::OnBattleEnd()
+void IBattler::OnBattleEnd()
 {
 	Enable();
 }
