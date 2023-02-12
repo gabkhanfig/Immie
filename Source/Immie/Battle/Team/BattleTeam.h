@@ -31,7 +31,7 @@ private:
 
 	AController* Controller;
 
-	AActor* TeamOwner;
+	TScriptInterface<ITrainer> TeamOwner;
 
 	TEnumAsByte<EBattleTeamType> TeamType;
 

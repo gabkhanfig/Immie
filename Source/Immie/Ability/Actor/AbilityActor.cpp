@@ -216,8 +216,7 @@ void AAbilityActor::DestroyAbilityActor()
 
 void AAbilityActor::OnAbilityActorDestroy_Implementation()
 {
-	ABattleTeam* _Team = GetTeam();
-	checkf(IsValid(_Team), TEXT("Team is not valid when ability actor is attempting to be destroyed."));
+	//ABattleTeam* _Team = GetTeam();
 	if (IsValid(Dummy)) {
 		Dummy->OnAbilityActorDestroy();
 	}

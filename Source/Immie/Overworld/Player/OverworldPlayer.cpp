@@ -5,12 +5,15 @@
 #include <Immie/ImmieCore.h>
 #include "../../Game/Player/PlayerImmies.h"
 #include <Kismet/KismetMathLibrary.h>
+#include <Immie/Game/ImmieGameMode.h>
+#include <Kismet/GameplayStatics.h>
 
 // Sets default values
 AOverworldPlayer::AOverworldPlayer()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	TimerForBattleReady = 0;
 }
 
 // Called when the game starts or when spawned
@@ -23,10 +26,22 @@ void AOverworldPlayer::BeginPlay()
 void AOverworldPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (TimerForBattleReady > 0) {
+		TimerForBattleReady -= DeltaTime;
+		if (TimerForBattleReady <= 0) {
+			TimerForBattleReady = 0;
+			iLog("You are ready to battle again!", LogVerbosity_Display, 15, FLinearColor(0.6, 0.9, 0.2));
+		}
+	}
 }
 
 void AOverworldPlayer::OnCollision(UPrimitiveComponent* ThisOverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherActorComponent)
 {
+	if (TimerForBattleReady > 0) {
+		return;
+	}
+
 	const bool ImplementsTrainer = OtherActor->GetClass()->ImplementsInterface(UTrainer::StaticClass());
 	if (!ImplementsTrainer) {
 		return;
@@ -38,7 +53,12 @@ void AOverworldPlayer::OnCollision(UPrimitiveComponent* ThisOverlappedComponent,
 
 void AOverworldPlayer::TrainerCollision_Implementation(const TScriptInterface<ITrainer>& Trainer, UPrimitiveComponent* ThisOverlappedComponent, UPrimitiveComponent* OtherActorComponent)
 {
-	iLog("trainer collision!");
+	TArray<FBattleTeamInit> Teams;
+	Teams.Add(GetBattleTeamInit());
+	Teams.Add(Trainer->GetBattleTeamInit());
+	AImmieGameMode* GameMode = Cast<AImmieGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	checkf(IsValid(GameMode), TEXT("Overworld player attempting to start a trainer battle on an invalid ImmieGameMode"));
+	GameMode->StartBattle("Singleplayer", Teams, { 0, 0, 0 });
 }
 
 // Called to bind functionality to input
@@ -74,6 +94,15 @@ FBattleTeamInit AOverworldPlayer::GetBattleTeamInit() const
 	FBattleTeamInit TeamInit = ITrainer::GetBattleTeamInit();
 	TeamInit.Controller = GetController();
 	return TeamInit;
+}
+
+void AOverworldPlayer::OnBattleEnd()
+{
+	TimerForBattleReady = 10;
+
+	ITrainer::OnBattleEnd();
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	PlayerController->Possess(this);
 }
 
 void AOverworldPlayer::YawInput(float AxisValue)

@@ -36,6 +36,7 @@ public:
 	virtual EBattleTeamType GetBattleTeamType() const override;
 	virtual TArray<UImmie*> GetTeam() const override;
 	virtual FBattleTeamInit GetBattleTeamInit() const override;
+	virtual void OnBattleEnd() override;
 
 protected:
 
@@ -46,5 +47,11 @@ protected:
 	void PitchInput(float AxisValue);
 	void ForwardMovement(float ScaleValue);
 	void RightMovement(float ScaleValue);
+
+protected:
+
+	UPROPERTY(BlueprintReadWrite)
+		/**/
+		float TimerForBattleReady;
 
 };

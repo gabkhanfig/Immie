@@ -2,6 +2,7 @@
 
 
 #include "TrainerPawn.h"
+#include "../../Immies/ImmieObject.h"
 
 // Sets default values
 ATrainerPawn::ATrainerPawn()
@@ -17,6 +18,11 @@ void ATrainerPawn::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	UImmie* Immie = UImmie::NewImmieObject(this, 0);
+	Immie->SetDisplayName("enemy!!! wowow");
+	Immie->SetHealth(10000);
+	Team.Add(Immie);
+
 }
 
 // Called every frame

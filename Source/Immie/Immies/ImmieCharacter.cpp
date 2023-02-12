@@ -45,6 +45,7 @@ AImmieCharacter::AImmieCharacter(const FObjectInitializer& ObjectInitializer)
 	FollowCamera->bUsePawnControlRotation = true;
 
 	FloatingBattleHealthbarComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("FloatingBattleHealthbarComponent"));
+	FloatingBattleHealthbarComponent->SetupAttachment(RootComponent);
 	FloatingBattleHealthbarComponent->SetIsReplicated(false);
 	FloatingBattleHealthbarComponent->SetWidgetSpace(EWidgetSpace::Screen);
 	FloatingBattleHealthbarComponent->SetVisibility(false, true);
@@ -246,6 +247,7 @@ void AImmieCharacter::CreateFloatingHealthBar()
 		iLog("Floating battle healthbar class for Immie must be valid! Specie: " + GetSpecieName().ToString(), LogVerbosity_Error);
 		return;
 	}
+
 
 	FloatingBattleHealthbar = CreateWidget<UFloatingBattleHealthbar>(Cast<APlayerController>(GetWorld()->GetFirstPlayerController()), FloatingBattleHealthbarClass);
 	FloatingBattleHealthbar->SetBattleActor(this);

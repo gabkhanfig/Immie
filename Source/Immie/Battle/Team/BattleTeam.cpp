@@ -11,6 +11,7 @@
 #include <Immie/Ability/Actor/AbilityActor.h>
 #include <Kismet/GameplayStatics.h>
 #include <Immie/Battle/Components/DamageComponent.h>
+#include "../../Overworld/Interfaces/Trainer.h"
 
 ABattleTeam::ABattleTeam()
 {
@@ -105,11 +106,15 @@ void ABattleTeam::InitializeTeam(ABattleInstance* _BattleInstance, const FBattle
 	DefaultSpawnLocation = TeamData.SpawnLocation;
 	DefaultSpawnRotation = TeamData.SpawnRotation;
 	Controller = TeamData.Controller;
-	TeamOwner = TeamData.Actor;
+	TeamOwner = TeamData.Trainer;
 	TeamType = TeamData.TeamType;
 
 	BP_CreateTeam(TeamData);
 	BP_InitializeTeam(TeamData);
+
+	if (IsValid(TeamOwner->_getUObject())) {
+		TeamOwner->OnBattleStart();
+	}
 }
 
 void ABattleTeam::BP_CreateTeam_Implementation(const FBattleTeamInit& TeamData)
@@ -245,7 +250,7 @@ AAbilityActor* ABattleTeam::SpawnAbilityActor(TSubclassOf<AAbilityActor> Ability
 
 void ABattleTeam::RemoveAbilityActor(AAbilityActor* AbilityActor)
 {
-	AbilityActors.RemoveSingleSwap(AbilityActor);
+	AbilityActors.RemoveSingle(AbilityActor);
 	AbilityActor->OnAbilityActorDestroy();
 	AbilityActor->Destroy();
 }
@@ -280,6 +285,9 @@ void ABattleTeam::OnBattleEnd_Implementation(EBattleTeamWinState WinState)
 {
 	if (HasAuthority()) {
 		DestroyBattleActors();
+		if (IsValid(TeamOwner->_getUObject())) {
+			TeamOwner->OnBattleEnd();
+		}
 	}
 
 	AImmiePlayerController* AsPlayerController = Cast<AImmiePlayerController>(Controller);

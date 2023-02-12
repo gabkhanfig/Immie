@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "../Battle/BattleStructures.h"
 #include "ImmieGameMode.generated.h"
+
+class ABattleInstance;
 
 /**
  * 
@@ -29,5 +32,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 		/**/
 		void StartSingleplayerBattle();
+
+	UFUNCTION(BlueprintCallable)
+		/* Creates a new battle instance and calls it's BattleInit(). */
+		ABattleInstance* StartBattle(FName BattleInstanceName, const TArray<FBattleTeamInit>& Teams, FVector BattleLocation);
 	
 };

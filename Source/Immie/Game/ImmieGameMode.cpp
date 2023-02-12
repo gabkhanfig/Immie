@@ -55,3 +55,10 @@ void AImmieGameMode::StartSingleplayerBattle()
 	Teams[0].Controller = GetWorld()->GetFirstPlayerController();
 	Battle->BattleInit(Teams);
 }
+
+ABattleInstance* AImmieGameMode::StartBattle(FName BattleInstanceName, const TArray<FBattleTeamInit>& Teams, FVector BattleLocation)
+{
+	ABattleInstance* Battle = ABattleInstance::NewBattleInstance(this, BattleInstanceName, BattleLocation);
+	Battle->BattleInit(Teams);
+	return Battle;
+}

@@ -7,6 +7,6 @@ FBattleTeamInit::FBattleTeamInit()
 {
 	//Team.Reserve(8);
 	Controller = nullptr;
-	Actor = nullptr;
+	Trainer = nullptr;
 	TeamType = EBattleTeamType::BattleTeam_None;
 }

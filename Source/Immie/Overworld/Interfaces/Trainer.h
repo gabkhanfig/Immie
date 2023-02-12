@@ -37,9 +37,33 @@ public:
 		virtual TArray<UImmie*> BattleActorGetTeam() const { return GetTeam(); }
 	virtual TArray<UImmie*> GetTeam() const = 0;
 
+	UFUNCTION(BlueprintPure)
+		/**/
+		virtual APawn* GetPawn() const;
+
 	UFUNCTION(BlueprintPure, DisplayName = "Get Battle Team Init")
 		/**/
 		virtual FBattleTeamInit BattleActorGetBattleTeamInit() const { return GetBattleTeamInit(); }
 	virtual FBattleTeamInit GetBattleTeamInit() const;
+
+	UFUNCTION(BlueprintCallable, DisplayName = "Disable")
+		/**/
+		virtual void BattleActorDisable() { Disable(); };
+	virtual void Disable();
+
+	UFUNCTION(BlueprintCallable, DisplayName = "Enable")
+		/**/
+		virtual void BattleActorEnable() { Enable(); }
+	virtual void Enable();
+
+	UFUNCTION(BlueprintCallable)
+		/**/
+		virtual void BattleActorOnBattleStart() { OnBattleStart(); };
+	virtual void OnBattleStart();
+
+	UFUNCTION(BlueprintCallable)
+		/**/
+		virtual void BattleActorOnBattleEnd() { OnBattleEnd(); };
+	virtual void OnBattleEnd();
 
 };
