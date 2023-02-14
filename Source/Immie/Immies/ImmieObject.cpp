@@ -190,6 +190,28 @@ FJsonObjectBP UImmie::SaveJsonData()
     return JsonWriter;
 }
 
+UImmie* UImmie::MakeCopy(UObject* Outer)
+{
+  UImmie* Copy = UImmie::NewImmieObject(Outer, SpecieId);
+  Copy->Health = Health;
+  Copy->Xp = Xp;
+  Copy->StatLevels = StatLevels;
+  Copy->AbilityIds = AbilityIds;
+  Copy->DisplayName = DisplayName;
+  BP_MakeCopy(Copy);
+  return Copy;
+}
+
+TArray<UImmie*> UImmie::MakeTeamCopy(const TArray<UImmie*>& Team, UObject* Outer)
+{
+  TArray<UImmie*> Copy;
+  Copy.Reserve(Team.Num());
+  for (int i = 0; i < Team.Num(); i++) {
+    Copy.Add(Team[i]->MakeCopy(Outer));
+  }
+  return Copy;
+}
+
 FJsonObjectBP UImmie::BP_SaveJsonData_Implementation()
 {
     return FJsonObjectBP();

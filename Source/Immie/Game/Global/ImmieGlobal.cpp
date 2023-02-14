@@ -45,3 +45,8 @@ UConfigDataManager* GetConfigDataManager()
 {
 	return GetImmieGameInstance()->_GetConfigDataManager();
 }
+
+UTrainerDataManager* GetTrainerDataManager()
+{
+	return GetImmieGameInstance()->_GetTrainerDataManager();
+}

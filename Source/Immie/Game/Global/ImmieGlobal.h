@@ -14,6 +14,7 @@ class UBattleDataManager;
 class UPlayerImmies;
 class USaveManager;
 class UConfigDataManager;
+class UTrainerDataManager;
 
 extern UImmieGameInstance* _ImmieGameInstance;
 
@@ -40,6 +41,9 @@ USaveManager* GetSaveManager();
 
 /**/
 UConfigDataManager* GetConfigDataManager();
+
+/**/
+UTrainerDataManager* GetTrainerDataManager();
 
 UCLASS()
 class UImmieGlobal : public UBlueprintFunctionLibrary
@@ -72,7 +76,12 @@ public:
 		/**/
 		static inline USaveManager* BP_GetSaveManager() { return GetSaveManager(); }
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, DisplayName = "Get Config Data Manager")
 		/**/
 		static inline UConfigDataManager* BP_GetConfigDataManager() { return GetConfigDataManager(); }
+
+	UFUNCTION(BlueprintPure, DisplayName = "Get Trainer Data Manager")
+		/**/
+		static inline UTrainerDataManager* BP_GetTrainerDataManager() { return GetTrainerDataManager(); }
+
 };

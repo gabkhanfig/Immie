@@ -17,7 +17,8 @@ class UBattler : public UInterface
 	GENERATED_BODY()
 };
 
-/* Interface for any class that can "own" a team. These include the player, trainers, and wild Immies. */
+/* Interface for any class that can "own" a team. These include the player, trainers, and wild Immies. 
+Only used by APawns. */
 class IMMIE_API IBattler
 {
 	GENERATED_BODY()

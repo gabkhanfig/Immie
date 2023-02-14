@@ -47,18 +47,6 @@ private:
 		/**/
 		FString DisplayName;
 
-protected:
-
-	UFUNCTION(BlueprintImplementableEvent, DisplayName = "Load Json Data")
-		/* Blueprint-side data loading for this Immie object. Loads from the specie-specific subobject within the parent json object handled in cpp.
-		Any variables defined in UImmie itself do not need to be loaded as they are handled before this event is called. */
-		void BP_LoadJsonData(const FJsonObjectBP& Json);
-
-	UFUNCTION(BlueprintNativeEvent, DisplayName = "Save Json Data")
-		/* Blueprint-side data saving for this Immie object. Saves it as a subobject within the parent json object handled in cpp.
-		Any variables defined in UImmie itself do not need to be saved as they are handled before this event is called. */
-		FJsonObjectBP BP_SaveJsonData();
-
 public:
 
 	UImmie();
@@ -72,6 +60,14 @@ public:
 
 	/* Save this Immie's data to a json object. */
 	FJsonObjectBP SaveJsonData();
+
+	UFUNCTION(BlueprintCallable)
+		/* Make a copy of this Immie object with a different outer */
+		UImmie* MakeCopy(UObject* Outer);
+
+	UFUNCTION(BlueprintCallable)
+		/**/
+		static TArray<UImmie*> MakeTeamCopy(const TArray<UImmie*>& Team, UObject* Outer);
 
 	UFUNCTION(BlueprintCallable)
 		/* Convert a team to a json object. */
@@ -164,6 +160,20 @@ public:
 		/* Get the 4 stats this Immie would use in battle. These are max health, unmodified attack, unmodified defense, and unmodified speed. */
 		FBattleStats GetStats(bool UseBaseStatOverride = false, uint8 BaseHealth = 0, uint8 BaseAttack = 0, uint8 BaseDefense = 0, uint8 BaseSpeed = 0) const;
 
-	
+protected:
+
+	UFUNCTION(BlueprintImplementableEvent, DisplayName = "Load Json Data")
+		/* Blueprint-side data loading for this Immie object. Loads from the specie-specific subobject within the parent json object handled in cpp.
+		Any variables defined in UImmie itself do not need to be loaded as they are handled before this event is called. */
+		void BP_LoadJsonData(const FJsonObjectBP& Json);
+
+	UFUNCTION(BlueprintNativeEvent, DisplayName = "Save Json Data")
+		/* Blueprint-side data saving for this Immie object. Saves it as a subobject within the parent json object handled in cpp.
+		Any variables defined in UImmie itself do not need to be saved as they are handled before this event is called. */
+		FJsonObjectBP BP_SaveJsonData();
+
+	UFUNCTION(BlueprintImplementableEvent, DisplayName = "Make Copy")
+		/* Blueprint-sided data copying for making a copy of this Immie object. See UImmie::MakeCopy(). */
+		void BP_MakeCopy(UImmie* Copy);
 	
 };

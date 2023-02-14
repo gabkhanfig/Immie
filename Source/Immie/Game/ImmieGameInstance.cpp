@@ -9,6 +9,7 @@
 #include <Immie/Game/Global/Managers/SpecieDataManager.h>
 #include <Immie/Game/Global/Managers/BattleDataManager.h>
 #include <Immie/Game/Global/Managers/ConfigDataManager.h>
+#include <Immie/Game/Global/Managers/TrainerDataManager.h>
 #include <Immie/Game/Player/PlayerImmies.h>
 #include <Immie/Game/Save/SaveManager.h>
 #include <Immie/Type/ImmieType.h>
@@ -25,12 +26,14 @@ void UImmieGameInstance::InitializeGameDataManagers()
 	PlayerImmies = NewObject<UPlayerImmies>(this);
 	SaveManager = NewObject<USaveManager>(this);
 	ConfigDataManager = NewObject<UConfigDataManager>(this);
+	TrainerDataManager = NewObject<UTrainerDataManager>(this);
 
 	ConfigDataManager->Load();
 	TypeDataManager->Load();
 	AbilityDataManager->Load();
 	SpecieDataManager->Load();
 	BattleDataManager->Load();
+	TrainerDataManager->Load();
 }
 
 void UImmieGameInstance::Init()
