@@ -19,9 +19,15 @@ class IMMIE_API UTrainerDataObject : public UObject
 
 protected:
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		/* This must be set in blueprint. Trainer name should be lower case formatted. */
+		FName TrainerName;
+
 	UPROPERTY(BlueprintReadWrite)
 		/**/
 		TArray<UImmie*> Team;
+
+
 	
 
 public:
@@ -31,6 +37,8 @@ public:
 		TArray<UImmie*> GetTeamCopy(UObject* Owner);
 
 	void LoadTrainerJsonData(const FJsonObjectBP& Json);
+
+	static const FString& GetTrainerBlueprintFolder();
 
 protected:
 

@@ -14,3 +14,9 @@ void UTrainerDataObject::LoadTrainerJsonData(const FJsonObjectBP& Json)
   Team = UImmie::JsonToTeam(Json, "Team", this);
   BP_LoadTrainerJsonData(Json);
 }
+
+const FString& UTrainerDataObject::GetTrainerBlueprintFolder()
+{
+  static const FString TrainerBlueprintFolder = "/Script/Engine.Blueprint'/Game/Overworld/Trainer/Trainers/";
+  return TrainerBlueprintFolder;
+}

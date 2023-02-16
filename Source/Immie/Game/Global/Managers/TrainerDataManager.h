@@ -22,8 +22,24 @@ private:
 
 public:
 
+	UFUNCTION(BlueprintPure)
+		/**/
+		UTrainerDataObject* GetTrainerDataObject(FName TrainerName);
+
 private:
 
 	virtual void LoadDefaultGameData() override;
+
+	void RegisterTrainers(UObject* Outer, TMap<FName, UTrainerDataObject*>* MapOut);
+
+	void RegisterTrainer(UObject* Outer, FName TrainerName, TMap<FName, UTrainerDataObject*>* MapOut);
+
+	FString LoadTrainerJsonToString(FName TrainerName);
+
+	TSubclassOf<UTrainerDataObject> GetTrainerDataObjectClass(FName TrainerName);
+
+	UTrainerDataObject* LoadTrainerData(UObject* Outer, FName TrainerName);
+
+	
 	
 };
