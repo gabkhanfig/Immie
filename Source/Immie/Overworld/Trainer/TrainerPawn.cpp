@@ -3,6 +3,8 @@
 
 #include "TrainerPawn.h"
 #include "../../Immies/ImmieObject.h"
+#include "TrainerDataObject.h"
+#include "../../Game/Global/Managers/TrainerDataManager.h"
 
 // Sets default values
 ATrainerPawn::ATrainerPawn()
@@ -17,12 +19,24 @@ ATrainerPawn::ATrainerPawn()
 void ATrainerPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	UImmie* Immie = UImmie::NewImmieObject(this, 0);
-	Immie->SetDisplayName("enemy!!! wowow");
-	Immie->SetHealth(10000);
-	Team.Add(Immie);
 
+	ConstructTeam();
+}
+
+UTrainerDataObject* ATrainerPawn::GetTrainerDataObject()
+{
+	return GetTrainerDataManager()->GetTrainerDataObject(TrainerName);
+}
+
+void ATrainerPawn::ConstructTeam()
+{
+	UTrainerDataObject* DataObject = GetTrainerDataObject();
+	if (!IsValid(DataObject)) {
+		iLog("Unable to get trainer data object for trainer " + TrainerName.ToString(), LogVerbosity_Error);
+		return;
+	}
+
+	Team = DataObject->GetTeamCopy(this);
 }
 
 // Called every frame

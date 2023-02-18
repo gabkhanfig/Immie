@@ -12,7 +12,7 @@ class UImmie;
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable)
 class IMMIE_API UTrainerDataObject : public UObject
 {
 	GENERATED_BODY()

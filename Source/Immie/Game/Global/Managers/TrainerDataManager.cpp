@@ -6,6 +6,7 @@
 
 void UTrainerDataManager::RegisterTrainers(UObject* Outer, TMap<FName, UTrainerDataObject*>* MapOut)
 {
+	RegisterTrainer(Outer, "testTrainer", MapOut);
 }
 
 void UTrainerDataManager::RegisterTrainer(UObject* Outer, FName TrainerName, TMap<FName, UTrainerDataObject*>* MapOut)
@@ -48,7 +49,7 @@ FString UTrainerDataManager::LoadTrainerJsonToString(FName TrainerName)
 
 TSubclassOf<UTrainerDataObject> UTrainerDataManager::GetTrainerDataObjectClass(FName TrainerName)
 {
-	const FString TrainerString = FName::NameToDisplayString(TrainerName.ToString(), false);
+	const FString TrainerString = UStringUtils::ToUpperFirstLetter(TrainerName.ToString());
 	const FString DataObjectClassReferenceString = UTrainerDataObject::GetTrainerBlueprintFolder() + TrainerString + "/BP_" + TrainerString + "DataObject.BP_" + TrainerString + "DataObject_C'";
 	TSubclassOf<UTrainerDataObject> DataObjectClass = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *DataObjectClassReferenceString));
 	if (!IsValid(DataObjectClass)) {

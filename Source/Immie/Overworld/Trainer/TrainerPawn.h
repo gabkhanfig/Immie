@@ -7,12 +7,18 @@
 #include "../Interfaces/Battler.h"
 #include "TrainerPawn.generated.h"
 
+class UTrainerDataObject;
+
 UCLASS()
 class IMMIE_API ATrainerPawn : public APawn, public IBattler
 {
 	GENERATED_BODY()
 
 protected:
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		/**/
+		FName TrainerName;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/**/
@@ -38,5 +44,11 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	UFUNCTION(BlueprintPure)
+		/**/
+		UTrainerDataObject* GetTrainerDataObject();
+
+	void ConstructTeam();
 
 };

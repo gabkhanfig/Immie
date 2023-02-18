@@ -1,0 +1,31 @@
+{
+    "Team": [
+		{
+			"Specie": "snamdon",
+			"DisplayName": "trainer dude",
+			"Xp": 1000,
+			"Health": 50,
+			"HealthLevel": 0,
+			"AttackLevel": 0,
+			"DefenseLevel": 0,
+			"SpeedLevel": 0,
+			"Abilities": [
+				{
+					"Ability": "fireball"
+				},
+				{
+					"Ability": "fireball"
+				},
+				{
+					"Ability": "fireball"
+				},
+				{
+					"Ability": "fireball"
+				}
+			],
+			"SpecieSpecific":
+			{
+			}
+		}
+	]
+}
