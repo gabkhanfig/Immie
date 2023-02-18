@@ -112,7 +112,7 @@ void ABattleTeam::InitializeTeam(ABattleInstance* _BattleInstance, const FBattle
 	BP_CreateTeam(TeamData);
 	BP_InitializeTeam(TeamData);
 
-	if (IsValid(TeamOwner->_getUObject())) {
+	if (TeamOwner != nullptr) {
 		TeamOwner->OnBattleStart();
 	}
 }

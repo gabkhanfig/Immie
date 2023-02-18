@@ -6,7 +6,9 @@
 
 void UTrainerDataManager::RegisterTrainers(UObject* Outer, TMap<FName, UTrainerDataObject*>* MapOut)
 {
-	RegisterTrainer(Outer, "testTrainer", MapOut);
+#define RegisterTrainerName(name) RegisterTrainer(Outer, name, MapOut)
+
+	RegisterTrainerName("testTrainer");
 }
 
 void UTrainerDataManager::RegisterTrainer(UObject* Outer, FName TrainerName, TMap<FName, UTrainerDataObject*>* MapOut)

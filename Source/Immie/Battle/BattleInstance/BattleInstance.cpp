@@ -131,7 +131,9 @@ void ABattleInstance::CreateTeams()
 void ABattleInstance::InitializeTeams_Implementation()
 {
 	for (int i = 0; i < Teams.Num(); i++) {
-		Teams[i]->InitializeTeam(this, InitTeams[i]);
+		ABattleTeam* Team = Teams[i];
+		checkf(IsValid(Team), TEXT("Team must be valid in order to be initalized"));
+		Team->InitializeTeam(this, InitTeams[i]);
 	}
 }
 

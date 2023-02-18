@@ -479,6 +479,8 @@ bool AImmieCharacter::AllClientBattleSubobjectsValid()
 
 void AImmieCharacter::OnBeginBattle_Implementation()
 {
+	if (IsRunningDedicatedServer()) return;
+
 	if (IsControlledByLocalPlayer()) {
 		CreateBattleHud();
 	}
