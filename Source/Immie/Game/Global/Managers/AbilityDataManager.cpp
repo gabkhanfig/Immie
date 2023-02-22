@@ -17,6 +17,7 @@ void UAbilityDataManager::SetAbilityNamesAndIds()
 	AbilityIds.Add(AbilityName, Index);
 
 	//DefineAbilityName("testAbility");
+	DefineAbilityName("emptyAbility");
 	DefineAbilityName("fireball");
 }
 

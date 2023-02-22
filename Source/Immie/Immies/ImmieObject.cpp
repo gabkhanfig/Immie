@@ -28,7 +28,6 @@ UImmie::UImmie()
     Xp = 1;
     StatLevels = { 0, 0, 0, 0 };
     AbilityIds.Reserve(MAX_ABILITY_COUNT);
-    AbilityIds.Init(0, MAX_ABILITY_COUNT);
 }
 
 UImmie* UImmie::NewImmieObject(UObject* Outer, int _SpecieId)
@@ -143,14 +142,16 @@ void UImmie::LoadJsonData(int _SpecieId, const FJsonObjectBP& Json)
         TArray<FString> FoundAbilities = AbilityJsonArray.GetStringArray(JSON_FIELD_ABILITIES_ELEMENT);
 
         const int ElementCount = FGenericPlatformMath::Min(FoundAbilities.Num(), MAX_ABILITY_COUNT);
-        for (int i = 0; i < ElementCount; i++) {
-            const int FoundAbilityId = GetAbilityDataManager()->GetAbilityId(FName(FoundAbilities[i]));
+
+        for (int i = 0; i < MAX_ABILITY_COUNT; i++) {
+            const FName AbilityName = FoundAbilities.IsValidIndex(i) ? FName(FoundAbilities[i]) : "emptyAbility";
+            const int FoundAbilityId = GetAbilityDataManager()->GetAbilityId(AbilityName);
             if (GetAbilityDataManager()->IsValidAbility(FoundAbilityId)) {
                 // Should always be a valid index
-                AbilityIds[i] = (FoundAbilityId);
+                AbilityIds.Add(FoundAbilityId);
             }
             else {
-                iLog("Parsed ability in Immie object json " + FoundAbilities[i] + " does not have a valid ability id", LogVerbosity_Error);
+                iLog("Parsed ability in Immie object json " + AbilityName.ToString() + " does not have a valid ability id", LogVerbosity_Error);
             }
         }
     }
