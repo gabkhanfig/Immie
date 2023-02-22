@@ -26,10 +26,7 @@ void AMultiplayerGameMode::AddPlayerToBattle(AImmiePlayerController* Player, con
 	if (!Team.TeamJsonString.IsEmpty()) {
 		PlayerTeams.Add(Team);
 	}
-
-	if (IsReadyForBattle()) {
-		StartMultiplayerBattle();
-	}
+	ULogger::Log("Added player team to upcoming battle");
 }
 
 bool AMultiplayerGameMode::IsReadyForBattle()
@@ -71,6 +68,58 @@ void AMultiplayerGameMode::StartMultiplayerBattle()
 	BattleTeams.Add(Team);
 
 	Battle->BattleInit(BattleTeams);
+}
+
+void AMultiplayerGameMode::ForceStartMultiplayerBattle(AImmiePlayerController* Player)
+{
+	ULogger::Log("Player has force started a multiplayer battle");
+
+	const int RequiredTeamCount = 2;
+	const int TeamCount = PlayerTeams.Num();
+
+	TArray<FBattleTeamInit> BattleTeams;
+	BattleTeams.Reserve(RequiredTeamCount);
+
+	for (int i = 0; i < FMath::Max(RequiredTeamCount, TeamCount); i++) {
+		if (!PlayerTeams.IsValidIndex(i)) {
+			BattleTeams.Add(GenerateTestAiTeam());
+			continue;
+		}
+
+		FBattleTeamInit BattleTeam;
+		BattleTeam.Controller = PlayerTeams[i].Controller;
+		BattleTeam.TeamType = EBattleTeamType::BattleTeam_PlayerMultiplayer;
+		FJsonObjectBP PlayerImmiesJson;
+		if (!FJsonObjectBP::LoadJsonString(PlayerTeams[i].TeamJsonString, PlayerImmiesJson)) {
+			ULogger::Log("Unable to parse player supplied team string into a json object from player team index " + FString::FromInt(i) + ". Outputting string.", LogVerbosity_Error);
+			ULogger::Log(PlayerTeams[i].TeamJsonString, LogVerbosity_Error);
+			continue;
+		}
+
+		BattleTeam.Team = UImmie::JsonToTeam(PlayerImmiesJson, "PlayerTeam", Battle);
+		ULogger::Log("Successfully parsed player's multiplayer team");
+		BattleTeams.Add(BattleTeam);
+	}
+
+	Battle = ABattleInstance::NewBattleInstance(this, "Multiplayer", { 0, 0, 0 });
+	check(IsValid(Battle));
+	Battle->BattleInit(BattleTeams);
+}
+
+FBattleTeamInit AMultiplayerGameMode::GenerateTestAiTeam() const
+{
+	TArray<UImmie*> Immies;
+	for (int i = 0; i < 2; i++) {
+		UImmie* Immie = UImmie::NewImmieObject((UObject*)this, 0);
+		Immie->SetDisplayName("Ai Trainer Immie " + FString::FromInt(i + 1));
+		Immie->SetHealth(10000);
+		Immies.Add(Immie);
+	}
+
+	FBattleTeamInit Team;
+	Team.Team = Immies;
+	Team.TeamType = EBattleTeamType::BattleTeam_PlayerSingleplayer;
+	return Team;
 }
 
 

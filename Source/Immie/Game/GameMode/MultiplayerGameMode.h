@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include <Immie/Game/ImmieGameMode.h>
+#include <Immie/Battle/BattleStructures.h>
 #include "MultiplayerGameMode.generated.h"
 
 class AImmiePlayerController;
@@ -53,6 +54,11 @@ public:
 	/* Starts the multiplayer battle, including subsequently validating the data. */
 	void StartMultiplayerBattle();
 
+	/**/
+	void ForceStartMultiplayerBattle(AImmiePlayerController* Player);
 
+private:
+
+	FBattleTeamInit GenerateTestAiTeam() const;
 
 };

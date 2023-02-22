@@ -56,4 +56,12 @@ public:
 		/**/
 		void InformBattleInstanceClientValidTeams(ABattleInstance* BattleInstance);
 
+	UFUNCTION(Exec)
+		/**/
+		void StartMultiplayerBattle();
+
+	UFUNCTION(Server, Reliable)
+		/**/
+		void ExecuteStartMultiplayerBattle();
+
 };

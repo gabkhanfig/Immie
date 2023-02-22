@@ -40,3 +40,15 @@ void AImmiePlayerController::InformBattleInstanceClientValidTeams_Implementation
 {
 	BattleInstance->ClientTeamsValid(this);
 }
+
+void AImmiePlayerController::StartMultiplayerBattle()
+{
+	iLog("You have decided to force start a multiplayer battle", LogVerbosity_Warning);
+	ExecuteStartMultiplayerBattle();
+}
+
+void AImmiePlayerController::ExecuteStartMultiplayerBattle_Implementation()
+{
+	AMultiplayerGameMode* MultiplayerGameMode = Cast<AMultiplayerGameMode>(GameMode);
+	MultiplayerGameMode->ForceStartMultiplayerBattle(this);
+}
