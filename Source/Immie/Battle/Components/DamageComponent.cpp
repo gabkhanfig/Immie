@@ -3,8 +3,9 @@
 
 #include "DamageComponent.h"
 #include <Immie/Battle/Interfaces/BattleActor.h>
-#include <Immie/Ability/Abilities/Ability.h>
+#include <Immie/Ability/Ability.h>
 #include <Immie/Type/ImmieType.h>
+#include <Immie/Immies/ImmieCharacter.h>
 
 UDamageComponent::UDamageComponent()
 {
@@ -46,25 +47,30 @@ void UDamageComponent::AuthorityBattleTick(float DeltaTime)
 {
 	// Do healing to allow battle actors to survive at low health if there is healing they can do.
 	for (int i = 0; i < Healing.Num(); i++) {
-		if (Healing[i].Garbage) {
+		FBattleDamage& Heal = Healing[i];
+		if (Heal.Garbage) {
 			Healing.RemoveAt(i);
 			i--;
 			continue;
 		}
-
-		const float Amount = UDamageComponent::ExecuteAmount(Healing[i], DeltaTime);
+		float Amount = UDamageComponent::ExecuteAmount(Heal, DeltaTime); 
+		if (Heal.Ability != nullptr && Amount != 0.f) {
+			Heal.Ability->GetImmieCharacter()->EventPlayerDealtHealing(GetBattleActor(), Amount, Heal);
+		}
 		GetBattleActor()->IncreaseHealth(Amount);
 	}
 
-
 	for (int i = 0; i < Damage.Num(); i++) {
-		if (Damage[i].Garbage) {
+		FBattleDamage& Dmg = Damage[i];
+		if (Dmg.Garbage) {
 			Damage.RemoveAt(i);
 			i--;
 			continue;
 		}
-
-		const float Amount = UDamageComponent::ExecuteAmount(Damage[i], DeltaTime);
+		float Amount = UDamageComponent::ExecuteAmount(Dmg, DeltaTime);
+		if (Dmg.Ability != nullptr && Amount != 0.f) {
+			Dmg.Ability->GetImmieCharacter()->EventPlayerDealtDamage(GetBattleActor(), Amount, Dmg);
+		}
 		GetBattleActor()->DecreaseHealth(Amount);
 	}
 }
@@ -103,6 +109,7 @@ float UDamageComponent::ExecuteAmount(FBattleDamage& Values, float DeltaTime)
 float UDamageComponent::GetMultiplierThisTick(const FBattleDamage& Values)
 {
 	const float ElapsedTime = Values.TotalTime - Values.RemainingTime;
+	if (Values.Ability == nullptr) return 1;
 	return Values.Ability->TimeDamageMultiplier(ElapsedTime);
 }
 

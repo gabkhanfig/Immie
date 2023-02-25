@@ -13,10 +13,10 @@
 #include <Immie/Game/Global/Managers/AbilityDataManager.h>
 #include <Immie/Game/Global/Managers/SpecieDataManager.h>
 #include <Immie/Type/ImmieType.h>
-#include <Immie/Ability/Abilities/AbilityDataObject.h>
+#include "AbilityDataObject.h"
 #include <Immie/Immies/ImmieObject.h>
 #include <Kismet/GameplayStatics.h>
-#include <Immie/Ability/Actor/AbilityActor.h>
+#include "AbilityActor.h"
 #include <Immie/Controller/Player/ImmiePlayerController.h>
 
 UAbility::UAbility()
@@ -282,6 +282,14 @@ void UAbility::OnImmieCharacterDisable()
 	bInputHeld = false;
 	HoldDuration = 0;
 	BP_OnImmieCharacterDisable();
+}
+
+void UAbility::EventPlayerDealtHealing_Implementation(const TScriptInterface<IBattleActor>& Target, float& Amount, FBattleDamage& Healing, bool IsOwningAbility)
+{
+}
+
+void UAbility::EventPlayerDealtDamage_Implementation(const TScriptInterface<IBattleActor>& Target, float& Amount, FBattleDamage& Damage, bool IsOwningAbility)
+{
 }
 
 AImmieCharacter* UAbility::GetImmieCharacter() const

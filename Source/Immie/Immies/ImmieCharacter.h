@@ -209,7 +209,7 @@ protected:
 		/* Update active stats to all clients. */
 		void UpdateActiveStats(FBattleStats NewActiveStats);
 
-public:	
+public:
 
 	AImmieCharacter(const FObjectInitializer& ObjectInitializer);
 
@@ -263,6 +263,14 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 		/* Called when this Immie character is removed from battle. */
 		void OnRemoveFromBattle();
+
+	UFUNCTION(BlueprintNativeEvent, Category = "BattleEvents", DisplayName = "Player Dealt Healing")
+		/* Event that executes immediately before an ability this Immie character owns is dealing healing. The amount of healing done can be freely modified. */
+		void EventPlayerDealtHealing(const TScriptInterface<IBattleActor>& Target, UPARAM(ref) float& Amount, UPARAM(ref) FBattleDamage& Healing);
+
+	UFUNCTION(BlueprintNativeEvent, Category = "BattleEvents", DisplayName = "Player Dealt Damage")
+		/* Event that executes immediately before an ability this Immie character owns is dealing damage. The amount of damage done can be freely modified. */
+		void EventPlayerDealtDamage(const TScriptInterface<IBattleActor>& Target, UPARAM(ref) float& Amount, UPARAM(ref) FBattleDamage& Damage);
 
 	UFUNCTION(BlueprintPure)
 		/* Get the camera component for this Immie character. */

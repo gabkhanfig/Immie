@@ -3,8 +3,8 @@
 
 #include "AbilityActor.h"
 #include <Immie/ImmieCore.h>
-#include <Immie/Ability/Abilities/Ability.h>
-#include <Immie/Ability/Abilities/AbilityDataObject.h>
+#include <Immie/Ability/Ability.h>
+#include "AbilityDataObject.h"
 #include <Immie/Battle/Components/DamageComponent.h>
 #include <Net/UnrealNetwork.h>
 #include "DummyAbilityActor.h"

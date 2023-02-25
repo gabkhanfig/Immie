@@ -4,8 +4,8 @@
 #include "BattleAbilityManager.h"
 #include <Immie/Battle/BattleInstance/BattleInstance.h>
 #include <Immie/Game/Global/Managers/AbilityDataManager.h>
-#include <Immie/Ability/Abilities/Ability.h>
-#include <Immie/Ability/Abilities/AbilityDataObject.h>
+#include <Immie/Ability/Ability.h>
+#include <Immie/Ability/AbilityDataObject.h>
 
 UBattleAbilityManager::UBattleAbilityManager()
 {

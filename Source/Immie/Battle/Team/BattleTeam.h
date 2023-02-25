@@ -139,6 +139,14 @@ public:
 		/**/
 		void OnBattleEnd(EBattleTeamWinState WinState);
 
+	UFUNCTION(BlueprintNativeEvent, Category = "BattleEvents", DisplayName = "Player Dealt Healing")
+		/* Event that executes immediately before an ability that an Immie character owns is dealing healing. The amount of healing done can be freely modified. */
+		void EventPlayerDealtHealing(const TScriptInterface<IBattleActor>& Target, UPARAM(ref) float& Amount, UPARAM(ref) FBattleDamage& Healing, AImmieCharacter* ImmieCharacter);
+
+	UFUNCTION(BlueprintNativeEvent, Category = "BattleEvents", DisplayName = "Player Dealt Damage")
+		/* Event that executes immediately before an ability that an Immie character owns is dealing damage. The amount of damage done can be freely modified. */
+		void EventPlayerDealtDamage(const TScriptInterface<IBattleActor>& Target, UPARAM(ref) float& Amount, UPARAM(ref) FBattleDamage& Damage, AImmieCharacter* ImmieCharacter);
+
 	UFUNCTION(BlueprintPure)
 		/* Returns the type of team this is. Override this for all blueprint child classes. */
 		TEnumAsByte<EBattleTeamType> GetBattleTeamType() const { return TeamType; };

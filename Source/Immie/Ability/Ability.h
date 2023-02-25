@@ -6,7 +6,7 @@
 #include "Components/ActorComponent.h"
 #include <Immie/Util/Json/BlueprintJsonObject.h>
 #include <Immie/ImmieCore.h>
-#include <Immie/Ability/AbilityDataTypes.h>
+#include "AbilityDataTypes.h"
 #include "Ability.generated.h"
 
 class UImmie;
@@ -183,6 +183,16 @@ public:
 	UFUNCTION(BlueprintCallable)
 		/**/
 		void OnImmieCharacterDisable();
+
+	UFUNCTION(BlueprintNativeEvent, Category = "BattleEvents", DisplayName = "Player Dealt Healing")
+		/* Event that executes immediately before one of the abilities of the owning Immie character is dealing healing. The amount of healing done can be freely modified. 
+		IsOwningAbility means this ability dealt the healing. */
+		void EventPlayerDealtHealing(const TScriptInterface<IBattleActor>& Target, UPARAM(ref) float& Amount, UPARAM(ref) FBattleDamage& Healing, bool IsOwningAbility);
+
+	UFUNCTION(BlueprintNativeEvent, Category = "BattleEvents", DisplayName = "Player Dealt Damage")
+		/* Event that executes immediately before one of the abilities of the owning Immie character is dealing damage. The amount of damage done can be freely modified. 
+		IsOwningAbility means this ability dealt the damage. */
+		void EventPlayerDealtDamage(const TScriptInterface<IBattleActor>& Target, UPARAM(ref) float& Amount, UPARAM(ref) FBattleDamage& Damage, bool IsOwningAbility);
 
 	UFUNCTION(BlueprintPure)
 		/* Get the id number of this ability. */

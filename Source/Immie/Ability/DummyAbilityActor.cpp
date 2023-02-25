@@ -4,7 +4,7 @@
 #include "DummyAbilityActor.h"
 #include "AbilityActor.h"
 #include <Immie/ImmieCore.h>
-#include <Immie/Ability/Abilities/AbilityDataObject.h>
+#include "AbilityDataObject.h"
 #include <GameFramework/ProjectileMovementComponent.h>
 #include <Components/ArrowComponent.h>
 

@@ -100,7 +100,7 @@ struct FBattleDamage
 	GENERATED_BODY()
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		/* The ability that is responsible for this damage / healing. */
+		/* The ability that is responsible for this damage / healing. Setting this to null will force a damage multiplier of 1 always for any time duration. */
 		UAbility* Ability;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)

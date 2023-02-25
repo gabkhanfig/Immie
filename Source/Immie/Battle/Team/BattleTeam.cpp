@@ -1,14 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "BattleTeam.h"
 #include <Immie/Immies/ImmieObject.h>
 #include <Immie/Immies/ImmieCharacter.h>
 #include <Immie/Battle/BattleInstance/BattleInstance.h>
 #include <Immie/Type/ImmieType.h>
-#include <Immie/Ability/Abilities/Ability.h>
+#include <Immie/Ability/Ability.h>
 #include <Immie/Controller/Player/ImmiePlayerController.h>
-#include <Immie/Ability/Actor/AbilityActor.h>
+#include <Immie/Ability/AbilityActor.h>
 #include <Kismet/GameplayStatics.h>
 #include <Immie/Battle/Components/DamageComponent.h>
 #include "../../Overworld/Interfaces/Battler.h"
@@ -279,6 +278,14 @@ void ABattleTeam::DestroyBattleActors()
 		}
 		RemoveAbilityActor(AbilityActor);
 	}
+}
+
+void ABattleTeam::EventPlayerDealtHealing_Implementation(const TScriptInterface<IBattleActor>& Target, UPARAM(ref) float& Amount, UPARAM(ref)FBattleDamage& Healing, AImmieCharacter* ImmieCharacter)
+{
+}
+
+void ABattleTeam::EventPlayerDealtDamage_Implementation(const TScriptInterface<IBattleActor>& Target, UPARAM(ref) float& Amount, UPARAM(ref)FBattleDamage& Damage, AImmieCharacter* ImmieCharacter)
+{
 }
 
 void ABattleTeam::OnBattleEnd_Implementation(EBattleTeamWinState WinState)

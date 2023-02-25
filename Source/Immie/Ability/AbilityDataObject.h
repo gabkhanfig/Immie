@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include <Immie/Util/Json/BlueprintJsonObject.h>
-#include <Immie/Ability/AbilityDataTypes.h>
+#include "AbilityDataTypes.h"
 #include <Immie/Core/Structures.h>
 #include "AbilityDataObject.generated.h"
 

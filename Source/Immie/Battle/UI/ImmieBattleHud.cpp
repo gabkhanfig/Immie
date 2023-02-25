@@ -4,7 +4,7 @@
 #include "ImmieBattleHud.h"
 #include <Immie/Immies/ImmieCharacter.h>
 #include <Immie/Immies/ImmieObject.h>
-#include <Immie/Ability/Abilities/Ability.h>
+#include <Immie/Ability/Ability.h>
 #include <Immie/Type/ImmieType.h>
 
 UImmieBattleHud::UImmieBattleHud(const FObjectInitializer& ObjectInitializer)

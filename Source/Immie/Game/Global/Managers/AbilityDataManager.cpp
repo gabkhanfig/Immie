@@ -2,8 +2,8 @@
 
 
 #include "AbilityDataManager.h"
-#include <Immie/Ability/Abilities/Ability.h>
-#include <Immie/Ability/Abilities/AbilityDataObject.h>
+#include <Immie/Ability/Ability.h>
+#include <Immie/Ability/AbilityDataObject.h>
 
 void UAbilityDataManager::SetAbilityNamesAndIds()
 {

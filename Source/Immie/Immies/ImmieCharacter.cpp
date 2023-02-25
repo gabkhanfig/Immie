@@ -17,7 +17,7 @@
 #include <Immie/Battle/Managers/BattleAbilityManager.h>
 #include <Immie/Battle/Managers/BattleSpecieManager.h>
 #include <Immie/Battle/Team/BattleTeam.h>
-#include <Immie/Ability/Abilities/Ability.h>
+#include <Immie/Ability/Ability.h>
 #include <Immie/Battle/Components/DamageComponent.h>
 #include <Immie/Immies/SpecieDataObject.h>
 #include <Kismet/KismetMathLibrary.h>
@@ -502,6 +502,26 @@ void AImmieCharacter::OnRemoveFromBattle_Implementation()
 
 	BattleHud = nullptr;
 	FloatingBattleHealthbar = nullptr;
+}
+
+void AImmieCharacter::EventPlayerDealtHealing_Implementation(const TScriptInterface<IBattleActor>& Target, float& Amount, FBattleDamage& Healing)
+{
+	GetTeam()->EventPlayerDealtHealing(Target, Amount, Healing, this);
+	for (int i = 0; i < Abilities.Num(); i++) {
+		UAbility* Ability = Abilities[i];
+		const bool IsHealingAbility = Healing.Ability == Ability;
+		Ability->EventPlayerDealtDamage(Target, Amount, Healing, IsHealingAbility);
+	}
+}
+
+void AImmieCharacter::EventPlayerDealtDamage_Implementation(const TScriptInterface<IBattleActor>& Target, float& Amount, FBattleDamage& Damage)
+{
+	GetTeam()->EventPlayerDealtDamage(Target, Amount, Damage, this);
+	for (int i = 0; i < Abilities.Num(); i++) {
+		UAbility* Ability = Abilities[i];
+		const bool IsDamagingAbility = Damage.Ability == Ability;
+		Ability->EventPlayerDealtDamage(Target, Amount, Damage, IsDamagingAbility);
+	}
 }
 
 int AImmieCharacter::GetSpecieId() const

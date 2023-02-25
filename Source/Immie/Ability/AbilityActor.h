@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include <Immie/Core/Structures.h>
 #include <Immie/Battle/Interfaces/BattleActor.h>
-#include <Immie/Ability/AbilityDataTypes.h>
+#include "AbilityDataTypes.h"
 #include "AbilityActor.generated.h"
 
 class UAbility;
