@@ -41,7 +41,7 @@ private:
 
 	FString LoadSpecieJsonFileToString(FName SpecieName, const FString& FolderName);
 
-	UClass* LoadSpecieDataObjectClass(FName SpecieName);
+	TSubclassOf<USpecieDataObject> LoadSpecieDataObjectClass(FName SpecieName);
 
 	USpecieDataObject* RegisterSpecie(UObject* Outer, FName SpecieName, int SpecieId, const FString& JsonString, bool LoadLearnsets = true);
 

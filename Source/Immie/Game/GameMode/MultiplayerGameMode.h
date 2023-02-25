@@ -51,9 +51,6 @@ public:
 	/* Is everything ready for battle? */
 	bool IsReadyForBattle();
 
-	/* Starts the multiplayer battle, including subsequently validating the data. */
-	void StartMultiplayerBattle();
-
 	/**/
 	void ForceStartMultiplayerBattle(AImmiePlayerController* Player);
 

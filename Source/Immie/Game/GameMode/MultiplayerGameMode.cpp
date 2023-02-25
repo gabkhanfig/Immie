@@ -35,41 +35,6 @@ bool AMultiplayerGameMode::IsReadyForBattle()
 	return PlayerTeams.Num() >= RequiredTeamCount;
 }
 
-void AMultiplayerGameMode::StartMultiplayerBattle()
-{
-	const int TeamCount = PlayerTeams.Num();
-
-	Battle = ABattleInstance::NewBattleInstance(this, "Multiplayer", { 0, 0, 0 });
-	check(IsValid(Battle));
-
-	TArray<FBattleTeamInit> BattleTeams;
-	BattleTeams.Reserve(TeamCount);
-	for (int i = 0; i < TeamCount; i++) {
-		FBattleTeamInit BattleTeam;
-		BattleTeam.Controller = PlayerTeams[i].Controller;
-		BattleTeam.TeamType = EBattleTeamType::BattleTeam_PlayerMultiplayer;
-		FJsonObjectBP PlayerImmiesJson;
-		if (!FJsonObjectBP::LoadJsonString(PlayerTeams[i].TeamJsonString, PlayerImmiesJson)) {
-			ULogger::Log("Unable to parse player supplied team string into a json object from player team index " + FString::FromInt(i) + ". Outputting string.", LogVerbosity_Error);
-			ULogger::Log(PlayerTeams[i].TeamJsonString, LogVerbosity_Error);
-			continue;
-		}
-		
-		BattleTeam.Team = UImmie::JsonToTeam(PlayerImmiesJson, "PlayerTeam", Battle);
-		ULogger::Log("Successfully parsed team");
-		BattleTeams.Add(BattleTeam);
-	}
-	FBattleTeamInit Team;
-	UImmie* Immie = UImmie::NewImmieObject(this, 0);
-	Immie->SetDisplayName("some display name idk");
-	Immie->SetHealth(10000);
-	Team.Team.Add(Immie);
-	Team.TeamType = EBattleTeamType::BattleTeam_PlayerSingleplayer;
-	BattleTeams.Add(Team);
-
-	Battle->BattleInit(BattleTeams);
-}
-
 void AMultiplayerGameMode::ForceStartMultiplayerBattle(AImmiePlayerController* Player)
 {
 	ULogger::Log("Player has force started a multiplayer battle");

@@ -39,11 +39,11 @@ FString USpecieDataManager::LoadSpecieJsonFileToString(FName SpecieName, const F
 	return JsonString;
 }
 
-UClass* USpecieDataManager::LoadSpecieDataObjectClass(FName SpecieName)
+TSubclassOf<USpecieDataObject> USpecieDataManager::LoadSpecieDataObjectClass(FName SpecieName)
 {
 	const FString SpecieString = UStringUtils::ToUpperFirstLetter(SpecieName.ToString());
 	const FString DataObjectClassReferenceString = USpecieDataObject::GetImmiesBlueprintFolder() + SpecieString + "/BP_" + SpecieString + "DataObject.BP_" + SpecieString + "DataObject_C'";
-	UClass* DataObjectClass = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *DataObjectClassReferenceString));
+	TSubclassOf<USpecieDataObject> DataObjectClass = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *DataObjectClassReferenceString));
 
 	if (!IsValid(DataObjectClass)) {
 		iLog("Data object UClass for specie " + SpecieName.ToString() + " is not valid.", LogVerbosity_Error);
@@ -55,7 +55,7 @@ UClass* USpecieDataManager::LoadSpecieDataObjectClass(FName SpecieName)
 
 USpecieDataObject* USpecieDataManager::RegisterSpecie(UObject* Outer, FName SpecieName, int SpecieId, const FString& JsonString, bool LoadLearnsets)
 {
-	UClass* DataObjectClass = LoadSpecieDataObjectClass(SpecieName);
+	TSubclassOf<USpecieDataObject> DataObjectClass = LoadSpecieDataObjectClass(SpecieName);
 
 	FJsonObjectBP SpecieJson;
 	if (!FJsonObjectBP::LoadJsonString(JsonString, SpecieJson)) {

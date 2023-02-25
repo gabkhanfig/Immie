@@ -41,11 +41,11 @@ FString UAbilityDataManager::LoadAbilityJsonFileToString(FName AbilityName, cons
 	return JsonString;
 }
 
-UClass* UAbilityDataManager::LoadAbilityDataObjectClass(FName AbilityName)
+TSubclassOf<UAbilityDataObject> UAbilityDataManager::LoadAbilityDataObjectClass(FName AbilityName)
 {
 	const FString AbilityCapitalizedName = UStringUtils::ToUpperFirstLetter(AbilityName.ToString());
 	const FString DataObjectClassReferenceString = UAbilityDataObject::GetAbilitiesBlueprintFolder() + AbilityCapitalizedName + "/BP_" + AbilityCapitalizedName + "DataObject.BP_" + AbilityCapitalizedName + "DataObject_C'";
-	UClass* DataObjectClass = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *DataObjectClassReferenceString));
+	TSubclassOf<UAbilityDataObject> DataObjectClass = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *DataObjectClassReferenceString));
 
 	if (!IsValid(DataObjectClass)) {
 		iLog("Data object UClass for ability " + AbilityName.ToString() + " is not valid.", LogVerbosity_Error);
@@ -57,7 +57,7 @@ UClass* UAbilityDataManager::LoadAbilityDataObjectClass(FName AbilityName)
 
 UAbilityDataObject* UAbilityDataManager::RegisterAbility(UObject* Outer, FName AbilityName, int AbilityId, const FString& JsonString)
 {
-	UClass* DataObjectClass = LoadAbilityDataObjectClass(AbilityName);
+	TSubclassOf<UAbilityDataObject> DataObjectClass = LoadAbilityDataObjectClass(AbilityName);
 
 	FJsonObjectBP AbilityJson;
 	if (!FJsonObjectBP::LoadJsonString(JsonString, AbilityJson)) {

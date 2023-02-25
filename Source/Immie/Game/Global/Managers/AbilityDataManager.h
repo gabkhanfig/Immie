@@ -39,7 +39,7 @@ private:
 
 	FString LoadAbilityJsonFileToString(FName AbilityName, const FString& FolderName);
 
-	UClass* LoadAbilityDataObjectClass(FName AbilityName);
+	TSubclassOf<UAbilityDataObject> LoadAbilityDataObjectClass(FName AbilityName);
 
 	UAbilityDataObject* RegisterAbility(UObject* Outer, FName AbilityName, int AbilityId, const FString& JsonString);
 	
