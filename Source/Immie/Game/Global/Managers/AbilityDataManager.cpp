@@ -14,11 +14,12 @@ void UAbilityDataManager::SetAbilityNamesAndIds()
 
 #define DefineAbilityName(AbilityName) \
 	Index = AbilityNames.Add(AbilityName);\
-	AbilityIds.Add(AbilityName, Index);
+	AbilityIds.Add(AbilityName, Index)
 
 	//DefineAbilityName("testAbility");
 	DefineAbilityName("emptyAbility");
 	DefineAbilityName("fireball");
+	DefineAbilityName("terraSpike");
 }
 
 void UAbilityDataManager::LoadDefaultGameData()

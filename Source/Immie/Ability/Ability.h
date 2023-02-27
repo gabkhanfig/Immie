@@ -146,6 +146,14 @@ protected:
 		/* Blueprint sided client battle ticking. See UAbility::ClientBattleTick() for what is called prior to this event executing. */
 		void BP_ClientBattleTick(float DeltaTime);
 
+	UFUNCTION(BlueprintPure, BlueprintNativeEvent)
+		/**/
+		FTransform GetAbilityActorSpawnTransform() const;
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, DisplayName = "Use Ability")
+		/* Executed when this ability has been validated to be able to be "used" after input. See the event BP_OnInputPress(). */
+		void BP_UseAbility();
+
 public:	
 
 	UAbility();

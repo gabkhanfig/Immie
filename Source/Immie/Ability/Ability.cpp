@@ -19,6 +19,11 @@
 #include "AbilityActor.h"
 #include <Immie/Controller/Player/ImmiePlayerController.h>
 
+FTransform UAbility::GetAbilityActorSpawnTransform_Implementation() const
+{
+	return GetImmieCharacter()->GetActorTransform();
+}
+
 UAbility::UAbility()
 {
 	PrimaryComponentTick.bCanEverTick = true;
@@ -150,17 +155,11 @@ void UAbility::InformClientsInputPress_Implementation()
 
 void UAbility::BP_OnInputPress_Implementation(bool HasBattleAuthority, FAbilityFlags AbilityFlags)
 {
-	//if (!CanAbilityBeUsed()) return;
 	if (!HasBattleAuthority) return;
 	if (!CanAbilityBeUsed()) return;
 
+	BP_UseAbility();
 	DecrementUses();
-
-	if (AbilityFlags.Projectile) {
-		AAbilityActor* actor = SpawnAbilityActor(GetImmieCharacter()->GetTransform());
-	}
-	//FDateTime t = FDateTime::UtcNow();
-	//iLog(t.ToString());
 }
 
 void UAbility::InputRelease()
@@ -206,6 +205,7 @@ void UAbility::BP_OnInputRelease_Implementation(bool HasBattleAuthority, FAbilit
 
 AAbilityActor* UAbility::SpawnAbilityActor(const FTransform& SpawnTransform)
 {
+	checkf(HasBattleAuthority(), TEXT("Ability actors can only be spawned on the server/standalone, the authoritative side."))
 	return SpawnAbilityActorFromClass(GetActorClass(), SpawnTransform);
 }
 

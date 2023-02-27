@@ -1,0 +1,15 @@
+{
+    "Types": [
+        {
+            "Type": "ground"
+        }
+    ],
+    "MaxUses": 1,
+    "InitialUses": 1,
+    "MaxCooldown": 4,
+    "DamagePower": 100,
+    "AbilityFlags": {
+        "DoesDamage": true,
+        "VisualDummy": true
+    }
+}
