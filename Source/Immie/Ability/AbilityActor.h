@@ -102,6 +102,14 @@ protected:
 		/* Event for handling ability actor collision with an enemy battle actor. Can have base functionality overridden in blueprints. See "call to parent" functionality in blueprints. */
 		void OnEnemyCollision(const TScriptInterface<IBattleActor>& Enemy, UPrimitiveComponent* ThisComponent, UPrimitiveComponent* OtherComponent);
 
+	UFUNCTION(BlueprintImplementableEvent, DisplayName = "Authority Battle Tick")
+		/**/
+		void BP_AuthorityBattleTick(float DeltaTime);
+
+	UFUNCTION(BlueprintImplementableEvent, DisplayName = "Client Battle Tick")
+		/**/
+		void BP_ClientBattleTick(float DeltaTime);
+
 public:	
 
 	UFUNCTION(BlueprintCallable)
@@ -239,4 +247,6 @@ public:
 	virtual FString GetDisplayName() const override;
 
 	virtual void UpdateVisuals() override;
+
+	virtual UDamageComponent* BattleActorGetDamageComponent_Implementation() const override { return GetDamageComponent(); }
 };

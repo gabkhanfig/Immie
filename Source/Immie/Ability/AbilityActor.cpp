@@ -298,10 +298,12 @@ ABattleTeam* AAbilityActor::GetTeam() const
 
 void AAbilityActor::AuthorityBattleTick(float DeltaTime)
 {
+	BP_AuthorityBattleTick(DeltaTime);
 }
 
 void AAbilityActor::ClientBattleTick(float DeltaTime)
 {
+	BP_ClientBattleTick(DeltaTime);
 }
 
 void AAbilityActor::IncreaseHealth(float Amount)

@@ -348,4 +348,6 @@ public:
 
 	virtual void UpdateVisuals() override;
 
+	virtual UDamageComponent* BattleActorGetDamageComponent_Implementation() const override { return GetDamageComponent(); }
+
 };
