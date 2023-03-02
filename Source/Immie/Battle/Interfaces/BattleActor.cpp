@@ -47,12 +47,12 @@
 //  return GetType();
 //}
 //
-bool IBattleActor::IsAlly(const TScriptInterface<IBattleActor>& OtherBattleActor) const
-{
-  ABattleTeam* Team = GetTeam();
-  if (!IsValid(Team)) return false;
-  return Team != nullptr && Team == OtherBattleActor->GetTeam();
-}
+//bool IBattleActor::IsAlly(const TScriptInterface<IBattleActor>& OtherBattleActor) const
+//{
+//  ABattleTeam* Team = GetTeam();
+//  if (!IsValid(Team)) return false;
+//  return Team != nullptr && Team == OtherBattleActor->GetTeam();
+//}
 //
 //FBattleStats IBattleActor::BattleActorGetInitialStats_Implmementation() const
 //{

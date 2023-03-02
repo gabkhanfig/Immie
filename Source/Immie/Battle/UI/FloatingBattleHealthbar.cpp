@@ -22,12 +22,12 @@ void UFloatingBattleHealthbar::SetBattleActor(TScriptInterface<IBattleActor> New
 
 float UFloatingBattleHealthbar::GetCurrentHealth() const
 {
-	return BattleActor->GetActiveStats().Health;
+	return IBattleActor::Execute_GetActiveStats(BattleActor.GetObject()).Health;
 }
 
 float UFloatingBattleHealthbar::GetMaxHealth() const
 {
-	return BattleActor->GetInitialStats().Health;
+	return IBattleActor::Execute_GetInitialStats(BattleActor.GetObject()).Health;
 }
 
 float UFloatingBattleHealthbar::GetHealthPercent() const
@@ -37,7 +37,7 @@ float UFloatingBattleHealthbar::GetHealthPercent() const
 
 FString UFloatingBattleHealthbar::GetDisplayName() const
 {
-	return BattleActor->GetDisplayName();
+	return IBattleActor::Execute_GetDisplayName(BattleActor.GetObject());
 }
 
 FLinearColor UFloatingBattleHealthbar::GetTypeColor(UImmieType* Type) const

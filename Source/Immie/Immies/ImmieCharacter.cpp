@@ -122,7 +122,7 @@ void AImmieCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AImmieCharacter::AuthorityBattleTick(float DeltaTime)
+void AImmieCharacter::AuthorityBattleTick_Implementation(float DeltaTime)
 {
 	FBattleStats PreviousActiveStats = ActiveStats;
 
@@ -130,7 +130,8 @@ void AImmieCharacter::AuthorityBattleTick(float DeltaTime)
 
 	AuthorityBattleTickComponents(DeltaTime);
 	if (!IsRunningDedicatedServer()) {
-		UpdateVisuals();
+		IBattleActor::Execute_UpdateVisuals(this);
+		//UpdateVisuals();
 	}
 
 	if (ActiveStats != PreviousActiveStats) {
@@ -138,43 +139,50 @@ void AImmieCharacter::AuthorityBattleTick(float DeltaTime)
 	}
 }
 
-void AImmieCharacter::ClientBattleTick(float DeltaTime)
+void AImmieCharacter::ClientBattleTick_Implementation(float DeltaTime)
 {
 	ClientBattleTickComponents(DeltaTime);
-	UpdateVisuals();
+	IBattleActor::Execute_UpdateVisuals(this);
+	//UpdateVisuals();
 }
 
-bool AImmieCharacter::IsValidAbilityCollider(UPrimitiveComponent* Collider) const
+bool AImmieCharacter::IsValidAbilityCollider_Implementation(UPrimitiveComponent* Collider) const
 {
 	return AbilityColliders.Contains(Collider);
 }
 
-bool AImmieCharacter::CanBeHealedByAbilityActor(AAbilityActor* AbilityActor) const
+bool AImmieCharacter::CanBeHealedByAbilityActor_Implementation(AAbilityActor* AbilityActor) const
 {
 	return true;
 }
 
-bool AImmieCharacter::CanBeDamagedByAbilityActor(AAbilityActor* AbilityActor) const
+bool AImmieCharacter::CanBeDamagedByAbilityActor_Implementation(AAbilityActor* AbilityActor) const
 {
 	return true;
 }
 
-FBattleStats AImmieCharacter::GetInitialStats() const
+bool AImmieCharacter::IsAlly_Implementation(const TScriptInterface<IBattleActor>& OtherBattleActor) const
+{
+	if (!IsValid(Team)) return false;
+	return Team == IBattleActor::Execute_GetTeam(OtherBattleActor.GetObject());
+}
+
+FBattleStats AImmieCharacter::GetInitialStats_Implementation() const
 {
 	return InitialStats;
 }
 
-ABattleTeam* AImmieCharacter::GetTeam() const
+ABattleTeam* AImmieCharacter::GetTeam_Implementation() const
 {
 	return Team;
 }
 
-TArray<UImmieType*> AImmieCharacter::GetType() const
+TArray<UImmieType*> AImmieCharacter::GetType_Implementation() const
 {
 	return Type;
 }
 
-void AImmieCharacter::IncreaseHealth(float Amount)
+void AImmieCharacter::IncreaseHealth_Implementation(float Amount)
 {
 	checkf(Amount >= 0, TEXT("Increasing battle actor health by negative value is not allowed"));
 	ActiveStats.Health += Amount;
@@ -183,7 +191,7 @@ void AImmieCharacter::IncreaseHealth(float Amount)
 	}
 }
 
-void AImmieCharacter::DecreaseHealth(float Amount)
+void AImmieCharacter::DecreaseHealth_Implementation(float Amount)
 {
 	checkf(Amount >= 0, TEXT("Decreasing battle actor health by negative value is not allowed"));
 	ActiveStats.Health -= Amount;
@@ -192,7 +200,7 @@ void AImmieCharacter::DecreaseHealth(float Amount)
 	}
 }
 
-void AImmieCharacter::UpdateVisuals()
+void AImmieCharacter::UpdateVisuals_Implementation()
 {
 }
 
@@ -506,7 +514,7 @@ void AImmieCharacter::OnRemoveFromBattle_Implementation()
 
 void AImmieCharacter::EventPlayerDealtHealing_Implementation(const TScriptInterface<IBattleActor>& Target, float& Amount, FBattleDamage& Healing)
 {
-	GetTeam()->EventPlayerDealtHealing(Target, Amount, Healing, this);
+	Team->EventPlayerDealtHealing(Target, Amount, Healing, this);
 	for (int i = 0; i < Abilities.Num(); i++) {
 		UAbility* Ability = Abilities[i];
 		const bool IsHealingAbility = Healing.Ability == Ability;
@@ -516,7 +524,7 @@ void AImmieCharacter::EventPlayerDealtHealing_Implementation(const TScriptInterf
 
 void AImmieCharacter::EventPlayerDealtDamage_Implementation(const TScriptInterface<IBattleActor>& Target, float& Amount, FBattleDamage& Damage)
 {
-	GetTeam()->EventPlayerDealtDamage(Target, Amount, Damage, this);
+	Team->EventPlayerDealtDamage(Target, Amount, Damage, this);
 	for (int i = 0; i < Abilities.Num(); i++) {
 		UAbility* Ability = Abilities[i];
 		const bool IsDamagingAbility = Damage.Ability == Ability;
@@ -550,12 +558,12 @@ bool AImmieCharacter::IsControlledByLocalPlayer() const
 	return ImmieController != nullptr && ImmieController == GetBattleInstance()->GetLocalPlayerController();
 }
 
-UDamageComponent* AImmieCharacter::GetDamageComponent() const
+UDamageComponent* AImmieCharacter::GetDamageComponent_Implementation() const
 {
 	return DamageComponent;
 }
 
-float AImmieCharacter::TotalHealingFromAbility(const FAbilityInstigatorDamage& AbilityHealing) const
+float AImmieCharacter::TotalHealingFromAbility_Implementation(const FAbilityInstigatorDamage& AbilityHealing) const
 {
 	// TODO properly implement healing thats not just the opposite of damage.
 	const float UnmodifiedDamageMultiplier = UFormula::Damage(AbilityHealing.Power, AbilityHealing.AttackerStat, AbilityHealing.DefenderStat, AbilityHealing.InstigatorLevel);
@@ -563,7 +571,7 @@ float AImmieCharacter::TotalHealingFromAbility(const FAbilityInstigatorDamage& A
 	return UnmodifiedDamageMultiplier * TypeDamageMultiplier;
 }
 
-float AImmieCharacter::TotalDamageFromAbility(const FAbilityInstigatorDamage& AbilityDamage) const
+float AImmieCharacter::TotalDamageFromAbility_Implementation(const FAbilityInstigatorDamage& AbilityDamage) const
 {
 	const float UnmodifiedDamageMultiplier = UFormula::Damage(AbilityDamage.Power, AbilityDamage.AttackerStat, AbilityDamage.DefenderStat, AbilityDamage.InstigatorLevel);
 	const float TypeDamageMultiplier = UImmieType::TotalTypeDamageMultiplier(AbilityDamage.InstigatorType, AbilityDamage.DefenderType);
@@ -578,12 +586,12 @@ void AImmieCharacter::SetImmieEnabled_Implementation(bool NewEnabled)
 	bEnabled = NewEnabled;
 }
 
-FBattleStats AImmieCharacter::GetActiveStats() const
+FBattleStats AImmieCharacter::GetActiveStats_Implementation() const
 {
 	return ActiveStats;
 }
 
-FString AImmieCharacter::GetDisplayName() const
+FString AImmieCharacter::GetDisplayName_Implementation() const
 {
 	return ImmieObject->GetDisplayName();
 }

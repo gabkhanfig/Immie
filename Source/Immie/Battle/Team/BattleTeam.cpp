@@ -70,7 +70,8 @@ void ABattleTeam::AuthorityBattleTickBattleActors(float DeltaTime)
 {
 	const bool ActiveImmieAlive = ActiveImmie->GetCurrentHealth() > 0;
 	if (ActiveImmieAlive) {
-		ActiveImmie->AuthorityBattleTick(DeltaTime);
+		IBattleActor::Execute_AuthorityBattleTick(ActiveImmie, DeltaTime);
+		//ActiveImmie->AuthorityBattleTick(DeltaTime);
 	}
 	else {
 		if (!SwapInNextImmie()) {
@@ -82,14 +83,16 @@ void ABattleTeam::AuthorityBattleTickBattleActors(float DeltaTime)
 		// Should be valid
 		AAbilityActor* Actor = AbilityActors[i];
 		checkf(IsValid(Actor), TEXT("Ability Actor should be valid for authority battle tick. See if AAbilityActor::Destroy() was called anywhere. Use AAbilityActor::DestroyAbilityActor() instead."));
-		Actor->AuthorityBattleTick(DeltaTime);
+		IBattleActor::Execute_AuthorityBattleTick(Actor, DeltaTime);
+		//Actor->AuthorityBattleTick(DeltaTime);
 	}
 }
 
 void ABattleTeam::ClientBattleTickBattleActors(float DeltaTime)
 {
 	if (IsValid(ActiveImmie)) {
-		ActiveImmie->ClientBattleTick(DeltaTime);
+		IBattleActor::Execute_ClientBattleTick(ActiveImmie, DeltaTime);
+		//ActiveImmie->ClientBattleTick(DeltaTime);
 	}
 	// Client ability actors do not execute client battle tick. DummyAbilityActor::Tick() should handle any client relevant ticking.
 }
@@ -167,7 +170,7 @@ bool ABattleTeam::ValidSubobjects()
 			return false;
 		}
 
-		TArray<UImmieType*> ImmieTypes = Team[i]->GetType();
+		TArray<UImmieType*> ImmieTypes = IBattleActor::Execute_GetType(Team[i]);//->GetType();
 		for (const auto& Type : ImmieTypes) {
 			if (!IsValid(Type)) {
 				iLog("valid subobjects? invalid type");

@@ -64,7 +64,7 @@ void UAbility::InitializeForBattle()
 	FAbilityFlags AbilityFlags = AbilityDataObject->GetAbilityFlags();
 
 	if (AbilityFlags.SameTypeImmie) {
-		Type = GetImmieCharacter()->GetType();
+		Type = IBattleActor::Execute_GetType(GetImmieCharacter());//GetImmieCharacter()->GetType();
 	}
 	else {
 		const int AbilityTypeBitmask = AbilityDataObject->GetTypeBitmask();
@@ -299,7 +299,7 @@ AImmieCharacter* UAbility::GetImmieCharacter() const
 
 ABattleTeam* UAbility::GetTeam() const
 {
-	return GetImmieCharacter()->GetTeam();
+	return IBattleActor::Execute_GetTeam(GetImmieCharacter());
 }
 
 ABattleInstance* UAbility::GetBattleInstance() const
