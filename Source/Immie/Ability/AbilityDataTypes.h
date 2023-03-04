@@ -11,6 +11,7 @@
 class UAbility;
 class AAbilityActor;
 class UImmieType;
+class UPrimitiveComponent;
 
 USTRUCT(BlueprintType)
 /* Pass around damage or healing values instigated by an ability. */
@@ -118,4 +119,15 @@ public:
 
 	FJsonObjectBP ToJson();
 
+};
+
+USTRUCT(BlueprintType)
+/**/
+struct FBattleActorColliderHitArray
+{
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		/**/
+		TArray<UPrimitiveComponent*> Colliders;
 };

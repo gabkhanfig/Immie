@@ -35,6 +35,10 @@ private:
 		/* The active stats of the owning ability component when this ability actor was spawned. Replicated via serialization on spawn. DO NOT CHANGE ON CLIENT. */
 		FBattleStats SpawnedActiveStats;
 
+	UPROPERTY()
+		/**/
+		TMap<UObject*, FBattleActorColliderHitArray> BattleActorHitColliders;
+
 protected:
 
 	UPROPERTY(BlueprintReadWrite, replicated)
@@ -91,8 +95,9 @@ protected:
 		void OnCollision(UPrimitiveComponent* ThisOverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherActorComponent);
 
 	UFUNCTION(BlueprintNativeEvent)
-		/* Executes after AAbilityActor::OnCollision(). Can have base functionality overridden in blueprints. See "call to parent" functionality in blueprints. */
-		void OnBattleActorCollision(const TScriptInterface<IBattleActor>& BattleActor, UPrimitiveComponent* ThisComponent, UPrimitiveComponent* OtherComponent);
+		/* Executes after AAbilityActor::OnCollision(). Can have base functionality overridden in blueprints. 
+		See "call to parent" functionality in blueprints. For collision tracking, prefer call to parent AFTER blueprint logic. */
+		void OnBattleActorCollision(const TScriptInterface<IBattleActor>& BattleActor, UPrimitiveComponent* ThisComponent, UPrimitiveComponent* OtherComponent, bool IsEnemy);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 		/* Event for handling ability actor collision with an ally battle actor. Can have base functionality overridden in blueprints. See "call to parent" functionality in blueprints. */
@@ -109,6 +114,18 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, DisplayName = "Client Battle Tick")
 		/**/
 		void BP_ClientBattleTick(float DeltaTime);
+
+	UFUNCTION(BlueprintPure)
+		/* Check if this battle actor has collided with this ability actor previously. See AAbilityActor::OnBattleActorCollision and AAbilityActor::AddCollidedBattleActor(). */
+		bool HasBattleActorCollidedAlready(const TScriptInterface<IBattleActor>& BattleActor) const;
+
+	UFUNCTION(BlueprintPure)
+		/* Check if this battle actor has collided with a specific ability actor component previously. See AAbilityActor::OnBattleActorCollision and AAbilityActor::AddCollidedBattleActor(). */
+		bool HasBattleActorCollidedWithCollider(const TScriptInterface<IBattleActor>& BattleActor, UPrimitiveComponent* CheckColliderHit) const;
+
+	UFUNCTION(BlueprintCallable)
+		/* Track that a battle actor has collided with a specific component. See AAbilityActor::HasBattleActorCollidedAlready() and AAbilityActor::HasBattleActorCollidedWithCollider(). */
+		void AddCollidedBattleActor(const TScriptInterface<IBattleActor>& BattleActor, UPrimitiveComponent* HitCollider);
 
 public:	
 

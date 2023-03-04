@@ -16,6 +16,35 @@
 #include <Components/ArrowComponent.h>
 #include "Camera/CameraComponent.h"
 
+bool AAbilityActor::HasBattleActorCollidedAlready(const TScriptInterface<IBattleActor>& BattleActor) const
+{
+	return BattleActorHitColliders.Contains(BattleActor.GetObject());
+}
+
+bool AAbilityActor::HasBattleActorCollidedWithCollider(const TScriptInterface<IBattleActor>& BattleActor, UPrimitiveComponent* CheckColliderHit) const
+{
+	UObject* BattleActorObj = BattleActor.GetObject();
+	const TArray<UPrimitiveComponent*>* Found = &BattleActorHitColliders.Find(BattleActorObj)->Colliders;
+	if (Found == nullptr) {
+		return false;
+	}
+
+	return Found->Contains(CheckColliderHit);
+}
+
+void AAbilityActor::AddCollidedBattleActor(const TScriptInterface<IBattleActor>& BattleActor, UPrimitiveComponent* HitCollider)
+{
+	UObject* BattleActorObj = BattleActor.GetObject();
+	TArray<UPrimitiveComponent*>* Found = &BattleActorHitColliders.Find(BattleActorObj)->Colliders;
+	if (Found == nullptr) {
+		FBattleActorColliderHitArray Arr;
+		Arr.Colliders.Add(HitCollider);
+		BattleActorHitColliders.Add(BattleActorObj, Arr);
+		return;
+	}
+	Found->Add(HitCollider);
+}
+
 void AAbilityActor::EnableAbilityProjectileComponent(AActor* AbilityActor, UAbilityDataObject* AbilityDataObject, UProjectileMovementComponent* ProjMovement, AImmieCharacter* ImmieCharacter)
 {
 	checkf(ProjMovement, TEXT("Projectile movement component for ability actor must not be null"));
@@ -113,17 +142,18 @@ void AAbilityActor::OnCollision(UPrimitiveComponent* ThisOverlappedComponent, AA
 		return;
 	}
 
-	OnBattleActorCollision(BattleActor, ThisOverlappedComponent, OtherActorComponent);
+	OnBattleActorCollision(BattleActor, ThisOverlappedComponent, OtherActorComponent, !IBattleActor::Execute_IsAlly(this, BattleActor));
 }
 
-void AAbilityActor::OnBattleActorCollision_Implementation(const TScriptInterface<IBattleActor>& BattleActor, UPrimitiveComponent* ThisComponent, UPrimitiveComponent* OtherComponent)
+void AAbilityActor::OnBattleActorCollision_Implementation(const TScriptInterface<IBattleActor>& BattleActor, UPrimitiveComponent* ThisComponent, UPrimitiveComponent* OtherComponent, bool IsEnemy)
 {
-	if (IBattleActor::Execute_IsAlly(this, BattleActor)) {
-		OnAllyCollision(BattleActor, ThisComponent, OtherComponent);
-	}
-	else {
+	if (IsEnemy) {
 		OnEnemyCollision(BattleActor, ThisComponent, OtherComponent);
 	}
+	else {
+		OnAllyCollision(BattleActor, ThisComponent, OtherComponent);
+	}
+	AddCollidedBattleActor(BattleActor, ThisComponent);
 }
 
 void AAbilityActor::OnAllyCollision_Implementation(const TScriptInterface<IBattleActor>& Ally, UPrimitiveComponent* ThisComponent, UPrimitiveComponent* OtherComponent)
