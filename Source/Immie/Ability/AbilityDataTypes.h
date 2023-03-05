@@ -39,7 +39,7 @@ struct FAbilityInstigatorDamage
 		/**/
 		float AttackerStat;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/**/
 		float DefenderStat;
 
@@ -54,6 +54,10 @@ struct FAbilityInstigatorDamage
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/**/
 		float Multiplier;
+
+	FAbilityInstigatorDamage()
+		: Multiplier(1)
+	{}
 };
 
 USTRUCT(BlueprintType)

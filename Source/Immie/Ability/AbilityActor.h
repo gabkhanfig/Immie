@@ -99,13 +99,13 @@ protected:
 		See "call to parent" functionality in blueprints. For collision tracking, prefer call to parent AFTER blueprint logic. */
 		void OnBattleActorCollision(const TScriptInterface<IBattleActor>& BattleActor, UPrimitiveComponent* ThisComponent, UPrimitiveComponent* OtherComponent, bool IsEnemy);
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 		/* Event for handling ability actor collision with an ally battle actor. Can have base functionality overridden in blueprints. See "call to parent" functionality in blueprints. */
-		void OnAllyCollision(const TScriptInterface<IBattleActor>& Ally, UPrimitiveComponent* ThisComponent, UPrimitiveComponent* OtherComponent);
+		//void OnAllyCollision(const TScriptInterface<IBattleActor>& Ally, UPrimitiveComponent* ThisComponent, UPrimitiveComponent* OtherComponent);
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 		/* Event for handling ability actor collision with an enemy battle actor. Can have base functionality overridden in blueprints. See "call to parent" functionality in blueprints. */
-		void OnEnemyCollision(const TScriptInterface<IBattleActor>& Enemy, UPrimitiveComponent* ThisComponent, UPrimitiveComponent* OtherComponent);
+		//void OnEnemyCollision(const TScriptInterface<IBattleActor>& Enemy, UPrimitiveComponent* ThisComponent, UPrimitiveComponent* OtherComponent);
 
 	UFUNCTION(BlueprintImplementableEvent, DisplayName = "Authority Battle Tick")
 		/**/
