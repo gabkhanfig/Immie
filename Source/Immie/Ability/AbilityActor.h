@@ -13,7 +13,8 @@ class UAbility;
 class AImmieCharacter;
 class UDamageComponent;
 class ADummyAbilityActor;
-class UImmieType;
+class UImmieType; 
+class UProjectileMovementComponent;
 
 UCLASS()
 /* Actor object representing in world abilities. Ensure calling AAbilityActor::DestroyAbilityActor() rather than AAbilityActor::Destroy(). */
@@ -53,18 +54,22 @@ protected:
 		/* Components of this Immie character that can collide with ability actors. */
 		TArray<UPrimitiveComponent*> AbilityColliders;
 
-	UPROPERTY(BlueprintReadWrite)
-		/**/
-		class UMovementComponent* MovementComponent;
-
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/**/
-		class UProjectileMovementComponent* ProjectileComponent;
+		UProjectileMovementComponent* ProjectileComponent;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		/**/
+		bool bShouldSpawnVisualDummy;
 
 protected:
 
 	/* Actors begin play. Note that not all objects and values will be initialized by the time this executes. */
 	virtual void BeginPlay() override;
+
+	UFUNCTION(BlueprintImplementableEvent, DisplayName = "InitializeForBattle")
+		/**/
+		void BP_InitializeForBattle();
 
 	UFUNCTION(NetMulticast, Reliable)
 		/* Informs clients or standalone of spawn. */
@@ -98,14 +103,6 @@ protected:
 		/* Executes after AAbilityActor::OnCollision(). Can have base functionality overridden in blueprints. 
 		See "call to parent" functionality in blueprints. For collision tracking, prefer call to parent AFTER blueprint logic. */
 		void OnBattleActorCollision(const TScriptInterface<IBattleActor>& BattleActor, UPrimitiveComponent* ThisComponent, UPrimitiveComponent* OtherComponent, bool IsEnemy);
-
-	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-		/* Event for handling ability actor collision with an ally battle actor. Can have base functionality overridden in blueprints. See "call to parent" functionality in blueprints. */
-		//void OnAllyCollision(const TScriptInterface<IBattleActor>& Ally, UPrimitiveComponent* ThisComponent, UPrimitiveComponent* OtherComponent);
-
-	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-		/* Event for handling ability actor collision with an enemy battle actor. Can have base functionality overridden in blueprints. See "call to parent" functionality in blueprints. */
-		//void OnEnemyCollision(const TScriptInterface<IBattleActor>& Enemy, UPrimitiveComponent* ThisComponent, UPrimitiveComponent* OtherComponent);
 
 	UFUNCTION(BlueprintImplementableEvent, DisplayName = "Authority Battle Tick")
 		/**/
@@ -193,10 +190,6 @@ public:
 		FName GetAbilityName() const;
 
 	UFUNCTION(BlueprintPure)
-		/* Get the behavior flags of this ability. */
-		FAbilityFlags GetAbilityFlags() const;
-
-	UFUNCTION(BlueprintPure)
 		/**/
 		float GetDamagePower() const;
 
@@ -251,7 +244,7 @@ public:
 
 	virtual void DecreaseHealth_Implementation(float Amount) override;
 
-	virtual bool IsAlly_Implementation(const TScriptInterface<IBattleActor>& OtherBattleActor) const override;
+	virtual bool IsEnemy_Implementation(const TScriptInterface<IBattleActor>& OtherBattleActor) const override;
 
 	virtual FBattleStats GetInitialStats_Implementation() const override;
 

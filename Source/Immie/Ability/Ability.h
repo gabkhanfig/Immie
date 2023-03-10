@@ -56,6 +56,10 @@ protected:
 		/* How long has the user input been held down. Kept track on server and client sides. */
 		float HoldDuration;
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Flags")
+		/**/
+		bool bTypeSameAsImmie;
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -95,7 +99,7 @@ protected:
 	UFUNCTION(BlueprintNativeEvent, DisplayName = "On Input Press")
 		/* By default, this decrements the amount of uses this ability has on both authority and non-authority sides. 
 		Executes if the ability can be used, given whatever conditions is set by the ability object. See CanAbilityBeUsed Blueprint Native Event. */
-		void BP_OnInputPress(bool HasBattleAuthority, FAbilityFlags AbilityFlags);
+		void BP_OnInputPress(bool HasBattleAuthority);
 
 	/* Execute what should happen when this ability input is released. */
 	void ExecuteInputRelease();
@@ -110,7 +114,7 @@ protected:
 
 	UFUNCTION(BlueprintNativeEvent, DisplayName = "On Input Release")
 		/* Blueprint sided handling for when this ability has it's input released. Executes on all clients and server. */
-		void BP_OnInputRelease(bool HasBattleAuthority, FAbilityFlags AbilityFlags);
+		void BP_OnInputRelease(bool HasBattleAuthority);
 
 	UFUNCTION(BlueprintCallable)
 		/* Spawns and initializes the default actor class of this ability. */
@@ -233,10 +237,6 @@ public:
 	UFUNCTION(BlueprintPure)
 		/**/
 		UClass* GetActorClass() const;
-
-	UFUNCTION(BlueprintPure)
-		/**/
-		FAbilityFlags GetAbilityFlags() const;
 
 	UFUNCTION(BlueprintPure)
 		/**/

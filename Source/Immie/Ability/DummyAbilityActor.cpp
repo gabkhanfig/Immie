@@ -31,12 +31,6 @@ ADummyAbilityActor::ADummyAbilityActor()
 void ADummyAbilityActor::BeginPlay()
 {
 	Super::BeginPlay();
-
-	UAbilityDataObject* AbilityDataObject = AbilityActor->GetAbilityDataObject();
-	if (AbilityDataObject->GetAbilityFlags().Projectile) {
-		MovementComponent = ProjectileComponent;
-		AAbilityActor::EnableAbilityProjectileComponent(this, AbilityDataObject, ProjectileComponent, AbilityActor->GetImmieCharacter());
-	}
 }
 
 void ADummyAbilityActor::BP_OnAbilityActorDestroy_Implementation()
@@ -49,11 +43,9 @@ void ADummyAbilityActor::SetAbilityActor(AAbilityActor* _AbilityActor)
 	AbilityActor = _AbilityActor;
 }
 
-// Called every frame
 void ADummyAbilityActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	FVector location = GetActorLocation();
 }
 
 void ADummyAbilityActor::OnAbilityActorDestroy()

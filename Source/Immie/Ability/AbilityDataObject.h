@@ -43,10 +43,6 @@ protected:
 		FName AbilityName;
 
 	UPROPERTY(BlueprintReadOnly)
-		/**/
-		FAbilityFlags AbilityFlags;
-
-	UPROPERTY(BlueprintReadOnly)
 		/* Bitmask containing all of this ability's types. Used in MOST cases to figure out which battle types to use. */
 		int TypeBitmask;
 
@@ -154,10 +150,6 @@ public:
 	UFUNCTION(BlueprintPure)
 		/**/
 		UClass* GetDummyActorClass() const { return DummyActorClass; }
-
-	UFUNCTION(BlueprintPure)
-		/**/
-		FAbilityFlags GetAbilityFlags() const { return AbilityFlags; }
 
 	UFUNCTION(BlueprintPure)
 		/**/

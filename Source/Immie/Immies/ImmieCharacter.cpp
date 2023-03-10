@@ -50,7 +50,6 @@ AImmieCharacter::AImmieCharacter(const FObjectInitializer& ObjectInitializer)
 	FloatingBattleHealthbarComponent->SetWidgetSpace(EWidgetSpace::Screen);
 	FloatingBattleHealthbarComponent->SetVisibility(false, true);
 	FloatingBattleHealthbarComponent->SetWidget(nullptr);
-	//FloatingBattleHealthBarComponent->SetWidgetClass
 
 	ImmieObject = nullptr;
 	bEnabled = true;
@@ -161,10 +160,10 @@ bool AImmieCharacter::CanBeDamagedByAbilityActor_Implementation(AAbilityActor* A
 	return true;
 }
 
-bool AImmieCharacter::IsAlly_Implementation(const TScriptInterface<IBattleActor>& OtherBattleActor) const
+bool AImmieCharacter::IsEnemy_Implementation(const TScriptInterface<IBattleActor>& OtherBattleActor) const
 {
-	if (!IsValid(Team)) return false;
-	return Team == IBattleActor::Execute_GetTeam(OtherBattleActor.GetObject());
+	if (!IsValid(Team)) return true;
+	return Team != IBattleActor::Execute_GetTeam(OtherBattleActor.GetObject());
 }
 
 FBattleStats AImmieCharacter::GetInitialStats_Implementation() const

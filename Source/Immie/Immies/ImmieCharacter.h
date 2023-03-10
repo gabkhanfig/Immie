@@ -332,7 +332,7 @@ public:
 
 	virtual bool CanBeDamagedByAbilityActor_Implementation(AAbilityActor* AbilityActor) const override;
 
-	virtual bool IsAlly_Implementation(const TScriptInterface<IBattleActor>& OtherBattleActor) const override;
+	virtual bool IsEnemy_Implementation(const TScriptInterface<IBattleActor>& OtherBattleActor) const override;
 
 	virtual FBattleStats GetInitialStats_Implementation() const override;
 

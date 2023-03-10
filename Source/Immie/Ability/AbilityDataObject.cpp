@@ -9,7 +9,6 @@
 #include <Immie/Game/Global/Managers/ConfigDataManager.h>
 
 #define ABILITY_DO_JSON_FIELD_TYPES "Types"
-#define ABILITY_DO_JSON_FIELD_ABILITY_FLAGS "AbilityFlags"
 #define ABILITY_DO_JSON_FIELD_INITIAL_COOLDOWN "InitialCooldown"
 #define ABILITY_DO_JSON_FIELD_MAX_COOLDOWN "MaxCooldown"
 #define ABILITY_DO_JSON_FIELD_INITIAL_USES "InitialUses"
@@ -99,11 +98,6 @@ void UAbilityDataObject::LoadAbilityJsonData(const FJsonObjectBP& Json)
 {
 	if (Json.HasField(ABILITY_DO_JSON_FIELD_TYPES)) {
 		TypeBitmask = GetTypeDataManager()->GetTypeBitmaskFromJsonArray(Json.GetArrayField("Types"));
-	}
-
-	FJsonObjectBP AbilityFlagsJson;
-	if (Json.TryGetObjectField(ABILITY_DO_JSON_FIELD_ABILITY_FLAGS, AbilityFlagsJson)) {
-		AbilityFlags = FAbilityFlags::LoadJsonAbilityFlags(AbilityFlagsJson);
 	}
 
 	Json.TryGetFloatField(ABILITY_DO_JSON_FIELD_INITIAL_COOLDOWN, InitialCooldown);
@@ -208,7 +202,6 @@ FJsonObjectBP UAbilityDataObject::AbilityDataToJson()
 	Json.SetFloatField(ABILITY_DO_JSON_FIELD_RELATIVE_DEFENSE, RelativeStats.Defense);
 	Json.SetFloatField(ABILITY_DO_JSON_FIELD_RELATIVE_SPEED, RelativeStats.Speed);
 
-	Json.SetObjectField(ABILITY_DO_JSON_FIELD_ABILITY_FLAGS, AbilityFlags.ToJson());
 	Json.SetObjectField(ABILITY_DO_JSON_FIELD_ABILITY_SPECIFIC, BP_AbilityDataToJson());
 
 	return Json;

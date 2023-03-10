@@ -80,52 +80,6 @@ struct FSerializedAbilityData
 };
 
 USTRUCT(BlueprintType)
-/* All json flags are the variable name without the b (boolean) prefix. */
-struct FAbilityFlags
-{
-	GENERATED_BODY()
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		/* Deals damage. */
-		uint8 DoesDamage : 1;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		/* Deals healing .*/
-		uint8 DoesHealing : 1;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		/* Copies it's owning Immie's type. */
-		uint8 SameTypeImmie : 1;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		/* Uses base stats for calculating it's own stats. */
-		uint8 BaseStats : 1;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		/* Uses multipliers of it's owning Immie's stats for it's own stats. */
-		uint8 RelativeStats : 1;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		/**/
-		uint8 VisualDummy : 1;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		/**/
-		uint8 Projectile : 1;
-
-private:
-
-	static bool GetJsonAbilityFlag(const FJsonObjectBP& JsonObject, const FString& FlagName);
-
-public:
-
-	static FAbilityFlags LoadJsonAbilityFlags(const FJsonObjectBP& JsonObject);
-
-	FJsonObjectBP ToJson();
-
-};
-
-USTRUCT(BlueprintType)
 /**/
 struct FBattleActorColliderHitArray
 {

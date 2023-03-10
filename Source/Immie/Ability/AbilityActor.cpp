@@ -70,6 +70,8 @@ AAbilityActor::AAbilityActor()
 	ProjectileComponent->MaxSpeed = 0;
 	ProjectileComponent->ProjectileGravityScale = 0;
 	ProjectileComponent->bRotationFollowsVelocity;
+
+	bShouldSpawnVisualDummy = true;
 }
 
 void AAbilityActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const 
@@ -86,10 +88,8 @@ void AAbilityActor::BeginPlay()
 
 void AAbilityActor::InformSpawn_Implementation()
 {
-	const FAbilityFlags AbilityFlags = Ability->GetAbilityFlags();
-
 	if (!IsRunningDedicatedServer()) {
-		if (AbilityFlags.VisualDummy) {
+		if (bShouldSpawnVisualDummy) {
 			SpawnVisualDummy();
 		}
 	}
@@ -142,97 +142,12 @@ void AAbilityActor::OnCollision(UPrimitiveComponent* ThisOverlappedComponent, AA
 		return;
 	}
 
-	OnBattleActorCollision(BattleActor, ThisOverlappedComponent, OtherActorComponent, !IBattleActor::Execute_IsAlly(this, BattleActor));
+	OnBattleActorCollision(BattleActor, ThisOverlappedComponent, OtherActorComponent, IBattleActor::Execute_IsEnemy(this, BattleActor));
 }
 
 void AAbilityActor::OnBattleActorCollision_Implementation(const TScriptInterface<IBattleActor>& BattleActor, UPrimitiveComponent* ThisComponent, UPrimitiveComponent* OtherComponent, bool IsEnemy)
 {
-	//if (IsEnemy) {
-	//	OnEnemyCollision(BattleActor, ThisComponent, OtherComponent);
-	//}
-	//else {
-	//	OnAllyCollision(BattleActor, ThisComponent, OtherComponent);
-	//}
-	//AddCollidedBattleActor(BattleActor, ThisComponent);
 }
-
-//void AAbilityActor::OnAllyCollision_Implementation(const TScriptInterface<IBattleActor>& Ally, UPrimitiveComponent* ThisComponent, UPrimitiveComponent* OtherComponent)
-//{
-//	const FAbilityFlags AbilityFlags = GetAbilityFlags();
-//	if (!AbilityFlags.DoesHealing) {
-//		return;
-//	}
-//
-//	if (!IBattleActor::Execute_CanBeHealedByAbilityActor(Ally.GetObject(), this)) {
-//		return;
-//	}
-//
-//	UDamageComponent* AllyDamageComponent = IBattleActor::Execute_GetDamageComponent(Ally.GetObject());
-//	if (!IsValid(AllyDamageComponent)) {
-//		iLog("Invalid ally damage component in AAbilityActor::OnAllyCollision().", LogVerbosity_Error);
-//		return;
-//	}
-//
-//	FAbilityInstigatorDamage Healing;
-//	Healing.Instigator = GetAbility();
-//	Healing.InstigatorType = GetAbility()->GetType();
-//	Healing.Power = GetHealingPower();
-//
-//	if (AbilityFlags.BaseStats || AbilityFlags.RelativeStats) {
-//		Healing.AttackerStat = IBattleActor::Execute_GetActiveStats(this).Attack;
-//	}
-//	else {
-//		Healing.AttackerStat = IBattleActor::Execute_GetActiveStats(GetImmieCharacter()).Attack;
-//	}
-//	
-//	Healing.DefenderStat = IBattleActor::Execute_GetActiveStats(Ally.GetObject()).Defense;
-//	Healing.DefenderType = IBattleActor::Execute_GetType(Ally.GetObject());
-//	Healing.Duration = GetAbility()->GetHealingDuration();
-//	Healing.InstigatorLevel = GetImmieCharacter()->GetImmieLevel();
-//	Healing.Multiplier = 1;
-//	AllyDamageComponent->AddHealing(Healing);
-//
-//	DestroyAbilityActor();
-//}
-//
-//void AAbilityActor::OnEnemyCollision_Implementation(const TScriptInterface<IBattleActor>& Enemy, UPrimitiveComponent* ThisComponent, UPrimitiveComponent* OtherComponent)
-//{
-//	const FAbilityFlags AbilityFlags = GetAbilityFlags();
-//	if (!AbilityFlags.DoesDamage) {
-//		return;
-//	}
-//
-//	if (!IBattleActor::Execute_CanBeDamagedByAbilityActor(Enemy.GetObject(), this)) {
-//		return;
-//	}
-//
-//	UDamageComponent* EnemyDamageComponent = IBattleActor::Execute_GetDamageComponent(Enemy.GetObject());
-//	if (!IsValid(EnemyDamageComponent)) {
-//		iLog("Invalid enemy damage component in AAbilityActor::OnEnemyCollision().", LogVerbosity_Error);
-//		return;
-//	}
-//
-//	FAbilityInstigatorDamage Damage;
-//	Damage.Instigator = GetAbility();
-//	Damage.InstigatorType = GetAbility()->GetType();
-//	Damage.Power = GetDamagePower();
-//
-//	if (AbilityFlags.BaseStats || AbilityFlags.RelativeStats) {
-//		Damage.AttackerStat = IBattleActor::Execute_GetActiveStats(this).Attack;
-//	}
-//	else {
-//		Damage.AttackerStat = IBattleActor::Execute_GetActiveStats(GetImmieCharacter()).Attack;
-//	}
-//
-//	Damage.DefenderStat = IBattleActor::Execute_GetActiveStats(Enemy.GetObject()).Defense;
-//	Damage.DefenderType = IBattleActor::Execute_GetType(Enemy.GetObject());
-//	Damage.Duration = GetAbility()->GetHealingDuration();
-//	Damage.InstigatorLevel = GetImmieCharacter()->GetImmieLevel();
-//	Damage.Multiplier = 1;
-//	EnemyDamageComponent->AddDamage(Damage);
-//
-//	DestroyAbilityActor();
-//}
 
 void AAbilityActor::Tick(float DeltaTime)
 {
@@ -273,11 +188,7 @@ void AAbilityActor::InitializeForBattle()
 {
 	ActiveStats = SpawnedActiveStats;
 
-	if (GetAbilityFlags().Projectile) {
-		MovementComponent = ProjectileComponent;
-		AAbilityActor::EnableAbilityProjectileComponent(this, GetAbilityDataObject(), ProjectileComponent, GetImmieCharacter());
-	}
-
+	BP_InitializeForBattle();
 	InformSpawn();
 }
 
@@ -356,11 +267,11 @@ void AAbilityActor::DecreaseHealth_Implementation(float Amount)
 	}
 }
 
-bool AAbilityActor::IsAlly_Implementation(const TScriptInterface<IBattleActor>& OtherBattleActor) const
+bool AAbilityActor::IsEnemy_Implementation(const TScriptInterface<IBattleActor>& OtherBattleActor) const
 {
 	const ABattleTeam* Team = IBattleActor::Execute_GetTeam(this);
-	if (!IsValid(Team)) return false;
-	return Team == IBattleActor::Execute_GetTeam(OtherBattleActor.GetObject());
+	if (!IsValid(Team)) return true;
+	return Team != IBattleActor::Execute_GetTeam(OtherBattleActor.GetObject());
 }
 
 FBattleStats AAbilityActor::GetInitialStats_Implementation() const
@@ -396,11 +307,6 @@ UAbilityDataObject* AAbilityActor::GetAbilityDataObject() const
 FName AAbilityActor::GetAbilityName() const
 {
 	return GetAbility()->GetAbilityName();
-}
-
-FAbilityFlags AAbilityActor::GetAbilityFlags() const
-{
-	return GetAbility()->GetAbilityFlags();
 }
 
 float AAbilityActor::GetDamagePower() const

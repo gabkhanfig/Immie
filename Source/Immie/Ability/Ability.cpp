@@ -34,6 +34,8 @@ UAbility::UAbility()
 	CurrentCooldown = 0;
 	CurrentUses = 0;
 	HoldDuration = 0;
+
+	bTypeSameAsImmie = false;
 }
 
 void UAbility::BeginPlay()
@@ -60,10 +62,8 @@ void UAbility::InitializeForBattle()
 
 	CurrentCooldown = AbilityDataObject->GetInitialCooldown();
 	CurrentUses = AbilityDataObject->GetInitialUses();
-	
-	FAbilityFlags AbilityFlags = AbilityDataObject->GetAbilityFlags();
 
-	if (AbilityFlags.SameTypeImmie) {
+	if (bTypeSameAsImmie) {
 		Type = IBattleActor::Execute_GetType(GetImmieCharacter());//GetImmieCharacter()->GetType();
 	}
 	else {
@@ -73,26 +73,26 @@ void UAbility::InitializeForBattle()
 
 	const int Level = GetImmieCharacter()->GetImmieLevel();
 
-	if (AbilityFlags.BaseStats) {
-		const FBaseStats BaseStats = AbilityDataObject->GetBaseStats();
-		const FBaseStats StatLevels = GetImmieCharacter()->GetImmieObject()->GetStatLevels();
+	//checkf(!(bCustomBaseStats && bRelativeStats), TEXT("Ability cannot have the bCustomBaseStats flag and bRelativeStats flag active simultaneously"))
+	//if (bCustomBaseStats) {
+	//	const FBaseStats BaseStats = AbilityDataObject->GetBaseStats();
+	//	const FBaseStats StatLevels = GetImmieCharacter()->GetImmieObject()->GetStatLevels();
 
-		InitialStats.Health = UFormula::HealthStat(BaseStats.Health, Level, StatLevels.Health);
-		InitialStats.Attack = UFormula::AttackStat(BaseStats.Attack, Level, StatLevels.Attack);
-		InitialStats.Defense = UFormula::DefenseStat(BaseStats.Defense, Level, StatLevels.Defense);
-		InitialStats.Speed = UFormula::SpeedStat(BaseStats.Speed, StatLevels.Speed);	
-	}
-	
-	if (AbilityFlags.RelativeStats) {
-		const FBattleStats RelativeMultipliers = AbilityDataObject->GetRelativeStats();
+	//	InitialStats.Health = UFormula::HealthStat(BaseStats.Health, Level, StatLevels.Health);
+	//	InitialStats.Attack = UFormula::AttackStat(BaseStats.Attack, Level, StatLevels.Attack);
+	//	InitialStats.Defense = UFormula::DefenseStat(BaseStats.Defense, Level, StatLevels.Defense);
+	//	InitialStats.Speed = UFormula::SpeedStat(BaseStats.Speed, StatLevels.Speed);	
+	//}
+	//
+	//if (bRelativeStats) {
+	//	const FBattleStats RelativeMultipliers = AbilityDataObject->GetRelativeStats();
 
-		InitialStats.Health = GetImmieCharacter()->GetInitialStats().Health * RelativeMultipliers.Health;
-		InitialStats.Attack = GetImmieCharacter()->GetInitialStats().Attack * RelativeMultipliers.Attack;
-		InitialStats.Defense = GetImmieCharacter()->GetInitialStats().Defense * RelativeMultipliers.Defense;
-		InitialStats.Speed = GetImmieCharacter()->GetInitialStats().Speed * RelativeMultipliers.Speed;
-	}
-	
-	ActiveStats = InitialStats;
+	//	InitialStats.Health = GetImmieCharacter()->GetInitialStats().Health * RelativeMultipliers.Health;
+	//	InitialStats.Attack = GetImmieCharacter()->GetInitialStats().Attack * RelativeMultipliers.Attack;
+	//	InitialStats.Defense = GetImmieCharacter()->GetInitialStats().Defense * RelativeMultipliers.Defense;
+	//	InitialStats.Speed = GetImmieCharacter()->GetInitialStats().Speed * RelativeMultipliers.Speed;
+	//}
+	//ActiveStats = InitialStats;
 
 	BP_InitializeForBattle(AbilityDataObject);
 }
@@ -129,7 +129,7 @@ void UAbility::ExecuteInputPress()
 {
 	bInputHeld = true;
 	HoldDuration = 0;
-	BP_OnInputPress(HasBattleAuthority(), GetAbilityFlags());
+	BP_OnInputPress(HasBattleAuthority());
 }
 
 void UAbility::ServerInputPress_Implementation()
@@ -153,7 +153,7 @@ void UAbility::InformClientsInputPress_Implementation()
 	}
 }
 
-void UAbility::BP_OnInputPress_Implementation(bool HasBattleAuthority, FAbilityFlags AbilityFlags)
+void UAbility::BP_OnInputPress_Implementation(bool HasBattleAuthority)
 {
 	if (!HasBattleAuthority) return;
 	if (!CanAbilityBeUsed()) return;
@@ -176,7 +176,7 @@ void UAbility::ExecuteInputRelease()
 {
 	bInputHeld = false; 
 	HoldDuration = 0;
-	BP_OnInputRelease(HasBattleAuthority(), GetAbilityFlags());
+	BP_OnInputRelease(HasBattleAuthority());
 }
 
 void UAbility::ServerInputRelease_Implementation()
@@ -199,7 +199,7 @@ void UAbility::InformClientsInputRelease_Implementation()
 	ExecuteInputRelease();
 }
 
-void UAbility::BP_OnInputRelease_Implementation(bool HasBattleAuthority, FAbilityFlags AbilityFlags)
+void UAbility::BP_OnInputRelease_Implementation(bool HasBattleAuthority)
 {
 }
 
@@ -325,11 +325,6 @@ FName UAbility::GetAbilityName() const
 UClass* UAbility::GetActorClass() const
 {
 	return GetAbilityDataObject()->GetActorClass();
-}
-
-FAbilityFlags UAbility::GetAbilityFlags() const
-{
-	return GetAbilityDataObject()->GetAbilityFlags();
 }
 
 int UAbility::GetTypeBitmask() const
