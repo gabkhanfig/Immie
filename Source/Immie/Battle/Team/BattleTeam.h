@@ -171,4 +171,12 @@ public:
 		/**/
 		FORCEINLINE bool IsTeamAlive() const { return bTeamAlive; }
 
+	UFUNCTION(BlueprintPure)
+		/**/
+		AImmieCharacter* GetActiveImmie() const { return ActiveImmie; }
+
+	UFUNCTION(BlueprintPure)
+		/**/
+		TArray<AAbilityActor*> GetAbilityActors() const { return AbilityActors; }
+
 };

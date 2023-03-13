@@ -67,6 +67,10 @@ protected:
 	/* Actors begin play. Note that not all objects and values will be initialized by the time this executes. */
 	virtual void BeginPlay() override;
 
+	UFUNCTION(BlueprintImplementableEvent, DisplayName = "BeginAbility")
+		/* Called by battle authority side to begin the ability. Functionally similar to BeginPlay(), but executes after a possible dummy is created. */
+		void BP_BeginAbility();
+
 	UFUNCTION(BlueprintImplementableEvent, DisplayName = "InitializeForBattle")
 		/**/
 		void BP_InitializeForBattle();
@@ -160,6 +164,14 @@ public:
 
 	/* Called when the server will serialize this ability actor to clients. */
 	virtual void OnSerializeNewActor(class FOutBunch& OutBunch) override;
+
+	UFUNCTION(BlueprintCallable)
+		/**/
+		FBattleActorHitscanResult HitscanShotFromImmie(
+			AImmieCharacter* Start,
+			float MaxDistance,
+			UPARAM(meta = (Bitmask, BitmaskEnum = EAbilityHitscanShotTarget)) int TargetBitmask
+		);
 
 	UFUNCTION(BlueprintPure)
 		/* Get the ability that "owns" this ability actor. Not the same as the actors actual owner. */

@@ -340,6 +340,13 @@ public:
 		/**/
 		bool IsPaused() const { return bPaused; }
 
+	UFUNCTION(BlueprintPure)
+		/**/
+		int GetTeamCount() const { return Teams.Num(); }
+
+	UFUNCTION(BlueprintPure)
+		/**/
+		ABattleTeam* GetTeam(int index) const { return Teams[index]; }
 
 
 

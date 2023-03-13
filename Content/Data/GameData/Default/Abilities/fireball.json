@@ -8,10 +8,5 @@
     "InitialUses": 8,
     "MaxCooldown": 2,
     "DamagePower": 10,
-    "Speed": 800,
-    "AbilityFlags": {
-        "DoesDamage": true,
-        "VisualDummy": true,
-        "Projectile": true
-    }
+    "Speed": 800
 }

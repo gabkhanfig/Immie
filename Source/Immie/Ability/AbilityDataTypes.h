@@ -89,3 +89,11 @@ struct FBattleActorColliderHitArray
 		/**/
 		TArray<UPrimitiveComponent*> Colliders;
 };
+
+UENUM(BlueprintType, meta = (Bitflags, UseEnumValuesAsMaskValuesInEditor = "true"))
+enum class EAbilityHitscanShotTarget : uint8
+{
+	None = 0 UMETA(Hidden),
+	Enemies = 1,
+};
+ENUM_CLASS_FLAGS(EAbilityHitscanShotTarget);

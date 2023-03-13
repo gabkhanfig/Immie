@@ -103,3 +103,30 @@ public:
 
 };
 
+USTRUCT(BlueprintType)
+/**/
+struct FBattleActorHitscanResult
+{
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadWrite)
+		/**/
+		bool HitSuccess;
+
+	UPROPERTY(BlueprintReadWrite)
+		/**/
+		FVector Location;
+
+	UPROPERTY(BlueprintReadWrite)
+		/**/
+		TScriptInterface<IBattleActor> BattleActor;
+
+	UPROPERTY(BlueprintReadWrite)
+		/**/
+		UPrimitiveComponent* HitCollider;
+
+	FBattleActorHitscanResult()
+		: HitSuccess(false), Location(0, 0, 0), BattleActor(nullptr), HitCollider(nullptr)
+	{}
+
+};

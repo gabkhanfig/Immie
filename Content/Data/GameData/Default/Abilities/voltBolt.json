@@ -1,0 +1,14 @@
+{
+    "Types": [
+        {
+            "Type": "electric"
+        }
+    ],
+    "MaxUses": 3,
+    "InitialUses": 3,
+    "MaxCooldown": 2,
+    "DamagePower": 10,
+    "AbilitySpecific": {
+        "Distance": 10000
+    }
+}

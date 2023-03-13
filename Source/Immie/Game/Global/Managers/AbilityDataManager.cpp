@@ -20,6 +20,7 @@ void UAbilityDataManager::SetAbilityNamesAndIds()
 	DefineAbilityName("emptyAbility");
 	DefineAbilityName("fireball");
 	DefineAbilityName("terraSpike");
+	DefineAbilityName("voltBolt");
 }
 
 void UAbilityDataManager::LoadDefaultGameData()

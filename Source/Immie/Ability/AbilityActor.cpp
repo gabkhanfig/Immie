@@ -15,6 +15,7 @@
 #include <GameFramework/ProjectileMovementComponent.h>
 #include <Components/ArrowComponent.h>
 #include "Camera/CameraComponent.h"
+#include "../Battle/BattleInstance/BattleInstance.h"
 
 bool AAbilityActor::HasBattleActorCollidedAlready(const TScriptInterface<IBattleActor>& BattleActor) const
 {
@@ -190,6 +191,7 @@ void AAbilityActor::InitializeForBattle()
 
 	BP_InitializeForBattle();
 	InformSpawn();
+	BP_BeginAbility();
 }
 
 void AAbilityActor::OnActorChannelOpen(FInBunch& InBunch, UNetConnection* Connection)
@@ -210,6 +212,48 @@ void AAbilityActor::OnSerializeNewActor(FOutBunch& OutBunch)
 	OutBunch << SpawnedActiveStats.Attack;
 	OutBunch << SpawnedActiveStats.Defense;
 	OutBunch << SpawnedActiveStats.Speed;
+}
+
+FBattleActorHitscanResult AAbilityActor::HitscanShotFromImmie(AImmieCharacter* Start, float MaxDistance, int TargetBitmask)
+{
+	const FVector StartLocation = Start->GetFollowCamera()->GetComponentLocation();
+	const FVector EndLocation = StartLocation + (MaxDistance * Start->GetFollowCamera()->GetForwardVector());
+
+	FCollisionQueryParams TraceParams;
+	TraceParams.AddIgnoredActor(Start);
+	
+	// If it's not flagged to target enemies, set all enemy battle actors to be ingored.
+	if (!(TargetBitmask & uint8(EAbilityHitscanShotTarget::Enemies))) {
+		const ABattleInstance* BattleInstance = Start->GetBattleInstance();
+		const int TeamCount = BattleInstance->GetTeamCount();
+		for (int i = 0; i < TeamCount; i++) {
+			ABattleTeam* Team = BattleInstance->GetTeam(i);
+			if (Team == IBattleActor::Execute_GetTeam(Start)) continue;
+
+			TraceParams.AddIgnoredActor(Team->GetActiveImmie());
+			TArray<AAbilityActor*> AbilityActors;
+			for (AActor* AsActor : AbilityActors) {
+				if (IsValid(AsActor)) TraceParams.AddIgnoredActor(AsActor);
+			}
+		}
+	}
+
+	FHitResult OutResult;
+	GetWorld()->LineTraceSingleByChannel(OutResult, StartLocation, EndLocation, ECollisionChannel::ECC_Visibility, TraceParams);
+
+	FBattleActorHitscanResult Hitscan;
+	if (OutResult.GetActor() != nullptr) {
+		const bool IsBattleActor = OutResult.GetActor()->GetClass()->ImplementsInterface(UBattleActor::StaticClass());
+		if (!IsBattleActor) {
+			return Hitscan;
+		}
+		Hitscan.HitSuccess	= true;
+		Hitscan.BattleActor = OutResult.GetActor();
+		Hitscan.Location		= OutResult.ImpactPoint;
+		Hitscan.HitCollider = OutResult.GetComponent();
+		return Hitscan;
+	}
+	return Hitscan;
 }
 
 UDamageComponent* AAbilityActor::GetDamageComponent() const
