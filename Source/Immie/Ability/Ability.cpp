@@ -174,9 +174,9 @@ void UAbility::InputRelease()
 
 void UAbility::ExecuteInputRelease()
 {
-	bInputHeld = false; 
-	HoldDuration = 0;
 	BP_OnInputRelease(HasBattleAuthority());
+	bInputHeld = false;
+	HoldDuration = 0;
 }
 
 void UAbility::ServerInputRelease_Implementation()

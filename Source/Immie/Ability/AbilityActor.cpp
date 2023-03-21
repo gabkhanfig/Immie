@@ -84,15 +84,19 @@ void AAbilityActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 
 void AAbilityActor::BeginPlay()
 {
-	Super::BeginPlay();
+	Super::BeginPlay(); // Calls blueprint begin play
+
+	if (HasBattleAuthority()) {
+		InformClientsSpawnDummy();
+	}
+	//iLog("AbilityActor::BeginPlay() cpp");
 }
 
-void AAbilityActor::InformSpawn_Implementation()
+void AAbilityActor::InformClientsSpawnDummy_Implementation()
 {
-	if (!IsRunningDedicatedServer()) {
-		if (bShouldSpawnVisualDummy) {
-			SpawnVisualDummy();
-		}
+	iLog("RPC InformClientsSpawnDummy");
+	if (!IsRunningDedicatedServer() && bShouldSpawnVisualDummy) {
+		SpawnVisualDummy();
 	}
 }
 
@@ -187,15 +191,15 @@ void AAbilityActor::SetDamageComponent(UDamageComponent* _DamageComponent)
 
 void AAbilityActor::InitializeForBattle()
 {
+	iLog("Ability actor initialize for battle");
 	ActiveStats = SpawnedActiveStats;
 
 	BP_InitializeForBattle();
-	InformSpawn();
-	BP_BeginAbility();
 }
 
 void AAbilityActor::OnActorChannelOpen(FInBunch& InBunch, UNetConnection* Connection)
 {
+	iLog("Ability actor channel opened");
 	InBunch << Ability;
 	InBunch << DamageComponent;
 	InBunch << SpawnedActiveStats.Health;

@@ -59,27 +59,22 @@ protected:
 		UProjectileMovementComponent* ProjectileComponent;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-		/**/
+		/* Flag for if this ability actor should spawn a visual dummy on standalone or clients.
+		Note that this being false does not prevent an ability actor from spawning a dummy. 
+		Simply call SpawnVisualDummy(). */
 		bool bShouldSpawnVisualDummy;
 
 protected:
 
-	/* Actors begin play. Note that not all objects and values will be initialized by the time this executes. */
+	/* Blueprint Note: Any network syncronization a blueprint ability actor should do should take place within the blueprint's BeginPlay() event.
+	This way, when the RPC to inform clients to create their dummy actors gets executed, syncing should have already executed. */
 	virtual void BeginPlay() override;
 
-	UFUNCTION(BlueprintImplementableEvent, DisplayName = "BeginAbility")
-		/* Called by battle authority side to begin the ability. Functionally similar to BeginPlay(), but executes after a possible dummy is created. */
-		void BP_BeginAbility();
-
 	UFUNCTION(BlueprintImplementableEvent, DisplayName = "InitializeForBattle")
-		/**/
+		/* Called by authority side before  */
 		void BP_InitializeForBattle();
 
-	UFUNCTION(NetMulticast, Reliable)
-		/* Informs clients or standalone of spawn. */
-		void InformSpawn();
-
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		/* Spawns a dummy ability actor used as a representation of this one. */
 		void SpawnVisualDummy();
 
@@ -164,6 +159,10 @@ public:
 
 	/* Called when the server will serialize this ability actor to clients. */
 	virtual void OnSerializeNewActor(class FOutBunch& OutBunch) override;
+
+	UFUNCTION(NetMulticast, Reliable)
+		/**/
+		void InformClientsSpawnDummy();
 
 	UFUNCTION(BlueprintCallable)
 		/**/

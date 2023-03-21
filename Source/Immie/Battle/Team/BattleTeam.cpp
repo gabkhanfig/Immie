@@ -245,8 +245,9 @@ AAbilityActor* ABattleTeam::SpawnAbilityActor(TSubclassOf<AAbilityActor> Ability
 
 	AbilityActors.Add(AbilityActor);
 
-	UGameplayStatics::FinishSpawningActor(AbilityActor, SpawnTransform);
 	AbilityActor->InitializeForBattle();
+	UGameplayStatics::FinishSpawningActor(AbilityActor, SpawnTransform); // Calls BeginPlay()
+
 	return AbilityActor;
 }
 

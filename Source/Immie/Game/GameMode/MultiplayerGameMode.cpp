@@ -45,6 +45,9 @@ void AMultiplayerGameMode::ForceStartMultiplayerBattle(AImmiePlayerController* P
 	TArray<FBattleTeamInit> BattleTeams;
 	BattleTeams.Reserve(RequiredTeamCount);
 
+	Battle = ABattleInstance::NewBattleInstance(this, "Multiplayer", { 0, 0, 0 });
+	check(Battle);
+
 	for (int i = 0; i < FMath::Max(RequiredTeamCount, TeamCount); i++) {
 		if (!PlayerTeams.IsValidIndex(i)) {
 			BattleTeams.Add(GenerateTestAiTeam());
@@ -66,8 +69,6 @@ void AMultiplayerGameMode::ForceStartMultiplayerBattle(AImmiePlayerController* P
 		BattleTeams.Add(BattleTeam);
 	}
 
-	Battle = ABattleInstance::NewBattleInstance(this, "Multiplayer", { 0, 0, 0 });
-	check(IsValid(Battle));
 	Battle->BattleInit(BattleTeams);
 }
 

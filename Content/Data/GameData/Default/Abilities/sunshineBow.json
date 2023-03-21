@@ -1,0 +1,11 @@
+{
+    "Types": [
+        {
+            "Type": "light"
+        }
+    ],
+    "MaxUses": 3,
+    "InitialUses": 3,
+    "MaxCooldown": 2,
+    "DamagePower": 10
+}

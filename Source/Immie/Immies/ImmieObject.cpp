@@ -32,9 +32,12 @@ UImmie::UImmie()
 
 UImmie* UImmie::NewImmieObject(UObject* Outer, int _SpecieId)
 {
-    UImmie* Immie = NewObject<UImmie>(Outer, GetSpecieDataManager()->GetImmieObjectClass(_SpecieId));
-    Immie->SpecieId = _SpecieId;
-    return Immie;
+  check(Outer);
+  UClass* ImmieObjectClass = GetSpecieDataManager()->GetImmieObjectClass(_SpecieId);
+  check(ImmieObjectClass);
+  UImmie* Immie = NewObject<UImmie>(Outer, ImmieObjectClass);
+  Immie->SpecieId = _SpecieId;
+  return Immie;
 }
 
 void UImmie::LoadJsonData(int _SpecieId, const FJsonObjectBP& Json)
