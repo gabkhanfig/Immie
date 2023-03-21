@@ -86,18 +86,10 @@ void AAbilityActor::BeginPlay()
 {
 	Super::BeginPlay(); // Calls blueprint begin play
 
-	if (HasBattleAuthority()) {
-		InformClientsSpawnDummy();
-	}
-	//iLog("AbilityActor::BeginPlay() cpp");
-}
-
-void AAbilityActor::InformClientsSpawnDummy_Implementation()
-{
-	iLog("RPC InformClientsSpawnDummy");
 	if (!IsRunningDedicatedServer() && bShouldSpawnVisualDummy) {
 		SpawnVisualDummy();
 	}
+	//iLog("AbilityActor::BeginPlay() cpp");
 }
 
 void AAbilityActor::SpawnVisualDummy()

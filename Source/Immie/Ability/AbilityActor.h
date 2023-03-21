@@ -160,10 +160,6 @@ public:
 	/* Called when the server will serialize this ability actor to clients. */
 	virtual void OnSerializeNewActor(class FOutBunch& OutBunch) override;
 
-	UFUNCTION(NetMulticast, Reliable)
-		/**/
-		void InformClientsSpawnDummy();
-
 	UFUNCTION(BlueprintCallable)
 		/**/
 		FBattleActorHitscanResult HitscanShotFromImmie(
