@@ -74,6 +74,10 @@ protected:
 		/* Called by authority side before  */
 		void BP_InitializeForBattle();
 
+	UFUNCTION(NetMulticast, Reliable)
+		/**/
+		void InformClientsSpawnDummy();
+
 	UFUNCTION(BlueprintCallable)
 		/* Spawns a dummy ability actor used as a representation of this one. */
 		void SpawnVisualDummy();
