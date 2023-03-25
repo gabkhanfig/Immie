@@ -255,7 +255,6 @@ void AImmieCharacter::CreateFloatingHealthBar()
 		return;
 	}
 
-
 	FloatingBattleHealthbar = CreateWidget<UFloatingBattleHealthbar>(Cast<APlayerController>(GetWorld()->GetFirstPlayerController()), FloatingBattleHealthbarClass);
 	FloatingBattleHealthbar->SetBattleActor(this);
 	FloatingBattleHealthbar->BP_Initialize();
@@ -387,12 +386,14 @@ void AImmieCharacter::InitializeForBattle(ABattleTeam* OwningTeam, int SlotOnTea
 	ActiveStats.Speed = InitialStats.Speed;
 
 	DamageComponent = UDamageComponent::NewDamageComponent(this);
+	DamageComponent->RegisterComponent();
 
 	const TArray<int> AbilityIds = ImmieObject->GetAbilityIds();
 	const int AbilityCount = AbilityIds.Num();
 	for (int i = 0; i < AbilityCount; i++) {
 		UAbility* BattleAbility = UAbility::NewAbility(this, AbilityIds[i]);
 		BattleAbility->InitializeForBattle();
+		BattleAbility->RegisterComponent();
 		Abilities.Add(BattleAbility);
 	}
 

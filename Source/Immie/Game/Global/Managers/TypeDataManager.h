@@ -53,7 +53,7 @@ public:
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		int GetTypeBitmask(const FName& Name);
+		int GetTypeBitmask(FName Name);
 
 	UFUNCTION(BlueprintPure)
 		/**/
@@ -69,7 +69,7 @@ public:
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		UImmieType* GetTypeFromName(const FName& Name);
+		UImmieType* GetTypeFromName(FName Name);
 
 	UFUNCTION(BlueprintPure)
 		/**/

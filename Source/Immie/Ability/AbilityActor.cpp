@@ -16,6 +16,7 @@
 #include <Components/ArrowComponent.h>
 #include "Camera/CameraComponent.h"
 #include "../Battle/BattleInstance/BattleInstance.h"
+#include "Camera/CameraComponent.h"
 
 bool AAbilityActor::HasBattleActorCollidedAlready(const TScriptInterface<IBattleActor>& BattleActor) const
 {
@@ -51,8 +52,8 @@ void AAbilityActor::EnableAbilityProjectileComponent(AActor* AbilityActor, UAbil
 	checkf(ProjMovement, TEXT("Projectile movement component for ability actor must not be null"));
 	ProjMovement->ProjectileGravityScale = AbilityDataObject->GetGravity();
 	ProjMovement->SetComponentTickEnabled(true);
-	const FVector Velocity = ImmieCharacter->GetFollowCamera()->GetComponentRotation().Vector() * AbilityDataObject->GetSpeed();
-	ProjMovement->Velocity = Velocity;
+	const FVector Velocity = ImmieCharacter->GetFollowCamera()->GetForwardVector() * AbilityDataObject->GetSpeed();
+	ProjMovement->SetVelocityInLocalSpace({ AbilityDataObject->GetSpeed(), 0, 0 });
 }
 
 AAbilityActor::AAbilityActor()
@@ -70,7 +71,7 @@ AAbilityActor::AAbilityActor()
 	ProjectileComponent->InitialSpeed = 0;
 	ProjectileComponent->MaxSpeed = 0;
 	ProjectileComponent->ProjectileGravityScale = 0;
-	ProjectileComponent->bRotationFollowsVelocity;
+	ProjectileComponent->bRotationFollowsVelocity = true;
 
 	bShouldSpawnVisualDummy = true;
 }
@@ -111,8 +112,9 @@ ADummyAbilityActor* AAbilityActor::CreateDummyActor()
 
 	const FTransform SpawnTransform = GetDummySpawnTransform();
 
+	AActor* _Owner = GetImmieCharacter(); //IBattleActor::Execute_GetTeam(this)
 	ADummyAbilityActor* DummyActor = GetWorld()->SpawnActorDeferred<ADummyAbilityActor>
-		(DummyActorClass, SpawnTransform, IBattleActor::Execute_GetTeam(this), nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+		(DummyActorClass, SpawnTransform, _Owner, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 	check(IsValid(DummyActor));
 	DummyActor->SetAbilityActor(this);
 	UGameplayStatics::FinishSpawningActor(DummyActor, SpawnTransform);
@@ -132,17 +134,25 @@ void AAbilityActor::AddAbilityCollider(UPrimitiveComponent* AbilityCollider)
 void AAbilityActor::OnCollision(UPrimitiveComponent* ThisOverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherActorComponent)
 {
 	if (!HasBattleAuthority()) {
+		iLog("no battle authority");
+		return;
+	}
+
+	if (OtherActor == GetImmieCharacter()) {
+		iLog("is owner immie character");
 		return;
 	}
 
 	const bool Implements = OtherActor->GetClass()->ImplementsInterface(UBattleActor::StaticClass());
 	if (!Implements) {
+		iLog("is not a battle actor");
 		return;
 	}
 
 	TScriptInterface<IBattleActor> BattleActor = OtherActor;
 	const bool IsValidAbilityCollider = IBattleActor::Execute_IsValidAbilityCollider(BattleActor.GetObject(), OtherActorComponent);// BattleActor->IsValidAbilityCollider(OtherActorComponent);
 	if (!IsValidAbilityCollider) {
+		iLog("invalid ability collider");
 		return;
 	}
 
@@ -190,7 +200,6 @@ void AAbilityActor::SetDamageComponent(UDamageComponent* _DamageComponent)
 
 void AAbilityActor::InitializeForBattle()
 {
-	iLog("Ability actor initialize for battle");
 	ActiveStats = SpawnedActiveStats;
 
 	BP_InitializeForBattle();
@@ -198,7 +207,6 @@ void AAbilityActor::InitializeForBattle()
 
 void AAbilityActor::OnActorChannelOpen(FInBunch& InBunch, UNetConnection* Connection)
 {
-	iLog("Ability actor channel opened");
 	InBunch << Ability;
 	InBunch << DamageComponent;
 	InBunch << SpawnedActiveStats.Health;
@@ -317,7 +325,16 @@ void AAbilityActor::DecreaseHealth_Implementation(float Amount)
 bool AAbilityActor::IsEnemy_Implementation(const TScriptInterface<IBattleActor>& OtherBattleActor) const
 {
 	const ABattleTeam* Team = IBattleActor::Execute_GetTeam(this);
-	if (!IsValid(Team)) return true;
+	if (!IsValid(Team)) {
+		return true;
+	}
+	bool Enemy = Team != IBattleActor::Execute_GetTeam(OtherBattleActor.GetObject());
+	if (Enemy) {
+		iLog("enemy");
+	}
+	else {
+		iLog("ally");
+	}
 	return Team != IBattleActor::Execute_GetTeam(OtherBattleActor.GetObject());
 }
 

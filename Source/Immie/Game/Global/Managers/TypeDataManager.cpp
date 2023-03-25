@@ -80,7 +80,7 @@ void UTypeDataManager::RegisterType(const FName& Name, UObject* Outer, const FSt
 	}
 }
 
-int UTypeDataManager::GetTypeBitmask(const FName& Name)
+int UTypeDataManager::GetTypeBitmask(FName Name)
 {
 	int* FoundBitmask = TypeBitmasks.Find(Name);
 	if (FoundBitmask) {
@@ -122,7 +122,7 @@ UImmieType* UTypeDataManager::GetType(int TypeBitmask)
 	}
 }
 
-UImmieType* UTypeDataManager::GetTypeFromName(const FName& Name)
+UImmieType* UTypeDataManager::GetTypeFromName(FName Name)
 {
 	const int TypeBitmask = GetTypeBitmask(Name);
 	UImmieType** TypeFound = Types.Find(TypeBitmask);

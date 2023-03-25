@@ -18,10 +18,15 @@
 #include <Kismet/GameplayStatics.h>
 #include "AbilityActor.h"
 #include <Immie/Controller/Player/ImmiePlayerController.h>
+#include "Camera/CameraComponent.h"
 
 FTransform UAbility::GetAbilityActorSpawnTransform_Implementation() const
 {
-	return GetImmieCharacter()->GetActorTransform();
+	FTransform SpawnTransform;
+	SpawnTransform.SetTranslation(GetImmieCharacter()->GetActorLocation());
+	SpawnTransform.SetRotation(GetImmieCharacter()->GetFollowCamera()->GetForwardVector().Rotation().Quaternion());
+	SpawnTransform.SetScale3D(GetImmieCharacter()->GetActorScale());
+	return SpawnTransform;
 }
 
 UAbility::UAbility()

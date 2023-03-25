@@ -25,7 +25,7 @@ ADummyAbilityActor::ADummyAbilityActor()
 	ProjectileComponent->InitialSpeed = 0;
 	ProjectileComponent->MaxSpeed = 0;
 	ProjectileComponent->ProjectileGravityScale = 0;
-	ProjectileComponent->bRotationFollowsVelocity;
+	ProjectileComponent->bRotationFollowsVelocity = true;
 }
 
 void ADummyAbilityActor::BeginPlay()

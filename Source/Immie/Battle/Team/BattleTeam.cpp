@@ -233,8 +233,9 @@ void ABattleTeam::SetActiveImmie_Implementation(AImmieCharacter* NewActiveImmie)
 AAbilityActor* ABattleTeam::SpawnAbilityActor(TSubclassOf<AAbilityActor> AbilityActorClass, UAbility* Ability, const FTransform& SpawnTransform)
 {
 	check(IsValid(AbilityActorClass));
+	AActor* _Owner = Ability->GetImmieCharacter(); //this
 	AAbilityActor* AbilityActor = Owner->GetWorld()->SpawnActorDeferred<AAbilityActor>
-		(AbilityActorClass, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+		(AbilityActorClass, SpawnTransform, _Owner, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 
 	check(IsValid(AbilityActor));
 	UDamageComponent* DamageComponent = UDamageComponent::NewDamageComponent(AbilityActor);
