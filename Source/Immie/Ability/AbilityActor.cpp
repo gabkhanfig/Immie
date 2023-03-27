@@ -134,25 +134,25 @@ void AAbilityActor::AddAbilityCollider(UPrimitiveComponent* AbilityCollider)
 void AAbilityActor::OnCollision(UPrimitiveComponent* ThisOverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherActorComponent)
 {
 	if (!HasBattleAuthority()) {
-		iLog("no battle authority");
+		//iLog("no battle authority");
 		return;
 	}
 
 	if (OtherActor == GetImmieCharacter()) {
-		iLog("is owner immie character");
+		//iLog("is owner immie character");
 		return;
 	}
 
 	const bool Implements = OtherActor->GetClass()->ImplementsInterface(UBattleActor::StaticClass());
 	if (!Implements) {
-		iLog("is not a battle actor");
+		//iLog("is not a battle actor");
 		return;
 	}
 
 	TScriptInterface<IBattleActor> BattleActor = OtherActor;
 	const bool IsValidAbilityCollider = IBattleActor::Execute_IsValidAbilityCollider(BattleActor.GetObject(), OtherActorComponent);// BattleActor->IsValidAbilityCollider(OtherActorComponent);
 	if (!IsValidAbilityCollider) {
-		iLog("invalid ability collider");
+		//iLog("invalid ability collider");
 		return;
 	}
 
@@ -329,12 +329,12 @@ bool AAbilityActor::IsEnemy_Implementation(const TScriptInterface<IBattleActor>&
 		return true;
 	}
 	bool Enemy = Team != IBattleActor::Execute_GetTeam(OtherBattleActor.GetObject());
-	if (Enemy) {
-		iLog("enemy");
-	}
-	else {
-		iLog("ally");
-	}
+	//if (Enemy) {
+	//	iLog("enemy");
+	//}
+	//else {
+	//	iLog("ally");
+	//}
 	return Team != IBattleActor::Execute_GetTeam(OtherBattleActor.GetObject());
 }
 
