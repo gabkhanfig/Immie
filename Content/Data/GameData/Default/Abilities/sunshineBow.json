@@ -8,7 +8,8 @@
     "InitialUses": 3,
     "MaxCooldown": 2,
     "DamagePower": 10,
-    "Speed": 1000,
+    "Speed": 3000,
+    "Gravity": 0.6,
     "AbilitySpecific": {
         "MaxHoldTime": 1.25
     }

@@ -47,13 +47,13 @@ void AAbilityActor::AddCollidedBattleActor(const TScriptInterface<IBattleActor>&
 	Found->Add(HitCollider);
 }
 
-void AAbilityActor::EnableAbilityProjectileComponent(AActor* AbilityActor, UAbilityDataObject* AbilityDataObject, UProjectileMovementComponent* ProjMovement, AImmieCharacter* ImmieCharacter)
+void AAbilityActor::EnableAbilityProjectileComponent(AActor* AbilityActor, UProjectileMovementComponent* ProjMovement, AImmieCharacter* ImmieCharacter, float Speed, float Gravity)
 {
 	checkf(ProjMovement, TEXT("Projectile movement component for ability actor must not be null"));
-	ProjMovement->ProjectileGravityScale = AbilityDataObject->GetGravity();
 	ProjMovement->SetComponentTickEnabled(true);
-	const FVector Velocity = ImmieCharacter->GetFollowCamera()->GetForwardVector() * AbilityDataObject->GetSpeed();
-	ProjMovement->SetVelocityInLocalSpace({ AbilityDataObject->GetSpeed(), 0, 0 });
+	//const FVector Velocity = ImmieCharacter->GetFollowCamera()->GetForwardVector() * Speed;
+	ProjMovement->ProjectileGravityScale = Gravity;
+	ProjMovement->SetVelocityInLocalSpace({ Speed, 0, 0 });
 }
 
 AAbilityActor::AAbilityActor()

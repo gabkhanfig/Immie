@@ -131,7 +131,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		/* Works for dummy abilities. */
-		static void EnableAbilityProjectileComponent(AActor* AbilityActor, UAbilityDataObject* AbilityDataObject, UProjectileMovementComponent* ProjMovement, AImmieCharacter* ImmieCharacter);
+		static void EnableAbilityProjectileComponent(AActor* AbilityActor, UProjectileMovementComponent* ProjMovement, AImmieCharacter* ImmieCharacter, float Speed, float Gravity);
 
 	/**/
 	AAbilityActor();
