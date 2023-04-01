@@ -193,6 +193,7 @@ FJsonObjectBP UAbilityDataObject::AbilityDataToJson()
 	Json.SetFloatField(ABILITY_DO_JSON_FIELD_SPEED, Speed);
 	Json.SetFloatField(ABILITY_DO_JSON_FIELD_RANGE, Range);
 	Json.SetFloatField(ABILITY_DO_JSON_FIELD_MAX_DELAY, MaxDelay);
+	Json.SetFloatField(ABILITY_DO_JSON_FIELD_GRAVITY, Gravity);
 	Json.SetIntegerField(ABILITY_DO_JSON_FIELD_BASE_HEALTH, BaseStats.Health);
 	Json.SetIntegerField(ABILITY_DO_JSON_FIELD_BASE_ATTACK, BaseStats.Attack);
 	Json.SetIntegerField(ABILITY_DO_JSON_FIELD_BASE_DEFENSE, BaseStats.Defense);
