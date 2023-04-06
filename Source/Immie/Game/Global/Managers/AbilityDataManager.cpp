@@ -22,7 +22,7 @@ void UAbilityDataManager::SetAbilityNamesAndIds()
 	DefineAbilityName("terraSpike");
 	DefineAbilityName("voltBolt");
 	DefineAbilityName("sunshineBow");
-	//DefineAbilityName("");
+	DefineAbilityName("leafVolley");
 }
 
 void UAbilityDataManager::LoadDefaultGameData()

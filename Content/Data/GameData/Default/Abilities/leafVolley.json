@@ -1,0 +1,15 @@
+{
+    "Types": [
+        {
+            "Type": "nature"
+        }
+    ],
+    "MaxUses": 4,
+    "InitialUses": 4,
+    "MaxCooldown": 2,
+    "DamagePower": 10,
+    "Speed": 1500,
+    "AbilitySpecific": {
+        "VolleyCount": 5
+    }
+}
