@@ -10,6 +10,7 @@
     "DamagePower": 10,
     "Speed": 1500,
     "AbilitySpecific": {
-        "VolleyCount": 5
+        "VolleyCount": 5,
+        "DurationBetweenLeaf": 0.1
     }
 }
