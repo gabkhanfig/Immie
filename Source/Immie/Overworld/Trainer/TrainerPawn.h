@@ -22,6 +22,14 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/**/
+		FString BattleStartText;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		/**/
+		FString BattleEndText;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		/**/
 		TEnumAsByte<EBattleTeamType> BattleTeamType;
 
 	UPROPERTY(BlueprintReadWrite)
