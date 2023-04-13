@@ -12,6 +12,11 @@ TArray<UImmie*> UTrainerDataObject::GetTeamCopy_Implementation(UObject* Owner)
 void UTrainerDataObject::LoadTrainerJsonData(const FJsonObjectBP& Json)
 {
   Team = UImmie::JsonToTeam(Json, "Team", this);
+
+  Json.TryGetStringField("BattleIntroDialogue", BattleIntroDialogue);
+  Json.TryGetStringField("BattleEndWinDialogue", BattleEndWinDialogue);
+  Json.TryGetStringField("BattleEndLoseDialogue", BattleEndLoseDialogue);
+
   BP_LoadTrainerJsonData(Json);
 }
 

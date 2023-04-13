@@ -23,12 +23,21 @@ protected:
 		/* This must be set in blueprint. Trainer name should be lower case formatted. */
 		FName TrainerName;
 
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadOnly)
 		/**/
 		TArray<UImmie*> Team;
 
+	UPROPERTY(BlueprintReadOnly)
+		/**/
+		FString BattleIntroDialogue;
 
-	
+	UPROPERTY(BlueprintReadOnly)
+		/**/
+		FString BattleEndWinDialogue;
+
+	UPROPERTY(BlueprintReadOnly)
+		/**/
+		FString BattleEndLoseDialogue;
 
 public:
 
@@ -39,6 +48,22 @@ public:
 	void LoadTrainerJsonData(const FJsonObjectBP& Json);
 
 	static const FString& GetTrainerBlueprintFolder();
+
+	UFUNCTION(BlueprintPure)
+		/**/
+		FName GetTrainerName() const { return TrainerName; }
+
+	UFUNCTION(BlueprintPure)
+		/**/
+		FString GetBattleIntroDialogue() const { return BattleIntroDialogue; }
+
+	UFUNCTION(BlueprintPure)
+		/**/
+		FString GetBattleEndWinDialogue() const { return BattleEndWinDialogue; }
+
+	UFUNCTION(BlueprintPure)
+		/**/
+		FString GetBattleEndLoseDialogue() const { return BattleEndLoseDialogue; }
 
 protected:
 
