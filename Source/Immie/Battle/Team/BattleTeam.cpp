@@ -282,6 +282,7 @@ void ABattleTeam::DestroyBattleActors()
 			continue;
 		}
 		RemoveAbilityActor(AbilityActor);
+		i--;
 	}
 }
 

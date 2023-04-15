@@ -314,7 +314,9 @@ ABattleInstance* UAbility::GetBattleInstance() const
 
 bool UAbility::HasBattleAuthority() const
 {
-	return GetTeam()->HasAuthority();
+	ABattleTeam* Team = GetTeam();
+	if (!IsValid(Team)) return false;
+	return Team->HasAuthority();
 }
 
 UAbilityDataObject* UAbility::GetAbilityDataObject() const
