@@ -54,8 +54,8 @@ void AOverworldPlayer::OnCollision(UPrimitiveComponent* ThisOverlappedComponent,
 void AOverworldPlayer::TrainerCollision_Implementation(const TScriptInterface<IBattler>& Trainer, UPrimitiveComponent* ThisOverlappedComponent, UPrimitiveComponent* OtherActorComponent)
 {
 	TArray<FBattleTeamInit> Teams;
-	Teams.Add(GetBattleTeamInit());
-	Teams.Add(Trainer->GetBattleTeamInit());
+	Teams.Add(IBattler::Execute_GetBattleTeamInit(this));
+	Teams.Add(IBattler::Execute_GetBattleTeamInit(Trainer->_getUObject()));
 	AImmieGameMode* GameMode = Cast<AImmieGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	checkf(IsValid(GameMode), TEXT("Overworld player attempting to start a trainer battle on an invalid ImmieGameMode"));
 	GameMode->StartBattle("Singleplayer", Teams, { 0, 0, 0 });
@@ -79,28 +79,39 @@ void AOverworldPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &AOverworldPlayer::StopJumping);
 }
 
-EBattleTeamType AOverworldPlayer::GetBattleTeamType() const
+EBattleTeamType AOverworldPlayer::GetBattleTeamType_Implementation() const
 {
 	return EBattleTeamType::BattleTeam_PlayerSingleplayer;
 }
 
-TArray<UImmie*> AOverworldPlayer::GetTeam() const
+TArray<UImmie*> AOverworldPlayer::GetTeam_Implementation() const
 {
 	return GetPlayerImmies()->GetTeam();
 }
 
-FBattleTeamInit AOverworldPlayer::GetBattleTeamInit() const
+APawn* AOverworldPlayer::GetPawn_Implementation() const
 {
-	FBattleTeamInit TeamInit = IBattler::GetBattleTeamInit();
+	return (APawn*)this;
+}
+
+FBattleTeamInit AOverworldPlayer::GetBattleTeamInit_Implementation() const
+{
+	FBattleTeamInit TeamInit = DefaultBattleTeamInit();
 	TeamInit.Controller = GetController();
 	return TeamInit;
 }
 
-void AOverworldPlayer::OnBattleEnd()
+void AOverworldPlayer::OnBattleStart_Implementation()
 {
+	DisablePawn();
+}
+
+void AOverworldPlayer::OnBattleEnd_Implementation()
+{
+	EnablePawn();
 	TimerForBattleReady = 10;
 
-	IBattler::OnBattleEnd();
+	//IBattler::OnBattleEnd();
 	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
 	PlayerController->Possess(this);
 }

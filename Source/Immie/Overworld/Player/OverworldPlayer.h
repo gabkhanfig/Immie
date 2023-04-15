@@ -32,11 +32,14 @@ public:
 		void TrainerCollision(const TScriptInterface<IBattler>& Trainer, UPrimitiveComponent* ThisOverlappedComponent, UPrimitiveComponent* OtherActorComponent);
 	
 	/* Battler interface. */
-
-	virtual EBattleTeamType GetBattleTeamType() const override;
-	virtual TArray<UImmie*> GetTeam() const override;
-	virtual FBattleTeamInit GetBattleTeamInit() const override;
-	virtual void OnBattleEnd() override;
+	virtual EBattleTeamType GetBattleTeamType_Implementation() const override;
+	virtual TArray<UImmie*> GetTeam_Implementation() const override;
+	virtual APawn* GetPawn_Implementation() const override;
+	virtual FBattleTeamInit GetBattleTeamInit_Implementation() const override;
+	//virtual void Disable_Implementation() override;
+	//virtual void Enable_Implementation() override;
+	virtual void OnBattleStart_Implementation() override;
+	virtual void OnBattleEnd_Implementation() override;
 
 protected:
 

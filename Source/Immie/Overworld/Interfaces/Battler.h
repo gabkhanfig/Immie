@@ -11,7 +11,7 @@ class UImmie;
 
 
 // This class does not need to be modified.
-UINTERFACE(NotBlueprintable)
+UINTERFACE(Blueprintable)
 class UBattler : public UInterface
 {
 	GENERATED_BODY()
@@ -23,46 +23,53 @@ class IMMIE_API IBattler
 {
 	GENERATED_BODY()
 
-	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
+protected:
+
+	void DisablePawn();
+
+	void EnablePawn();
+
+	FBattleTeamInit DefaultBattleTeamInit() const;
+
 public:
 
-	UFUNCTION(BlueprintPure, DisplayName = "Get Battle Team Type")
+	UFUNCTION(BlueprintNativeEvent, BlueprintPure)
 		/**/
-		virtual EBattleTeamType BattleActorGetBattleTeamType() const { return GetBattleTeamType(); }
-	virtual EBattleTeamType GetBattleTeamType() const = 0; 
+		EBattleTeamType GetBattleTeamType() const;// { return GetBattleTeamType(); }
+	//virtual EBattleTeamType GetBattleTeamType() const = 0; 
 
-	UFUNCTION(BlueprintPure, DisplayName = "Get Team")
+	UFUNCTION(BlueprintNativeEvent, BlueprintPure)
 		/**/
-		virtual TArray<UImmie*> BattleActorGetTeam() const { return GetTeam(); }
-	virtual TArray<UImmie*> GetTeam() const = 0;
+		TArray<UImmie*> GetTeam() const;// { return GetTeam(); }
+	//virtual TArray<UImmie*> GetTeam() const = 0;
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintNativeEvent, BlueprintPure)
 		/**/
-		virtual APawn* GetPawn() const;
+		APawn* GetPawn() const;
 
-	UFUNCTION(BlueprintPure, DisplayName = "Get Battle Team Init")
+	UFUNCTION(BlueprintNativeEvent, BlueprintPure)
 		/**/
-		virtual FBattleTeamInit BattleActorGetBattleTeamInit() const { return GetBattleTeamInit(); }
-	virtual FBattleTeamInit GetBattleTeamInit() const;
+		FBattleTeamInit GetBattleTeamInit() const;// { return GetBattleTeamInit(); }
+	//virtual FBattleTeamInit GetBattleTeamInit() const;
 
-	UFUNCTION(BlueprintCallable, DisplayName = "Disable")
-		/**/
-		virtual void BattleActorDisable() { Disable(); };
-	virtual void Disable();
+	//UFUNCTION(BlueprintCallable)
+	//	/**/
+	//	void Disable();// { Disable(); };
+	////virtual void Disable();
 
-	UFUNCTION(BlueprintCallable, DisplayName = "Enable")
-		/**/
-		virtual void BattleActorEnable() { Enable(); }
-	virtual void Enable();
+	//UFUNCTION(BlueprintCallable)
+	//	/**/
+	//	void Enable();// { Enable(); }
+	//virtual void Enable();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 		/**/
-		virtual void BattleActorOnBattleStart() { OnBattleStart(); };
-	virtual void OnBattleStart();
+		void OnBattleStart();// { OnBattleStart(); };
+	//virtual void OnBattleStart();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 		/**/
-		virtual void BattleActorOnBattleEnd() { OnBattleEnd(); };
-	virtual void OnBattleEnd();
+		void OnBattleEnd();// { OnBattleEnd(); };
+	//virtual void OnBattleEnd();
 
 };

@@ -115,7 +115,7 @@ void ABattleTeam::InitializeTeam(ABattleInstance* _BattleInstance, const FBattle
 	BP_InitializeTeam(TeamData);
 
 	if (TeamOwner != nullptr) {
-		TeamOwner->OnBattleStart();
+		IBattler::Execute_OnBattleStart(TeamOwner->_getUObject());
 	}
 }
 
@@ -298,7 +298,8 @@ void ABattleTeam::OnBattleEnd_Implementation(EBattleTeamWinState WinState)
 	if (HasAuthority()) {
 		DestroyBattleActors();
 		if (TeamOwner != nullptr) { // Don't use IsValid() due to being unable to get the UObject if its null
-			TeamOwner->OnBattleEnd();
+			//TeamOwner->OnBattleEnd();
+			IBattler::Execute_OnBattleEnd(TeamOwner->_getUObject());
 		}
 	}
 

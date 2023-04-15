@@ -46,13 +46,34 @@ void ATrainerPawn::Tick(float DeltaTime)
 
 }
 
-EBattleTeamType ATrainerPawn::GetBattleTeamType() const
+EBattleTeamType ATrainerPawn::GetBattleTeamType_Implementation() const
 {
 	return BattleTeamType;
 }
 
-TArray<UImmie*> ATrainerPawn::GetTeam() const
+TArray<UImmie*> ATrainerPawn::GetTeam_Implementation() const
 {
 	return Team;
+}
+
+APawn* ATrainerPawn::GetPawn_Implementation() const
+{
+	return (APawn*)this;
+}
+
+FBattleTeamInit ATrainerPawn::GetBattleTeamInit_Implementation() const
+{
+	return DefaultBattleTeamInit();
+}
+
+void ATrainerPawn::OnBattleStart_Implementation()
+{
+	DisablePawn();
+	iLog("test trainer battler start");
+}
+
+void ATrainerPawn::OnBattleEnd_Implementation()
+{
+	EnablePawn();
 }
 
