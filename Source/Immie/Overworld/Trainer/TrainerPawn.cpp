@@ -69,7 +69,7 @@ FBattleTeamInit ATrainerPawn::GetBattleTeamInit_Implementation() const
 void ATrainerPawn::OnBattleStart_Implementation()
 {
 	DisablePawn();
-	iLog("test trainer battler start");
+	iLog(GetTrainerDataObject()->GetBattleIntroDialogue());
 }
 
 void ATrainerPawn::OnBattleEnd_Implementation()
