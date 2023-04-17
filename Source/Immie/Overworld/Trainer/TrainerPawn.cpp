@@ -72,8 +72,19 @@ void ATrainerPawn::OnBattleStart_Implementation()
 	iLog(GetTrainerDataObject()->GetBattleIntroDialogue());
 }
 
-void ATrainerPawn::OnBattleEnd_Implementation()
+void ATrainerPawn::OnBattleEnd_Implementation(EBattleTeamWinState WinState)
 {
 	EnablePawn();
+	switch (WinState) {
+	case BattleTeamWinState_Win:
+		iLog(GetTrainerDataObject()->GetBattleEndWinDialogue());
+		break;
+	case BattleTeamWinState_Lose:
+		iLog(GetTrainerDataObject()->GetBattleEndLoseDialogue());
+		break;
+	case BattleTeamWinState_Draw:
+		iLog("Trainer Draw Example Dialogue");
+		break;
+	}
 }
 

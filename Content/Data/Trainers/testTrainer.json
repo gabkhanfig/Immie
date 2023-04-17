@@ -28,5 +28,7 @@
 			}
 		}
 	],
-	"BattleIntroDialogue": "Example Text for Trainer Battle Intro Dialogue"
+	"BattleIntroDialogue": "Example Text for Trainer Battle Intro Dialogue",
+	"BattleEndWinDialogue": "Example Text for Trainer Battle End Win Dialogue",
+	"BattleEndLoseDialogue": "Example Text for Trainer Battle End Lose Dialogue"
 }

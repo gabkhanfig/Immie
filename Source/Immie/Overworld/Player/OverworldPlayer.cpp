@@ -106,7 +106,7 @@ void AOverworldPlayer::OnBattleStart_Implementation()
 	DisablePawn();
 }
 
-void AOverworldPlayer::OnBattleEnd_Implementation()
+void AOverworldPlayer::OnBattleEnd_Implementation(EBattleTeamWinState WinState)
 {
 	EnablePawn();
 	TimerForBattleReady = 10;

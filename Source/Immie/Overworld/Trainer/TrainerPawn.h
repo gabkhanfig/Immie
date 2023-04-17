@@ -51,7 +51,7 @@ public:
 	//virtual void Disable_Implementation() override;
 	//virtual void Enable_Implementation() override;
 	virtual void OnBattleStart_Implementation() override;
-	virtual void OnBattleEnd_Implementation() override;
+	virtual void OnBattleEnd_Implementation(EBattleTeamWinState WinState) override;
 
 
 protected:

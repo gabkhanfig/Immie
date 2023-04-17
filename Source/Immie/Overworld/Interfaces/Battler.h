@@ -69,7 +69,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 		/**/
-		void OnBattleEnd();// { OnBattleEnd(); };
+		void OnBattleEnd(EBattleTeamWinState WinState);// { OnBattleEnd(); };
 	//virtual void OnBattleEnd();
 
 };

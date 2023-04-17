@@ -300,7 +300,7 @@ void ABattleTeam::OnBattleEnd_Implementation(EBattleTeamWinState WinState)
 		DestroyBattleActors();
 		if (TeamOwner != nullptr) { // Don't use IsValid() due to being unable to get the UObject if its null
 			//TeamOwner->OnBattleEnd();
-			IBattler::Execute_OnBattleEnd(TeamOwner->_getUObject());
+			IBattler::Execute_OnBattleEnd(TeamOwner->_getUObject(), WinState);
 		}
 	}
 
