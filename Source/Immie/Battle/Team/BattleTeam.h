@@ -11,6 +11,7 @@ class ABattleInstance;
 class UImmie;
 class AImmieCharacter;
 class AAbilityActor;
+class AImmieAIController;
 
 UCLASS()
 class IMMIE_API ABattleTeam : public AActor
@@ -39,6 +40,12 @@ private:
 
 	/* If the team is current alive. */
 	uint8 bTeamAlive : 1;
+
+protected:
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		/**/
+		TSubclassOf<AImmieAIController> AIControllerClass;
 
 protected:
 

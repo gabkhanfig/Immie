@@ -11,6 +11,7 @@
 #include <Kismet/GameplayStatics.h>
 #include <Immie/Battle/Components/DamageComponent.h>
 #include "../../Overworld/Interfaces/Battler.h"
+#include "../../Controller/Ai/ImmieAIController.h"
 
 ABattleTeam::ABattleTeam()
 {
@@ -110,6 +111,15 @@ void ABattleTeam::InitializeTeam(ABattleInstance* _BattleInstance, const FBattle
 	Controller = TeamData.Controller;
 	TeamOwner = TeamData.Trainer;
 	TeamType = TeamData.TeamType;
+
+	if (Controller == nullptr) {
+		if (IsValid(AIControllerClass)) {
+			iLog("null controller but valid ai controller class");
+		}
+		else {
+			iLog("null controller");
+		}
+	}
 
 	BP_CreateTeam(TeamData);
 	BP_InitializeTeam(TeamData);
