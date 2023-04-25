@@ -28,6 +28,9 @@ protected:
 		/**/
 		TArray<UImmie*> Team;
 
+	UPROPERTY(BlueprintReadWrite)
+		bool CanOverworldPlayerInitiateBattle;
+
 public:
 	// Sets default values for this pawn's properties
 	ATrainerPawn();
@@ -45,6 +48,7 @@ public:
 	virtual void OnBattleStart_Implementation() override;
 	virtual void OnBattleEnd_Implementation(EBattleTeamWinState WinState) override;
 
+	bool GetCanOverworldPlayerInitiateBattle() const { return CanOverworldPlayerInitiateBattle; }
 
 protected:
 	// Called when the game starts or when spawned

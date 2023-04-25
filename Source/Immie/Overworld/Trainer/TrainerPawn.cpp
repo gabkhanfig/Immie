@@ -13,6 +13,7 @@ ATrainerPawn::ATrainerPawn()
 	PrimaryActorTick.bCanEverTick = true;
 
 	BattleTeamType = EBattleTeamType::BattleTeam_Trainer;
+	CanOverworldPlayerInitiateBattle = true;
 }
 
 // Called when the game starts or when spawned
