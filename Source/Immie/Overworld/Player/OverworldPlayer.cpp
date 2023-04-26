@@ -7,6 +7,7 @@
 #include <Kismet/KismetMathLibrary.h>
 #include <Immie/Game/ImmieGameMode.h>
 #include <Kismet/GameplayStatics.h>
+#include "../Trainer/TrainerPawn.h"
 
 // Sets default values
 AOverworldPlayer::AOverworldPlayer()
@@ -26,6 +27,14 @@ void AOverworldPlayer::BeginPlay()
 void AOverworldPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	for (int i = 0; i < NearbyBattleEligibleTrainers.Num(); i++) {
+		ATrainerPawn* Trainer = NearbyBattleEligibleTrainers[i];
+		if (!IsValid(Trainer)) {
+			NearbyBattleEligibleTrainers.RemoveSingle(Trainer);
+			i--;
+		}
+	}
 
 	if (TimerForBattleReady > 0) {
 		TimerForBattleReady -= DeltaTime;
@@ -134,4 +143,14 @@ void AOverworldPlayer::ForwardMovement(float ScaleValue)
 void AOverworldPlayer::RightMovement(float ScaleValue)
 {
 	AddMovementInput(UKismetMathLibrary::GetRightVector(FRotator(0, GetControlRotation().Yaw, 0)), ScaleValue, false);
+}
+
+void AOverworldPlayer::AddNearbyBattleEligibleTrainer(ATrainerPawn* Trainer)
+{
+	NearbyBattleEligibleTrainers.Add(Trainer);
+}
+
+void AOverworldPlayer::RemoveNearbyBattleEligibleTrainer(ATrainerPawn* Trainer)
+{
+	NearbyBattleEligibleTrainers.RemoveSingle(Trainer);
 }

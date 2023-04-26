@@ -7,6 +7,8 @@
 #include "../Interfaces/Battler.h"
 #include "OverworldPlayer.generated.h"
 
+class ATrainerPawn;
+
 UCLASS()
 class IMMIE_API AOverworldPlayer : public ACharacter, public IBattler
 {
@@ -51,10 +53,24 @@ protected:
 	void ForwardMovement(float ScaleValue);
 	void RightMovement(float ScaleValue);
 
+	UFUNCTION(BlueprintCallable)
+		/**/
+		void AddNearbyBattleEligibleTrainer(ATrainerPawn* Trainer);
+
+	UFUNCTION(BlueprintCallable)
+		/**/
+		void RemoveNearbyBattleEligibleTrainer(ATrainerPawn* Trainer);
+
 protected:
 
 	UPROPERTY(BlueprintReadWrite)
 		/**/
 		float TimerForBattleReady;
+
+	UPROPERTY(BlueprintReadWrite)
+		/**/
+		TArray<ATrainerPawn*> NearbyBattleEligibleTrainers;
+
+
 
 };
