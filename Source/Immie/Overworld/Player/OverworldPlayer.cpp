@@ -62,12 +62,7 @@ void AOverworldPlayer::OnCollision(UPrimitiveComponent* ThisOverlappedComponent,
 
 void AOverworldPlayer::TrainerCollision_Implementation(const TScriptInterface<IBattler>& Trainer, UPrimitiveComponent* ThisOverlappedComponent, UPrimitiveComponent* OtherActorComponent)
 {
-	TArray<FBattleTeamInit> Teams;
-	Teams.Add(IBattler::Execute_GetBattleTeamInit(this));
-	Teams.Add(IBattler::Execute_GetBattleTeamInit(Trainer->_getUObject()));
-	AImmieGameMode* GameMode = Cast<AImmieGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-	checkf(IsValid(GameMode), TEXT("Overworld player attempting to start a trainer battle on an invalid ImmieGameMode"));
-	GameMode->StartBattle("Singleplayer", Teams, { 0, 0, 0 });
+	StartBattleWithBattler(Trainer);
 }
 
 // Called to bind functionality to input
@@ -153,4 +148,31 @@ void AOverworldPlayer::AddNearbyBattleEligibleTrainer(ATrainerPawn* Trainer)
 void AOverworldPlayer::RemoveNearbyBattleEligibleTrainer(ATrainerPawn* Trainer)
 {
 	NearbyBattleEligibleTrainers.RemoveSingle(Trainer);
+}
+
+void AOverworldPlayer::StartBattleWithFirstNearbyBattleEligibleTrainer()
+{
+	if (NearbyBattleEligibleTrainers.Num() == 0) return;
+	
+	ATrainerPawn* Trainer = nullptr;
+	for (int i = 0; i < NearbyBattleEligibleTrainers.Num(); i++) {
+		if (IsValid(NearbyBattleEligibleTrainers[i])) {
+			Trainer = NearbyBattleEligibleTrainers[i];
+			break;
+		}
+	}
+	if (Trainer == nullptr) return;
+	iLog("test starting battle");
+
+	
+}
+
+void AOverworldPlayer::StartBattleWithBattler(const TScriptInterface<IBattler>& Battler)
+{
+	TArray<FBattleTeamInit> Teams;
+	Teams.Add(IBattler::Execute_GetBattleTeamInit(this));
+	Teams.Add(IBattler::Execute_GetBattleTeamInit(Battler->_getUObject()));
+	AImmieGameMode* GameMode = Cast<AImmieGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	checkf(IsValid(GameMode), TEXT("Overworld player attempting to start a trainer battle on an invalid ImmieGameMode"));
+	GameMode->StartBattle("Singleplayer", Teams, { 0, 0, 0 });
 }

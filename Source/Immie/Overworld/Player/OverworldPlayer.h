@@ -61,6 +61,14 @@ protected:
 		/**/
 		void RemoveNearbyBattleEligibleTrainer(ATrainerPawn* Trainer);
 
+	UFUNCTION(BlueprintCallable)
+		/**/
+		void StartBattleWithFirstNearbyBattleEligibleTrainer();
+
+	UFUNCTION(BlueprintCallable)
+		/**/
+		void StartBattleWithBattler(const TScriptInterface<IBattler>& Battler);
+
 protected:
 
 	UPROPERTY(BlueprintReadWrite)
