@@ -45,26 +45,6 @@ void AOverworldPlayer::Tick(float DeltaTime)
 	}
 }
 
-void AOverworldPlayer::OnCollision(UPrimitiveComponent* ThisOverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherActorComponent)
-{
-	if (TimerForBattleReady > 0) {
-		return;
-	}
-
-	const bool ImplementsTrainer = OtherActor->GetClass()->ImplementsInterface(UBattler::StaticClass());
-	if (!ImplementsTrainer) {
-		return;
-	}
-
-	TScriptInterface<IBattler> Trainer = OtherActor;
-	TrainerCollision(Trainer, ThisOverlappedComponent, OtherActorComponent);
-}
-
-void AOverworldPlayer::TrainerCollision_Implementation(const TScriptInterface<IBattler>& Trainer, UPrimitiveComponent* ThisOverlappedComponent, UPrimitiveComponent* OtherActorComponent)
-{
-	StartBattleWithBattler(Trainer);
-}
-
 // Called to bind functionality to input
 void AOverworldPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -162,9 +142,8 @@ void AOverworldPlayer::StartBattleWithFirstNearbyBattleEligibleTrainer()
 		}
 	}
 	if (Trainer == nullptr) return;
-	iLog("test starting battle");
 
-	
+	StartBattleWithBattler(Trainer);
 }
 
 void AOverworldPlayer::StartBattleWithBattler(const TScriptInterface<IBattler>& Battler)

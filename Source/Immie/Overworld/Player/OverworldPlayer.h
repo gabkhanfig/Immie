@@ -24,14 +24,6 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	UFUNCTION(BlueprintCallable)
-		/* Called when any of this Overworld Player's colliders have begun collision with another actor. */
-		void OnCollision(UPrimitiveComponent* ThisOverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherActorComponent);
-
-	UFUNCTION(BlueprintNativeEvent)
-		/**/
-		void TrainerCollision(const TScriptInterface<IBattler>& Trainer, UPrimitiveComponent* ThisOverlappedComponent, UPrimitiveComponent* OtherActorComponent);
 	
 	/* Battler interface. */
 	virtual EBattleTeamType GetBattleTeamType_Implementation() const override;
