@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include <Immie/ImmieCore.h>
 #include <Immie/Battle/Interfaces/BattleActor.h>
+#include <Immie/Overworld/Interfaces/Battler.h>
 #include <Components/WidgetComponent.h>
 #include "ImmieCharacter.generated.h"
 
@@ -316,41 +317,31 @@ public:
 		/**/
 		bool IsControlledByLocalPlayer() const;
 
+#pragma region BattleActorInterface
+
 	virtual UDamageComponent* GetDamageComponent_Implementation() const override;
-
 	virtual float TotalHealingFromAbility_Implementation(const FAbilityInstigatorDamage& AbilityHealing) const override;
-
 	virtual float TotalDamageFromAbility_Implementation(const FAbilityInstigatorDamage& AbilityDamage) const override;
-
 	virtual void AuthorityBattleTick_Implementation(float DeltaTime) override;
-
 	virtual void ClientBattleTick_Implementation(float DeltaTime) override;
-
 	virtual bool IsValidAbilityCollider_Implementation(UPrimitiveComponent* Collider) const override;
-
 	virtual bool CanBeHealedByAbilityActor_Implementation(AAbilityActor* AbilityActor) const override;
-
 	virtual bool CanBeDamagedByAbilityActor_Implementation(AAbilityActor* AbilityActor) const override;
-
 	virtual bool IsEnemy_Implementation(const TScriptInterface<IBattleActor>& OtherBattleActor) const override;
-
 	virtual FBattleStats GetInitialStats_Implementation() const override;
-
 	virtual FBattleStats GetActiveStats_Implementation() const override;
-
 	virtual ABattleTeam* GetTeam_Implementation() const override;
-
 	virtual TArray<UImmieType*> GetType_Implementation() const override;
-
 	virtual FString GetDisplayName_Implementation() const override;
-
 	virtual void IncreaseHealth_Implementation(float Amount) override;
-
 	virtual void DecreaseHealth_Implementation(float Amount) override;
-
 	virtual void UpdateVisuals_Implementation() override;
 
+#pragma endregion
+
+#pragma region BattlerInterface
 
 
+#pragma endregion
 
 };

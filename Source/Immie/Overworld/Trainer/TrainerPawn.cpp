@@ -89,3 +89,8 @@ void ATrainerPawn::OnBattleEnd_Implementation(EBattleTeamWinState WinState)
 	}
 }
 
+bool ATrainerPawn::CanBeBattled_Implementation() const
+{
+	return true;
+}
+

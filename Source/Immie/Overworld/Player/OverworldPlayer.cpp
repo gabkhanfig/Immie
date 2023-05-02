@@ -100,6 +100,11 @@ void AOverworldPlayer::OnBattleEnd_Implementation(EBattleTeamWinState WinState)
 	PlayerController->Possess(this);
 }
 
+bool AOverworldPlayer::CanBeBattled_Implementation() const
+{
+	return true;
+}
+
 void AOverworldPlayer::YawInput(float AxisValue)
 {
 	AddControllerYawInput(AxisValue * 0.5);

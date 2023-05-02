@@ -17,7 +17,7 @@ class UBattler : public UInterface
 	GENERATED_BODY()
 };
 
-/* Interface for any class that can "own" a team. These include the player, trainers, and wild Immies. 
+/* Interface for any class that can "own" a team. These include the overworld player, trainers, and wild Immies. 
 Only used by APawns. */
 class IMMIE_API IBattler
 {
@@ -70,6 +70,10 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 		/**/
 		void OnBattleEnd(EBattleTeamWinState WinState);// { OnBattleEnd(); };
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+		/**/
+		bool CanBeBattled() const;
 	//virtual void OnBattleEnd();
 
 };

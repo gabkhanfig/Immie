@@ -47,6 +47,7 @@ public:
 	//virtual void Enable_Implementation() override;
 	virtual void OnBattleStart_Implementation() override;
 	virtual void OnBattleEnd_Implementation(EBattleTeamWinState WinState) override;
+	virtual bool CanBeBattled_Implementation() const override;
 
 	bool GetCanOverworldPlayerInitiateBattle() const { return CanOverworldPlayerInitiateBattle; }
 
