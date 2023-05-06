@@ -2,6 +2,8 @@
 
 
 #include "WildImmieSpawner.h"
+#include "WildSpawnTable.h"
+#include "ImmieSpawnData.h"
 
 // Sets default values
 AWildImmieSpawner::AWildImmieSpawner()

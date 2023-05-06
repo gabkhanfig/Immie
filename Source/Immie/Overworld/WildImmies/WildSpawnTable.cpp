@@ -2,4 +2,5 @@
 
 
 #include "WildSpawnTable.h"
+#include "ImmieSpawnData.h"
 
