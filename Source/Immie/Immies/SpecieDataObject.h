@@ -9,6 +9,10 @@
 #include <Immie/Immies/SpecieDataTypes.h>
 #include "SpecieDataObject.generated.h"
 
+class UImmieObject;
+class AImmieCharacter;
+class UImmieSpawnData;
+
 UCLASS(Blueprintable)
 /* Data object storing specie data. Override in blueprints for custom specie data.
 Automatically loads references to other specie classes.
@@ -31,6 +35,10 @@ private:
 	UPROPERTY()
 		/**/
 		UClass* CharacterClass;
+
+	UPROPERTY()
+		/**/
+		UClass* SpawnDataClass;
 
 protected:
 
@@ -98,6 +106,10 @@ public:
 	UFUNCTION(BlueprintPure)
 		/**/
 		UClass* GetImmieCharacterClass() const { return CharacterClass; }
+
+	UFUNCTION(BlueprintPure)
+		/**/
+		UClass* GetSpawnDataClass() const { return SpawnDataClass; }
 
 	UFUNCTION(BlueprintPure)
 		/**/

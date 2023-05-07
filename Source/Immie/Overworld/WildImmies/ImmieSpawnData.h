@@ -9,7 +9,7 @@
 #include "ImmieSpawnData.generated.h"
 
 /* Object containing spawn data for particular spawn table set with conditions and more. */
-UCLASS()
+UCLASS(Blueprintable)
 class IMMIE_API UImmieSpawnData : public UObject
 {
 	GENERATED_BODY()

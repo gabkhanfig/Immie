@@ -19,16 +19,15 @@ public:
 	// Sets default values for this actor's properties
 	AWildImmieSpawner();
 
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-protected:
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		/**/
 		FName SpawnTable;

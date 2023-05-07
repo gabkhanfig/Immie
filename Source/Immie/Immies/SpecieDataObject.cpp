@@ -7,6 +7,9 @@
 #include <Immie/Game/Global/Managers/TypeDataManager.h>
 #include <Immie/Game/Global/Managers/AbilityDataManager.h>
 #include <Immie/Game/Global/Managers/ConfigDataManager.h>
+#include "../Overworld/WildImmies/ImmieSpawnData.h"
+#include "ImmieObject.h"
+#include "ImmieCharacter.h"
 
 #define SPECIE_DO_JSON_FIELD_TYPES "Types"
 #define SPECIE_DO_JSON_FIELD_BASE_HEALTH "BaseHealth"
@@ -44,14 +47,18 @@ void USpecieDataObject::LoadClasses()
 
     const FString ObjectClassReferenceString = GetImmiesBlueprintFolder() + SpecieString + "/BP_" + SpecieString + "Object.BP_" + SpecieString + "Object_C'";
     const FString CharacterClassReferenceString = GetImmiesBlueprintFolder() + SpecieString + "/BP_" + SpecieString + "Character.BP_" + SpecieString + "Character_C'";
+    const FString SpawnDataClassReferenceString = GetImmiesBlueprintFolder() + SpecieString + "/BP_" + SpecieString + "SpawnData.BP_" + SpecieString + "SpawnData_C'";
 
-    UClass* SpecieObjectClass = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *ObjectClassReferenceString));
+    TSubclassOf<UImmie> SpecieObjectClass = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *ObjectClassReferenceString));
     checkf(IsValid(SpecieObjectClass), TEXT("Failed to load specie object UClass"));
-    UClass* SpecieCharacterClass = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *CharacterClassReferenceString));
+    TSubclassOf<AImmieCharacter> SpecieCharacterClass = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *CharacterClassReferenceString));
     checkf(IsValid(SpecieCharacterClass), TEXT("Failed to load specie character UClass"));
+    TSubclassOf<UImmieSpawnData> SpecieSpawnDataClass = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *SpawnDataClassReferenceString));
+    checkf(IsValid(SpecieSpawnDataClass), TEXT("Failed to load specie spawn data UClass"));
 
     ObjectClass = SpecieObjectClass;
     CharacterClass = SpecieCharacterClass;
+    SpawnDataClass = SpecieSpawnDataClass;
 }
 
 const FString& USpecieDataObject::GetImmiesBlueprintFolder()

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "../../Util/Json/BlueprintJsonObject.h"
 #include "WildSpawnTable.generated.h"
 
 class UImmieSpawnData;
@@ -14,5 +15,16 @@ UCLASS()
 class IMMIE_API UWildSpawnTable : public UObject
 {
 	GENERATED_BODY()
+
+public:
+
+	UWildSpawnTable();
+
+	void LoadJsonData(const FJsonObjectBP& Json);
+
+private:
+
+	UPROPERTY()
+		TArray<UImmieSpawnData*> Spawns;
 	
 };
