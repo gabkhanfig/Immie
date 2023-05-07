@@ -50,3 +50,8 @@ UTrainerDataManager* GetTrainerDataManager()
 {
 	return GetImmieGameInstance()->_GetTrainerDataManager();
 }
+
+USpawnTableManager* GetSpawnTableManager()
+{
+	return GetImmieGameInstance()->_GetSpawnTableManager();
+}

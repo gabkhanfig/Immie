@@ -10,6 +10,7 @@
 #include <Immie/Game/Global/Managers/BattleDataManager.h>
 #include <Immie/Game/Global/Managers/ConfigDataManager.h>
 #include <Immie/Game/Global/Managers/TrainerDataManager.h>
+#include <Immie/Game/Global/Managers/SpawnTableManager.h>
 #include <Immie/Game/Player/PlayerImmies.h>
 #include <Immie/Game/Save/SaveManager.h>
 #include <Immie/Type/ImmieType.h>
@@ -27,6 +28,7 @@ void UImmieGameInstance::InitializeGameDataManagers()
 	SaveManager = NewObject<USaveManager>(this);
 	ConfigDataManager = NewObject<UConfigDataManager>(this);
 	TrainerDataManager = NewObject<UTrainerDataManager>(this);
+	SpawnTableManager = NewObject<USpawnTableManager>(this);
 
 	ConfigDataManager->Load();
 	TypeDataManager->Load();
@@ -34,6 +36,7 @@ void UImmieGameInstance::InitializeGameDataManagers()
 	SpecieDataManager->Load();
 	BattleDataManager->Load();
 	TrainerDataManager->Load();
+	SpawnTableManager->Load();
 }
 
 void UImmieGameInstance::Init()

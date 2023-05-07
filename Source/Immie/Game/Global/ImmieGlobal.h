@@ -15,6 +15,7 @@ class UPlayerImmies;
 class USaveManager;
 class UConfigDataManager;
 class UTrainerDataManager;
+class USpawnTableManager;
 
 extern UImmieGameInstance* _ImmieGameInstance;
 
@@ -44,6 +45,9 @@ UConfigDataManager* GetConfigDataManager();
 
 /**/
 UTrainerDataManager* GetTrainerDataManager();
+
+/**/
+USpawnTableManager* GetSpawnTableManager();
 
 UCLASS()
 class UImmieGlobal : public UBlueprintFunctionLibrary
@@ -83,5 +87,9 @@ public:
 	UFUNCTION(BlueprintPure, DisplayName = "Get Trainer Data Manager")
 		/**/
 		static inline UTrainerDataManager* BP_GetTrainerDataManager() { return GetTrainerDataManager(); }
+
+	UFUNCTION(BlueprintPure, DisplayName = "Get Spawn Table Manager")
+		/**/
+		static inline USpawnTableManager* BP_GetSpawnTableManager() { return GetSpawnTableManager(); }
 
 };

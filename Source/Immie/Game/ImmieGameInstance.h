@@ -15,6 +15,7 @@ class UPlayerImmies;
 class USaveManager;
 class UConfigDataManager;
 class UTrainerDataManager;
+class USpawnTableManager;
 
 /**
  * 
@@ -58,6 +59,10 @@ protected:
 		/**/
 		UTrainerDataManager* TrainerDataManager;
 
+	UPROPERTY(BlueprintReadOnly)
+		/**/
+		USpawnTableManager* SpawnTableManager;
+
 private:
 
 	void InitializeGameDataManagers();
@@ -73,18 +78,12 @@ protected:
 public:
 
 	FORCEINLINE UTypeDataManager* _GetTypeDataManager() const { return TypeDataManager; }
-
 	FORCEINLINE USpecieDataManager* _GetSpecieDataManager() const { return SpecieDataManager; }
-
 	FORCEINLINE UAbilityDataManager* _GetAbilityDataManager() const { return AbilityDataManager; }
-
 	FORCEINLINE UBattleDataManager* _GetBattleDataManager() const { return BattleDataManager; }
-
 	FORCEINLINE UPlayerImmies* _GetPlayerImmies() const { return PlayerImmies; }
-
 	FORCEINLINE USaveManager* _GetSaveManager() const { return SaveManager; }
-
 	FORCEINLINE UConfigDataManager* _GetConfigDataManager() const { return ConfigDataManager; }
-
 	FORCEINLINE UTrainerDataManager* _GetTrainerDataManager() const { return TrainerDataManager; }
+	FORCEINLINE USpawnTableManager* _GetSpawnTableManager() const { return SpawnTableManager; }
 };
