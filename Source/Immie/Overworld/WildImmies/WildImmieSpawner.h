@@ -8,6 +8,7 @@
 
 class UWildSpawnTable;
 class UImmieSpawnData;
+class USpawnTableManager;
 
 /* Actor that spawns in wild immies around it. */
 UCLASS()
@@ -26,10 +27,14 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+protected:	
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		/**/
-		FName SpawnTable;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (NoResetToDefault))
+		/* Cannot be "None". */
+		FName SpawnTableName;
+
+	UPROPERTY(BlueprintReadOnly)
+		/* Set before blueprint begin play. */
+		UWildSpawnTable* SpawnTable;
 
 };

@@ -6,6 +6,8 @@
 #include "GameDataManager.h"
 #include "SpawnTableManager.generated.h"
 
+class UWildSpawnTable;
+
 /**
  * 
  */
@@ -14,8 +16,26 @@ class IMMIE_API USpawnTableManager : public UGameDataManager
 {
 	GENERATED_BODY()
 
+public:
+
+	UFUNCTION(BlueprintPure)
+		/**/
+		bool IsValidSpawnTable(FName TableName);
+
+	UFUNCTION(BlueprintPure)
+		/**/
+		UWildSpawnTable* GetImmieSpawnTable(FName TableName);
+
 private:
 
 	virtual void LoadDefaultGameData() override;
+
+	void LoadSpawnTableData(FName TableName, TMap<FName, UWildSpawnTable*>* MapOut);
+
+	FString LoadSpawnTableJsonToString(FName TableName);
+
+private:
+
+	TMap<FName, UWildSpawnTable*> ImmieSpawnTables;
 	
 };
