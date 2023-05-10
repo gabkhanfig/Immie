@@ -5,6 +5,8 @@
 #include "WildSpawnTable.h"
 #include "ImmieSpawnData.h"
 #include "../../Game/Global/Managers/SpawnTableManager.h"
+#include "../../Immies/ImmieCharacter.h"
+#include "../../Immies/ImmieObject.h"
 
 // Sets default values
 AWildImmieSpawner::AWildImmieSpawner()
@@ -20,20 +22,30 @@ void AWildImmieSpawner::BeginPlay()
 {
 	checkf(SpawnTableName != FName(), TEXT("SpawnTableName must be set for WildImmieSpawner"));
 	
-	USpawnTableManager* SpawnTableManager = GetSpawnTableManager();
-	if (!SpawnTableManager->IsValidSpawnTable(SpawnTableName)) {
-		iLog("[AWildImmieSpawner]: SpawnTableName of " + SpawnTableName.ToString() + " is not a valid spawn table", LogVerbosity_Error);
+	SpawnTable = GetSpawnTableManager()->GetImmieSpawnTable(SpawnTableName);
+	if (SpawnTable == nullptr) {
+		iLog("[AWildImmieSpawner]: SpawnTableName of " + SpawnTableName.ToString() + " is not a valid spawn table. Disabling ticking on this spawner and not executing begin play.", LogVerbosity_Error);
+		SetActorTickEnabled(false);
+		return;
 	}
-	SpawnTable = SpawnTableManager->GetImmieSpawnTable(SpawnTableName);
 
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
 void AWildImmieSpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	for (int i = 0; i < SpawnedImmies.Num(); i++) {
+		if (!IsValid(SpawnedImmies[i])) {
+			SpawnedImmies.RemoveAt(i);
+			i--;
+			continue;
+		}
+
+		SpawnedImmies[i]->WildTick(DeltaTime);
+	}
 
 }
 

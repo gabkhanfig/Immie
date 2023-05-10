@@ -300,6 +300,13 @@ public:
 		/* Event that executes immediately before an ability this Immie character owns is dealing damage. The amount of damage done can be freely modified. */
 		void EventPlayerDealtDamage(const TScriptInterface<IBattleActor>& Target, UPARAM(ref) float& Amount, UPARAM(ref) FBattleDamage& Damage);
 
+	/**/
+	void WildTick(float DeltaTime);
+
+	UFUNCTION(BlueprintImplementableEvent, DisplayName = "Wild Tick")
+		/**/
+		void BP_WildTick(float DeltaTime);
+
 	UFUNCTION(BlueprintPure)
 		/* Get the camera component for this Immie character. */
 		FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }

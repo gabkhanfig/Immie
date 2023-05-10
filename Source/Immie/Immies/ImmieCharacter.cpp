@@ -558,6 +558,11 @@ void AImmieCharacter::EventPlayerDealtDamage_Implementation(const TScriptInterfa
 	}
 }
 
+void AImmieCharacter::WildTick(float DeltaTime)
+{
+	BP_WildTick(DeltaTime);
+}
+
 int AImmieCharacter::GetSpecieId() const
 {
 	return ImmieObject->GetSpecieId();

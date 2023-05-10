@@ -9,6 +9,8 @@
 class UWildSpawnTable;
 class UImmieSpawnData;
 class USpawnTableManager;
+class AImmieCharacter;
+class UImmie;
 
 /* Actor that spawns in wild immies around it. */
 UCLASS()
@@ -30,11 +32,15 @@ protected:
 protected:	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (NoResetToDefault))
-		/* Cannot be "None". */
+		/* Cannot be "None". If it is, the program will be aborted. */
 		FName SpawnTableName;
 
 	UPROPERTY(BlueprintReadOnly)
 		/* Set before blueprint begin play. */
 		UWildSpawnTable* SpawnTable;
+
+	UPROPERTY(BlueprintReadWrite)
+		/**/
+		TArray<AImmieCharacter*> SpawnedImmies;
 
 };
