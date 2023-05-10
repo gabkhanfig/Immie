@@ -26,6 +26,7 @@
 #include <Immie/Type/ImmieType.h>
 #include <Immie/Battle/UI/ImmieBattleHud.h>
 #include <Immie/Battle/UI/FloatingBattleHealthbar.h>
+#include <Immie/Overworld/WildImmies/WildImmieSpawner.h>
 
 AImmieCharacter::AImmieCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UImmieMovementComponent>(ACharacter::CharacterMovementComponentName))
@@ -329,6 +330,31 @@ AImmieCharacter* AImmieCharacter::NewImmieCharacter(AActor* _Owner, const FTrans
 
 	UGameplayStatics::FinishSpawningActor(SpawnedImmie, Transform);
 	return SpawnedImmie;
+}
+
+AImmieCharacter* AImmieCharacter::SpawnBattleImmieCharacter(ABattleTeam* BattleTeam, const FTransform& Transform, UImmie* _ImmieObject)
+{
+	AImmieCharacter* SpawnedImmie = NewImmieCharacter(BattleTeam, Transform, _ImmieObject, false, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+	SpawnedImmie->ImmieCharacterMode = EImmieCharacterMode::Battle;
+	return SpawnedImmie;
+}
+
+AImmieCharacter* AImmieCharacter::SpawnWildImmieCharacter(AWildImmieSpawner* Spawner, const FTransform& Transform, UImmie* _ImmieObject)
+{
+	AImmieCharacter* SpawnedImmie = NewImmieCharacter(Spawner, Transform, _ImmieObject, true, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
+	_ImmieObject->ChangeOuter(SpawnedImmie);
+	SpawnedImmie->ImmieCharacterMode = EImmieCharacterMode::Wild;
+	return SpawnedImmie;
+}
+
+void AImmieCharacter::MakeBattle(ABattleTeam* BattleTeam)
+{
+	ImmieCharacterMode = EImmieCharacterMode::Battle;
+}
+
+void AImmieCharacter::MakeWild(AWildImmieSpawner* Spawner)
+{
+	ImmieCharacterMode = EImmieCharacterMode::Wild;
 }
 
 void AImmieCharacter::PossessForBattle(AController* NewController)

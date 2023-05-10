@@ -36,7 +36,7 @@ void ABattleTeam::CreateTeamFromImmies(const TArray<UImmie*>& TeamImmies)
 {
 	FTransform SpawnTransform = FTransform(DefaultSpawnRotation, DefaultSpawnLocation, { 1, 1, 1 });
 	for (int i = 0; i < TeamImmies.Num(); i++) {
-		AImmieCharacter* ImmieCharacter = AImmieCharacter::NewImmieCharacter(this, SpawnTransform, TeamImmies[i], false);
+		AImmieCharacter* ImmieCharacter = AImmieCharacter::SpawnBattleImmieCharacter(this, SpawnTransform, TeamImmies[i]);
 		ImmieCharacter->InitializeForBattle(this, i);
 		Team.Add(ImmieCharacter);
 	}

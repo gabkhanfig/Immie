@@ -21,6 +21,7 @@ class UCameraComponent;
 class UImmieMovementComponent;
 class UImmieBattleHud;
 class UFloatingBattleHealthbar;
+class AWildImmieSpawner;
 
 UCLASS()
 class IMMIE_API AImmieCharacter : public ACharacter, public IBattleActor
@@ -101,6 +102,10 @@ protected:
 	UPROPERTY(BlueprintReadWrite)
 		/**/
 		TEnumAsByte<EImmieCharacterMode> ImmieCharacterMode;
+
+	UPROPERTY(BlueprintReadWrite)
+		/**/
+		AWildImmieSpawner* WildSpawner;
 
 protected:
 
@@ -236,6 +241,23 @@ public:
 	UFUNCTION(BlueprintCallable)
 		/* Make a new Immie character. The Immie object must be valid due to it using it's specie id to get the correct specie character class. */
 		static AImmieCharacter* NewImmieCharacter(AActor* _Owner, const FTransform& Transform, UImmie* _ImmieObject, bool EnabledOnSpawn = true, ESpawnActorCollisionHandlingMethod SpawnCollisionHandling = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
+
+	UFUNCTION(BlueprintCallable)
+		/* Spawns a new battle immie character. Immie Object does not change ownership. */
+		static AImmieCharacter* SpawnBattleImmieCharacter(ABattleTeam* BattleTeam, const FTransform& Transform, UImmie* _ImmieObject);
+
+	UFUNCTION(BlueprintCallable)
+		/* Spawns a new wild immie character. Immie Object changes ownership to the wild immie character. */
+		static AImmieCharacter* SpawnWildImmieCharacter(AWildImmieSpawner* Spawner, const FTransform& Transform, UImmie* _ImmieObject);
+
+	UFUNCTION(BlueprintCallable)
+		/* Turns the immie character into a battle immie character. */
+		void MakeBattle(ABattleTeam* BattleTeam);
+
+	UFUNCTION(BlueprintCallable)
+		/* Turns the immie character into a wild immie character. */
+		void MakeWild(AWildImmieSpawner* Spawner);
+
 
 	UFUNCTION(BlueprintCallable, Category = "Battle")
 		/* Call to make a controller possess this Immie character for battle. Performs necessary network syncing. */
