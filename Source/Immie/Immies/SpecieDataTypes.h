@@ -75,3 +75,11 @@ struct FSerializedSpecieData
 		FString JsonString;
 };
 
+UENUM(BlueprintType)
+enum class EImmieCharacterMode : uint8
+{
+	None,
+	Battle,
+	Wild
+};
+

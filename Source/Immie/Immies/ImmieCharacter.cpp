@@ -56,6 +56,7 @@ AImmieCharacter::AImmieCharacter(const FObjectInitializer& ObjectInitializer)
 	Abilities.Reserve(MAX_ABILITY_COUNT);
 	Team = nullptr;
 	BattleHud = nullptr;
+	ImmieCharacterMode = EImmieCharacterMode::None;
 
 	// TODO remove this later
 	AbilityColliders.Add(GetCapsuleComponent());
@@ -312,13 +313,14 @@ void AImmieCharacter::UnPossessed()
 	Super::UnPossessed();
 }
 
-AImmieCharacter* AImmieCharacter::NewImmieCharacter(AActor* _Owner, const FTransform& Transform, UImmie* _ImmieObject, bool EnabledOnSpawn)
+AImmieCharacter* AImmieCharacter::NewImmieCharacter(AActor* _Owner, const FTransform& Transform, UImmie* _ImmieObject, bool EnabledOnSpawn, ESpawnActorCollisionHandlingMethod SpawnCollisionHandling)
 {
 	UClass* ImmieCharacterClass = GetSpecieDataManager()->GetImmieCharacterClass(_ImmieObject->GetSpecieId());
+	checkf(IsValid(ImmieCharacterClass), TEXT("UClass for Immie character must be valid for spawning"));
 	AImmieCharacter* SpawnedImmie = 
-		_Owner->GetWorld()->SpawnActorDeferred<AImmieCharacter>(ImmieCharacterClass, Transform, _Owner, nullptr, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
+		_Owner->GetWorld()->SpawnActorDeferred<AImmieCharacter>(ImmieCharacterClass, Transform, _Owner, nullptr, SpawnCollisionHandling);
 
-	checkf(IsValid(SpawnedImmie), TEXT("Spawned immie character must be valid"));
+	checkf(IsValid(SpawnedImmie), TEXT("Spawned Immie character must be valid"));
 	SpawnedImmie->ImmieObject = _ImmieObject;
 
 	if (!EnabledOnSpawn) {
@@ -342,8 +344,6 @@ void AImmieCharacter::PossessForBattle(AController* NewController)
 
 void AImmieCharacter::ClientPossessedByPlayerController_Implementation(AImmiePlayerController* PlayerController)
 {
-
-
 	BP_ClientPossessedByPlayerController(PlayerController);
 }
 

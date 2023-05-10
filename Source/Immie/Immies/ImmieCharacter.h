@@ -8,6 +8,7 @@
 #include <Immie/Battle/Interfaces/BattleActor.h>
 #include <Immie/Overworld/Interfaces/Battler.h>
 #include <Components/WidgetComponent.h>
+#include "SpecieDataTypes.h"
 #include "ImmieCharacter.generated.h"
 
 class UImmie;
@@ -96,6 +97,10 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Battle")
 		/**/
 		UFloatingBattleHealthbar* FloatingBattleHealthbar;
+
+	UPROPERTY(BlueprintReadWrite)
+		/**/
+		TEnumAsByte<EImmieCharacterMode> ImmieCharacterMode;
 
 protected:
 
@@ -230,7 +235,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		/* Make a new Immie character. The Immie object must be valid due to it using it's specie id to get the correct specie character class. */
-		static AImmieCharacter* NewImmieCharacter(AActor* _Owner, const FTransform& Transform, UImmie* _ImmieObject, bool EnabledOnSpawn = true);
+		static AImmieCharacter* NewImmieCharacter(AActor* _Owner, const FTransform& Transform, UImmie* _ImmieObject, bool EnabledOnSpawn = true, ESpawnActorCollisionHandlingMethod SpawnCollisionHandling = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
 
 	UFUNCTION(BlueprintCallable, Category = "Battle")
 		/* Call to make a controller possess this Immie character for battle. Performs necessary network syncing. */
