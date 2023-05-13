@@ -22,6 +22,8 @@ public:
 
 	void LoadJsonData(const FJsonObjectBP& Json);
 
+	UImmieSpawnData* GetWeightedRandomSpawnData();
+
 private:
 
 	UPROPERTY()

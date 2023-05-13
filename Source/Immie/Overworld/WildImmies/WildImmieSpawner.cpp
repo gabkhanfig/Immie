@@ -30,6 +30,11 @@ void AWildImmieSpawner::BeginPlay()
 	}
 
 	Super::BeginPlay();
+
+	UImmie* ImmieObject = UImmie::NewImmieObject(this, 0);
+
+	AImmieCharacter* SpawnedImmie = AImmieCharacter::SpawnWildImmieCharacter(this, GetActorTransform(), ImmieObject);
+	SpawnedImmies.Add(SpawnedImmie);
 }
 
 // Called every frame

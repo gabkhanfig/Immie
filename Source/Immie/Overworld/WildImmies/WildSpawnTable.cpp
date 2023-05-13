@@ -31,3 +31,8 @@ void UWildSpawnTable::LoadJsonData(const FJsonObjectBP& Json)
 		Spawns.Add(SpawnDataObject);
 	}
 }
+
+UImmieSpawnData* UWildSpawnTable::GetWeightedRandomSpawnData()
+{
+	return Spawns[0];
+}
