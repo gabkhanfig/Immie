@@ -55,12 +55,6 @@ public:
 		/**/
 		USpecieDataObject* GetSpecieDataObject(FName SpecieName);
 
-	static FName GetSpecieNameFromMap(TMap<FName, USpecieDataObject*>& Map, FName SpecieName);
-
-	UFUNCTION(BlueprintPure)
-		/**/
-		FName GetSpecieName(FName SpecieName);
-
 	static bool IsValidSpecieFromMap(TMap<FName, USpecieDataObject*>& Map, FName SpecieName);
 
 	UFUNCTION(BlueprintPure)

@@ -21,15 +21,11 @@ private:
 
 	UPROPERTY()
 		/**/
-		TMap<int, UAbilityDataObject*> Abilities;
+		TMap<FName, UAbilityDataObject*> Abilities;
 
 	UPROPERTY()
 		/**/
 		TArray<FName> AbilityNames;
-
-	UPROPERTY()
-		/**/
-		TMap<FName, int> AbilityIds;
 
 private:
 
@@ -41,47 +37,35 @@ private:
 
 	TSubclassOf<UAbilityDataObject> LoadAbilityDataObjectClass(FName AbilityName);
 
-	UAbilityDataObject* RegisterAbility(UObject* Outer, FName AbilityName, int AbilityId, const FString& JsonString);
+	UAbilityDataObject* RegisterAbility(UObject* Outer, FName AbilityName, const FString& JsonString);
 	
 public:
 
-	void RegisterAbilitiesFromDisk(UObject* Outer, const FString& FolderName, TMap<int, UAbilityDataObject*>* AbilitiesOut);
+	void RegisterAbilitiesFromDisk(UObject* Outer, const FString& FolderName, TMap<FName, UAbilityDataObject*>* AbilitiesOut);
 
-	void RegisterAbilitiesFromSerialized(UObject* Outer, const TArray<FSerializedAbilityData>& AbilityData, TMap<int, UAbilityDataObject*>* AbilitiesOut);
+	void RegisterAbilitiesFromSerialized(UObject* Outer, const TArray<FSerializedAbilityData>& AbilityData, TMap<FName, UAbilityDataObject*>* AbilitiesOut);
 
-	static UAbilityDataObject* GetAbilityDataObjectFromMap(TMap<int, UAbilityDataObject*>& Map, int AbilityId);
+	static UAbilityDataObject* GetAbilityDataObjectFromMap(TMap<FName, UAbilityDataObject*>& Map, FName AbilityName);
 
 	UFUNCTION(BlueprintPure)
 		/* Get the global ability object corresponding to the ability id. Not for use in battle. */
-		UAbilityDataObject* GetAbilityDataObject(int AbilityId);
+		UAbilityDataObject* GetAbilityDataObject(FName AbilityName);
 
-	static int GetAbilityIdFromMap(TMap<FName, int>& Map, FName AbilityName);
-
-	UFUNCTION(BlueprintPure)
-		/**/
-		int GetAbilityId(FName AbilityName);
-
-	static FName GetAbilityNameFromMap(TMap<int, UAbilityDataObject*>& Map, int AbilityId);
+	static bool IsValidAbilityFromMap(TMap<FName, UAbilityDataObject*>& Map, FName AbilityName);
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		FName GetAbilityName(int AbilityId);
+		bool IsValidAbility(FName AbilityName);
 
-	static bool IsValidAbilityFromMap(TMap<int, UAbilityDataObject*>& Map, int AbilityId);
-
-	UFUNCTION(BlueprintPure)
-		/**/
-		bool IsValidAbility(int AbilityId);
-
-	static UClass* GetAbilityClassFromMap(TMap<int, UAbilityDataObject*>& Map, int AbilityId);
+	static UClass* GetAbilityClassFromMap(TMap<FName, UAbilityDataObject*>& Map, FName AbilityName);
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		UClass* GetAbilityClass(int AbilityId);
+		UClass* GetAbilityClass(FName AbilityName);
 
-	static UClass* GetActorClassFromMap(TMap<int, UAbilityDataObject*>& Map, int AbilityId);
+	static UClass* GetActorClassFromMap(TMap<FName, UAbilityDataObject*>& Map, FName AbilityName);
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		UClass* GetActorClass(int AbilityId);
+		UClass* GetActorClass(FName AbilityName);
 };

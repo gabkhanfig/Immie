@@ -80,10 +80,9 @@ const FString& UAbilityDataObject::GetAbilitiesBlueprintFolder()
 	return AbilitiesBlueprintFolder;
 }
 
-UAbilityDataObject* UAbilityDataObject::CreateAbilityDataObject(UObject* Outer, int _AbilityId, UClass* DataObjectClass)
+UAbilityDataObject* UAbilityDataObject::CreateAbilityDataObject(UObject* Outer, UClass* DataObjectClass)
 {
 	UAbilityDataObject* AbilityDataObject = NewObject<UAbilityDataObject>(Outer, DataObjectClass);
-	AbilityDataObject->AbilityId = _AbilityId;
 	AbilityDataObject->LoadClasses();
 	return AbilityDataObject;
 }

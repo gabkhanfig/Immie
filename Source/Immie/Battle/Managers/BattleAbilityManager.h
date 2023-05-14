@@ -25,7 +25,7 @@ private:
 
 	UPROPERTY()
 		/**/
-		TMap<int, UAbilityDataObject*> AbilitiesOverride;
+		TMap<FName, UAbilityDataObject*> AbilitiesOverride;
 	
 	UPROPERTY()
 		/* Does this manager use it's own data or the system default. */
@@ -47,5 +47,5 @@ public:
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		UAbilityDataObject* GetAbilityDataObject(int AbilityId);
+		UAbilityDataObject* GetAbilityDataObject(FName AbilityName);
 };

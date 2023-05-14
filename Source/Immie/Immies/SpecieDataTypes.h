@@ -13,47 +13,47 @@ struct FSpecieLearnset
 
 		UPROPERTY(BlueprintReadWrite)
 		/**/
-		TArray<int> Initial;
+		TArray<FName> Initial;
 
 	UPROPERTY(BlueprintReadWrite)
 		/**/
-		TArray<int> Level10;
+		TArray<FName> Level10;
 
 	UPROPERTY(BlueprintReadWrite)
 		/**/
-		TArray<int> Level20;
+		TArray<FName> Level20;
 
 	UPROPERTY(BlueprintReadWrite)
 		/**/
-		TArray<int> Level30;
+		TArray<FName> Level30;
 
 	UPROPERTY(BlueprintReadWrite)
 		/**/
-		TArray<int> Level40;
+		TArray<FName> Level40;
 
 	UPROPERTY(BlueprintReadWrite)
 		/**/
-		TArray<int> Level50;
+		TArray<FName> Level50;
 
 	UPROPERTY(BlueprintReadWrite)
 		/**/
-		TArray<int> Level60;
+		TArray<FName> Level60;
 
 	UPROPERTY(BlueprintReadWrite)
 		/**/
-		TArray<int> Level70;
+		TArray<FName> Level70;
 
 	UPROPERTY(BlueprintReadWrite)
 		/**/
-		TArray<int> Level80;
+		TArray<FName> Level80;
 
 	UPROPERTY(BlueprintReadWrite)
 		/**/
-		TArray<int> Level90;
+		TArray<FName> Level90;
 
 	UPROPERTY(BlueprintReadWrite)
 		/**/
-		TArray<int> Level100;
+		TArray<FName> Level100;
 };
 
 USTRUCT(BlueprintType)

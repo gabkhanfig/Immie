@@ -41,7 +41,7 @@ private:
 
 	UPROPERTY()
 		/**/
-		TArray<int> AbilityIds;
+		TArray<FName> Abilities;
 
 	UPROPERTY()
 		/**/
@@ -126,7 +126,7 @@ public:
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		inline TArray<int> GetAbilityIds() const { return AbilityIds; }
+		inline TArray<FName> GetAbilityNames() const { return Abilities; }
 
 	UFUNCTION(BlueprintPure)
 		/**/

@@ -412,7 +412,7 @@ void AImmieCharacter::InitializeForBattle(ABattleTeam* OwningTeam, int SlotOnTea
 	DamageComponent = UDamageComponent::NewDamageComponent(this);
 	DamageComponent->RegisterComponent();
 
-	const TArray<int> AbilityIds = ImmieObject->GetAbilityIds();
+	const TArray<FName> AbilityIds = ImmieObject->GetAbilityNames();
 	const int AbilityCount = AbilityIds.Num();
 	for (int i = 0; i < AbilityCount; i++) {
 		UAbility* BattleAbility = UAbility::NewAbility(this, AbilityIds[i]);

@@ -32,13 +32,12 @@ void UBattleAbilityManager::LoadOverrideAbilityData(const FString& FolderName)
 void UBattleAbilityManager::SyncToClients()
 {
 	TArray<FSerializedAbilityData> SerializedAbilityDataObjects;
-	TArray<int> Keys;
+	TArray<FName> Keys;
 	AbilitiesOverride.GetKeys(Keys);
 	SerializedAbilityDataObjects.Reserve(Keys.Num());
 	for (auto Key : Keys) {
 		UAbilityDataObject* DataObject = GetAbilityDataObject(Key);
 		FSerializedAbilityData AbilityData;
-		AbilityData.AbilityId = DataObject->GetAbilityId();
 		AbilityData.AbilityName = DataObject->GetAbilityName();
 		
 		FJsonObjectBP JsonData = DataObject->AbilityDataToJson();
@@ -62,12 +61,12 @@ void UBattleAbilityManager::RecieveSerializedAbilityData_Implementation(ABattleI
 	GetAbilityDataManager()->RegisterAbilitiesFromSerialized(BattleInstance, AbilityData, &AbilitiesOverride);
 }
 
-UAbilityDataObject* UBattleAbilityManager::GetAbilityDataObject(int AbilityId)
+UAbilityDataObject* UBattleAbilityManager::GetAbilityDataObject(FName AbilityName)
 {
 	if (!bUseOverride) {
-		return GetAbilityDataManager()->GetAbilityDataObject(AbilityId);
+		return GetAbilityDataManager()->GetAbilityDataObject(AbilityName);
 	}
 
-	return UAbilityDataManager::GetAbilityDataObjectFromMap(AbilitiesOverride, AbilityId);	
+	return UAbilityDataManager::GetAbilityDataObjectFromMap(AbilitiesOverride, AbilityName);	
 }
 

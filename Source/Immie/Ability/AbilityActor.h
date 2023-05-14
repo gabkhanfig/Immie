@@ -177,10 +177,6 @@ public:
 		FORCEINLINE UAbility* GetAbility() const { return Ability; }
 
 	UFUNCTION(BlueprintPure)
-		/* Get the id number of this ability. */
-		int GetAbilityId() const;
-
-	UFUNCTION(BlueprintPure)
 		/* Get the Immie character that owns this ability. */
 		AImmieCharacter* GetImmieCharacter() const;
 

@@ -68,11 +68,7 @@ struct FSerializedAbilityData
 
 	UPROPERTY()
 		/**/
-		FName AbilityName;
-
-	UPROPERTY()
-		/**/
-		int AbilityId;
+		FName AbilityName;;
 
 	UPROPERTY()
 		/**/

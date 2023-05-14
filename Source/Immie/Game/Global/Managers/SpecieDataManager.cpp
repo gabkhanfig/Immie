@@ -108,22 +108,6 @@ USpecieDataObject* USpecieDataManager::GetSpecieDataObject(FName SpecieName)
 	return GetSpecieDataObjectFromMap(Species, SpecieName);
 }
 
-FName USpecieDataManager::GetSpecieNameFromMap(TMap<FName, USpecieDataObject*>& Map, FName SpecieName)
-{
-	USpecieDataObject** Found = Map.Find(SpecieName);
-	if (Found) {
-		return (*Found)->GetSpecieName();
-	}
-
-	iLog("Could not find name for specie id " + SpecieName.ToString());
-	return FName();
-}
-
-FName USpecieDataManager::GetSpecieName(FName SpecieName)
-{
-	return GetSpecieNameFromMap(Species, SpecieName);
-}
-
 bool USpecieDataManager::IsValidSpecieFromMap(TMap<FName, USpecieDataObject*>& Map, FName SpecieName)
 {
 	return IsValid(*Map.Find(SpecieName));

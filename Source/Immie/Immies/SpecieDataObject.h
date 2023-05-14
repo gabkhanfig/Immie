@@ -58,9 +58,9 @@ private:
 
 	void LoadLearnsets(const FJsonObjectBP& Json);
 
-	TArray<int> LoadAbilitySet(const FJsonObjectBP& Json, const FString& ArrayName);
+	TArray<FName> LoadAbilitySet(const FJsonObjectBP& Json, const FString& ArrayName);
 
-	FJsonArrayBP AbilitySetToJsonArray(const TArray<int>& AbilitySet);
+	FJsonArrayBP AbilitySetToJsonArray(const TArray<FName>& AbilitySet);
 
 protected:
 

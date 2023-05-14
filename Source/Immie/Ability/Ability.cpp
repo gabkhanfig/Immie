@@ -33,8 +33,6 @@ UAbility::UAbility()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 	SetIsReplicatedByDefault(true);
-
-	AbilityId = INVALID_ABILITY_ID;
 	bInputHeld = false;
 	CurrentCooldown = 0;
 	CurrentUses = 0;
@@ -53,17 +51,17 @@ void UAbility::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
-UAbility* UAbility::NewAbility(AImmieCharacter* Owner, int _AbilityId)
+UAbility* UAbility::NewAbility(AImmieCharacter* Owner, FName _AbilityName)
 {
-	UClass* AbilityClass = GetAbilityDataManager()->GetAbilityClass(_AbilityId);
+	UClass* AbilityClass = GetAbilityDataManager()->GetAbilityClass(_AbilityName);
 	UAbility* Ability = NewObject<UAbility>(Owner, AbilityClass);
-	Ability->AbilityId = _AbilityId;
+	Ability->AbilityName = _AbilityName;
 	return Ability;
 }
 
 void UAbility::InitializeForBattle()
 {
-	AbilityDataObject = GetBattleInstance()->GetBattleAbilityManager()->GetAbilityDataObject(AbilityId);
+	AbilityDataObject = GetBattleInstance()->GetBattleAbilityManager()->GetAbilityDataObject(AbilityName);
 
 	CurrentCooldown = AbilityDataObject->GetInitialCooldown();
 	CurrentUses = AbilityDataObject->GetInitialUses();
@@ -104,14 +102,14 @@ void UAbility::InitializeForBattle()
 
 void UAbility::SyncToClients()
 {
-	SyncClientAbilityData(AbilityId, InitialStats, ActiveStats, Type, CurrentCooldown, CurrentUses);
+	SyncClientAbilityData(AbilityName, InitialStats, ActiveStats, Type, CurrentCooldown, CurrentUses);
 	BP_SyncToClients();
 }
 
-void UAbility::SyncClientAbilityData_Implementation(int _AbilityId, FBattleStats _InitialStats, FBattleStats _ActiveStats, const TArray<UImmieType*>& _Type, float _CurrentCooldown, int _CurrentUses)
+void UAbility::SyncClientAbilityData_Implementation(FName _AbilityName, FBattleStats _InitialStats, FBattleStats _ActiveStats, const TArray<UImmieType*>& _Type, float _CurrentCooldown, int _CurrentUses)
 {
-	AbilityId = _AbilityId;
-	AbilityDataObject = GetBattleInstance()->GetBattleAbilityManager()->GetAbilityDataObject(AbilityId);
+	AbilityName = _AbilityName;
+	AbilityDataObject = GetBattleInstance()->GetBattleAbilityManager()->GetAbilityDataObject(AbilityName);
 	InitialStats = _InitialStats;
 	ActiveStats = _ActiveStats;
 	Type = _Type;

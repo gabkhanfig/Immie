@@ -150,18 +150,18 @@ void USpecieDataObject::LoadLearnsets(const FJsonObjectBP& Json)
     Learnset.Level100 = LoadAbilitySet(Json, SPECIE_DO_JSON_FIELD_LEARNSET_LEVEL_100);
 }
 
-TArray<int> USpecieDataObject::LoadAbilitySet(const FJsonObjectBP& Json, const FString& ArrayName)
+TArray<FName> USpecieDataObject::LoadAbilitySet(const FJsonObjectBP& Json, const FString& ArrayName)
 {
     TArray<FString> Parsed = Json.GetArrayField(ArrayName).GetStringArray("Ability");
     const int ElementCount = Parsed.Num();
 
-    TArray<int> Abilities;
+    TArray<FName> Abilities;
     Abilities.Reserve(ElementCount);
     for (int i = 0; i < ElementCount; i++) {
-        const int AbilityId = GetAbilityDataManager()->GetAbilityId(FName(Parsed[i]));
+        const FName AbilityName = FName(Parsed[i]);
 
-        if (GetAbilityDataManager()->IsValidAbility(AbilityId)) {
-            Abilities.Add(AbilityId);
+        if (GetAbilityDataManager()->IsValidAbility(AbilityName)) {
+            Abilities.Add(AbilityName);
         }
         else {
             iLog("Unable to parse learnset json ability " + Parsed[i] + " into a valid ability");
@@ -170,13 +170,13 @@ TArray<int> USpecieDataObject::LoadAbilitySet(const FJsonObjectBP& Json, const F
     return Abilities;
 }
 
-FJsonArrayBP USpecieDataObject::AbilitySetToJsonArray(const TArray<int>& AbilitySet)
+FJsonArrayBP USpecieDataObject::AbilitySetToJsonArray(const TArray<FName>& AbilitySet)
 {
     const int AbilityCount = AbilitySet.Num();
     TArray<FString> Abilities;
     Abilities.Reserve(AbilityCount);
     for (int i = 0; i < AbilityCount; i++) {
-        Abilities.Add(GetAbilityDataManager()->GetAbilityName(AbilitySet[i]).ToString());
+        Abilities.Add(AbilitySet[i].ToString());
     }
     FJsonArrayBP JsonArray;
     JsonArray.SetStringArray("Ability", Abilities);

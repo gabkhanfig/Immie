@@ -22,10 +22,6 @@ private:
 
 	UPROPERTY()
 		/**/
-		int AbilityId;
-
-	UPROPERTY()
-		/**/
 		UClass* AbilityClass;
 
 	UPROPERTY()
@@ -121,7 +117,7 @@ public:
 
 	static const FString& GetAbilitiesBlueprintFolder();
 
-	static UAbilityDataObject* CreateAbilityDataObject(UObject* Outer, int _AbilityId, UClass* DataObjectClass);
+	static UAbilityDataObject* CreateAbilityDataObject(UObject* Outer, UClass* DataObjectClass);
 
 	UFUNCTION(BlueprintCallable)
 		/**/
@@ -130,10 +126,6 @@ public:
 	void LoadAbilityJsonData(const FJsonObjectBP& Json);
 
 	FJsonObjectBP AbilityDataToJson();
-
-	UFUNCTION(BlueprintPure)
-		/**/
-		int GetAbilityId() const { return AbilityId; }
 
 	UFUNCTION(BlueprintPure)
 		/**/

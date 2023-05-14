@@ -26,7 +26,7 @@ UImmie::UImmie()
     Health = 0;
     Xp = 1;
     StatLevels = { 0, 0, 0, 0 };
-    AbilityIds.Reserve(MAX_ABILITY_COUNT);
+    Abilities.Reserve(MAX_ABILITY_COUNT);
 }
 
 UImmie* UImmie::NewImmieObject(UObject* Outer, FName _SpecieName)
@@ -148,10 +148,8 @@ void UImmie::LoadJsonData(const FJsonObjectBP& Json)
 
         for (int i = 0; i < MAX_ABILITY_COUNT; i++) {
             const FName AbilityName = FoundAbilities.IsValidIndex(i) ? FName(FoundAbilities[i]) : "emptyAbility";
-            const int FoundAbilityId = GetAbilityDataManager()->GetAbilityId(AbilityName);
-            if (GetAbilityDataManager()->IsValidAbility(FoundAbilityId)) {
-                // Should always be a valid index
-                AbilityIds.Add(FoundAbilityId);
+            if (GetAbilityDataManager()->IsValidAbility(AbilityName)) {
+                Abilities.Add(AbilityName);
             }
             else {
                 iLog("Parsed ability in Immie object json " + AbilityName.ToString() + " does not have a valid ability id", LogVerbosity_Error);
@@ -181,10 +179,10 @@ FJsonObjectBP UImmie::SaveJsonData()
     FJsonArrayBP AbilitiesJson;
     TArray<FString> AbilityNames;
 
-    const int AbilityCount = AbilityIds.Num();
+    const int AbilityCount = Abilities.Num();
     AbilityNames.Reserve(AbilityCount);
     for (int i = 0; i < AbilityCount; i++) {
-        AbilityNames.Add(GetAbilityDataManager()->GetAbilityName(AbilityIds[i]).ToString());
+        AbilityNames.Add(Abilities[i].ToString());
     }
 
     AbilitiesJson.SetStringArray(JSON_FIELD_ABILITIES_ELEMENT, AbilityNames);
@@ -200,7 +198,7 @@ UImmie* UImmie::MakeCopy(UObject* Outer)
   Copy->Health = Health;
   Copy->Xp = Xp;
   Copy->StatLevels = StatLevels;
-  Copy->AbilityIds = AbilityIds;
+  Copy->Abilities = Abilities;
   Copy->DisplayName = DisplayName;
   BP_MakeCopy(Copy);
   return Copy;

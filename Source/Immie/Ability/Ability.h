@@ -21,8 +21,7 @@ class IMMIE_API UAbility : public UActorComponent
 
 private:
 
-	/* The id of this ability. Copied from global ability to battle ability. */
-	int AbilityId;
+	FName AbilityName;
 
 	/* The ability data object containing the relevant unmodifiable ability data. Copied on client side from network syncing within the battle ability manager itself. */
 	UAbilityDataObject* AbilityDataObject;
@@ -67,7 +66,7 @@ protected:
 	UFUNCTION(NetMulticast, Reliable)
 		/* Multicast RPC to sync ability data to all connected clients. */
 		void SyncClientAbilityData(
-			int _AbilityId,
+			FName _AbilityName,
 			FBattleStats _InitialStats,
 			FBattleStats _ActiveStats,
 			const TArray<UImmieType*>& _Type, 
@@ -165,7 +164,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	/* Make a new ability object instance, also setting the ability id.  */
-	static UAbility* NewAbility(AImmieCharacter* Owner, int _AbilityId);
+	static UAbility* NewAbility(AImmieCharacter* Owner, FName _AbilityName);
 
 	void InitializeForBattle();
 
@@ -205,10 +204,6 @@ public:
 		/* Event that executes immediately before one of the abilities of the owning Immie character is dealing damage. The amount of damage done can be freely modified. 
 		IsOwningAbility means this ability dealt the damage. */
 		void EventPlayerDealtDamage(const TScriptInterface<IBattleActor>& Target, UPARAM(ref) float& Amount, UPARAM(ref) FBattleDamage& Damage, bool IsOwningAbility);
-
-	UFUNCTION(BlueprintPure)
-		/* Get the id number of this ability. */
-		FORCEINLINE int GetAbilityId() const { return AbilityId; }
 
 	UFUNCTION(BlueprintPure)
 		/* Get the Immie character that owns this ability. */

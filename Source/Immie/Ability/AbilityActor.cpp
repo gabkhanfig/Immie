@@ -343,11 +343,6 @@ FBattleStats AAbilityActor::GetInitialStats_Implementation() const
 	return GetAbilityInitialStats();
 }
 
-int AAbilityActor::GetAbilityId() const
-{
-	return GetAbility()->GetAbilityId();
-}
-
 AImmieCharacter* AAbilityActor::GetImmieCharacter() const
 {
 	return GetAbility()->GetImmieCharacter();
