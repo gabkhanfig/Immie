@@ -317,10 +317,6 @@ public:
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		int GetSpecieId() const;
-
-	UFUNCTION(BlueprintPure)
-		/**/
 		FName GetSpecieName() const;
 
 	UFUNCTION(BlueprintPure, Category = "Battle")

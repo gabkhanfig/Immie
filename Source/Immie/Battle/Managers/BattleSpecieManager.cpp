@@ -31,13 +31,12 @@ void UBattleSpecieManager::LoadOverrideSpecieData(const FString& FolderName)
 void UBattleSpecieManager::SyncToClients()
 {
 	TArray<FSerializedSpecieData> SerializedSpecieDataObjects;
-	TArray<int> Keys;
+	TArray<FName> Keys;
 	SpeciesOverride.GetKeys(Keys);
 	SerializedSpecieDataObjects.Reserve(Keys.Num());
 	for (auto Key : Keys) {
 		USpecieDataObject* DataObject = GetSpecieDataObject(Key);
 		FSerializedSpecieData SpecieData;
-		SpecieData.SpecieId = DataObject->GetSpecieId();
 		SpecieData.SpecieName = DataObject->GetSpecieName();
 
 		FJsonObjectBP JsonData = DataObject->SpecieDataToJson();
@@ -61,22 +60,22 @@ void UBattleSpecieManager::RecieveSerializedSpecieData_Implementation(ABattleIns
 	GetSpecieDataManager()->RegisterSpeciesFromSerialized(BattleInstance, SpecieData, &SpeciesOverride, false);
 }
 
-USpecieDataObject* UBattleSpecieManager::GetSpecieDataObject(int SpecieId)
+USpecieDataObject* UBattleSpecieManager::GetSpecieDataObject(FName SpecieName)
 {
 	if (!bUseOverride) {
-		return GetSpecieDataManager()->GetSpecieDataObject(SpecieId);
+		return GetSpecieDataManager()->GetSpecieDataObject(SpecieName);
 	}
 
-	return USpecieDataManager::GetSpecieDataObjectFromMap(SpeciesOverride, SpecieId);
+	return USpecieDataManager::GetSpecieDataObjectFromMap(SpeciesOverride, SpecieName);
 }
 
-int UBattleSpecieManager::GetSpecieTypeBitmask(int SpecieId)
+int UBattleSpecieManager::GetSpecieTypeBitmask(FName SpecieName)
 {
-	return GetSpecieDataObject(SpecieId)->GetTypeBitmask();
+	return GetSpecieDataObject(SpecieName)->GetTypeBitmask();
 }
 
-FBaseStats UBattleSpecieManager::GetSpecieBaseStats(int SpecieId)
+FBaseStats UBattleSpecieManager::GetSpecieBaseStats(FName SpecieName)
 {
-	return GetSpecieDataObject(SpecieId)->GetBaseStats();
+	return GetSpecieDataObject(SpecieName)->GetBaseStats();
 }
 

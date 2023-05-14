@@ -21,11 +21,10 @@ void UWildSpawnTable::LoadJsonData(const FJsonObjectBP& Json)
 			continue;
 		}
 		FName ImmieName = FName(TableElements[i].GetStringField("ImmieName"));
-		int SpecieId = GetSpecieDataManager()->GetSpecieId(ImmieName);
-		if (!GetSpecieDataManager()->IsValidSpecie(SpecieId)) {
+		if (!GetSpecieDataManager()->IsValidSpecie(ImmieName)) {
 			iLog(ERROR_PREFIX + "ImmieName of " + ImmieName.ToString() + " is not a valid specie");
 		}
-		UClass* SpawnDataClass = GetSpecieDataManager()->GetSpecieDataObject(SpecieId)->GetSpawnDataClass();
+		UClass* SpawnDataClass = GetSpecieDataManager()->GetSpecieDataObject(ImmieName)->GetSpawnDataClass();
 		UImmieSpawnData* SpawnDataObject = NewObject<UImmieSpawnData>(this, SpawnDataClass);
 		SpawnDataObject->LoadJsonData(TableElements[i]);
 		Spawns.Add(SpawnDataObject);

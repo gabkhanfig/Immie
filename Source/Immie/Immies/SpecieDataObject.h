@@ -26,10 +26,6 @@ private:
 
 	UPROPERTY()
 		/**/
-		int SpecieId;
-
-	UPROPERTY()
-		/**/
 		UClass* ObjectClass;
 
 	UPROPERTY()
@@ -85,7 +81,7 @@ public:
 
 	static const FString& GetImmiesBlueprintFolder();
 
-	static USpecieDataObject* CreateSpecieDataObject(UObject* Outer, int _SpecieId, UClass* DataObjectClass);
+	static USpecieDataObject* CreateSpecieDataObject(UObject* Outer, UClass* DataObjectClass);
 
 	UFUNCTION(BlueprintCallable)
 		/**/
@@ -94,10 +90,6 @@ public:
 	void LoadSpecieJsonData(const FJsonObjectBP& Json, bool LoadJsonLearnsets = true);
 
 	FJsonObjectBP SpecieDataToJson();
-
-	UFUNCTION(BlueprintPure)
-		/**/
-		int GetSpecieId() const { return SpecieId; }
 
 	UFUNCTION(BlueprintPure)
 		/**/

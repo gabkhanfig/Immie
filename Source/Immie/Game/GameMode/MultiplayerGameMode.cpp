@@ -76,7 +76,7 @@ FBattleTeamInit AMultiplayerGameMode::GenerateTestAiTeam() const
 {
 	TArray<UImmie*> Immies;
 	for (int i = 0; i < 2; i++) {
-		UImmie* Immie = UImmie::NewImmieObject((UObject*)this, 0);
+		UImmie* Immie = UImmie::NewImmieObject((UObject*)this, "snamdon");
 		Immie->SetDisplayName("Ai Trainer Immie " + FString::FromInt(i + 1));
 		Immie->SetHealth(10000);
 		Immies.Add(Immie);

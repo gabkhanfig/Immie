@@ -23,15 +23,11 @@ private:
 
 	UPROPERTY()
 		/**/
-		TMap<int, USpecieDataObject*> Species;
+		TMap<FName, USpecieDataObject*> Species;
 
 	UPROPERTY()
 		/**/
 		TArray<FName> SpecieNames;
-
-	UPROPERTY()
-		/**/
-		TMap<FName, int> SpecieIds;
 
 private:
 
@@ -43,69 +39,63 @@ private:
 
 	TSubclassOf<USpecieDataObject> LoadSpecieDataObjectClass(FName SpecieName);
 
-	USpecieDataObject* RegisterSpecie(UObject* Outer, FName SpecieName, int SpecieId, const FString& JsonString, bool LoadLearnsets = true);
+	USpecieDataObject* RegisterSpecie(UObject* Outer, FName SpecieName, const FString& JsonString, bool LoadLearnsets = true);
 
 public:
 
 	/* Set maps to nullptr to not load that set of data. */
-	void RegisterSpeciesFromDisk(UObject* Outer, const FString& FolderName, TMap<int, USpecieDataObject*>* SpeciesOut, bool LoadLearnsets = true);
+	void RegisterSpeciesFromDisk(UObject* Outer, const FString& FolderName, TMap<FName, USpecieDataObject*>* SpeciesOut, bool LoadLearnsets = true);
 
 	/**/
-	void RegisterSpeciesFromSerialized(UObject* Outer, const TArray<FSerializedSpecieData>& SpecieData, TMap<int, USpecieDataObject*>* SpeciesOut, bool LoadLearnsets = true);
+	void RegisterSpeciesFromSerialized(UObject* Outer, const TArray<FSerializedSpecieData>& SpecieData, TMap<FName, USpecieDataObject*>* SpeciesOut, bool LoadLearnsets = true);
 
-	static USpecieDataObject* GetSpecieDataObjectFromMap(TMap<int, USpecieDataObject*>& Map, int SpecieId);
-
-	UFUNCTION(BlueprintPure)
-		/**/
-		USpecieDataObject* GetSpecieDataObject(int SpecieId);
-
-	static int GetSpecieIdFromMap(TMap<FName, int>& Map, FName SpecieName);
+	static USpecieDataObject* GetSpecieDataObjectFromMap(TMap<FName, USpecieDataObject*>& Map, FName SpecieName);
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		int GetSpecieId(FName Name);
+		USpecieDataObject* GetSpecieDataObject(FName SpecieName);
 
-	static FName GetSpecieNameFromMap(TMap<int, USpecieDataObject*>& Map, int SpecieId);
-
-	UFUNCTION(BlueprintPure)
-		/**/
-		FName GetSpecieName(int SpecieId);
-
-	static bool IsValidSpecieFromMap(TMap<int, USpecieDataObject*>& Map, int SpecieId);
+	static FName GetSpecieNameFromMap(TMap<FName, USpecieDataObject*>& Map, FName SpecieName);
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		bool IsValidSpecie(int SpecieId);
+		FName GetSpecieName(FName SpecieName);
 
-	static int GetSpecieTypeBitmaskFromMap(TMap<int, USpecieDataObject*>& Map, int SpecieId);
-
-	UFUNCTION(BlueprintPure)
-		/**/
-		int GetSpecieTypeBitmask(int SpecieId);
-
-	static FBaseStats GetSpecieBaseStatsFromMap(TMap<int, USpecieDataObject*>& Map, int SpecieId);
+	static bool IsValidSpecieFromMap(TMap<FName, USpecieDataObject*>& Map, FName SpecieName);
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		FBaseStats GetSpecieBaseStats(int SpecieId);
+		bool IsValidSpecie(FName SpecieName);
 
-	static UClass* GetImmieObjectClassFromMap(TMap<int, USpecieDataObject*>& Map, int SpecieId);
+	static int GetSpecieTypeBitmaskFromMap(TMap<FName, USpecieDataObject*>& Map, FName SpecieName);
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		UClass* GetImmieObjectClass(int SpecieId);
+		int GetSpecieTypeBitmask(FName SpecieName);
 
-	static UClass* GetImmieCharacterClassFromMap(TMap<int, USpecieDataObject*>& Map, int SpecieId);
+	static FBaseStats GetSpecieBaseStatsFromMap(TMap<FName, USpecieDataObject*>& Map, FName SpecieName);
+
+	UFUNCTION(BlueprintPure)
+		/**/
+		FBaseStats GetSpecieBaseStats(FName SpecieName);
+
+	static UClass* GetImmieObjectClassFromMap(TMap<FName, USpecieDataObject*>& Map, FName SpecieName);
+
+	UFUNCTION(BlueprintPure)
+		/**/
+		UClass* GetImmieObjectClass(FName SpecieName);
+
+	static UClass* GetImmieCharacterClassFromMap(TMap<FName, USpecieDataObject*>& Map, FName SpecieName);
 	
 	UFUNCTION(BlueprintPure)
 		/**/
-		UClass* GetImmieCharacterClass(int SpecieId);
+		UClass* GetImmieCharacterClass(FName SpecieName);
 
-	static FSpecieLearnset GetSpecieLearnsetsFromMap(TMap<int, USpecieDataObject*>& Map, int SpecieId);
+	static FSpecieLearnset GetSpecieLearnsetsFromMap(TMap<FName, USpecieDataObject*>& Map, FName SpecieName);
 
 	UFUNCTION(BlueprintPure)
 		/* Avoid repeated calls due to potentially expensive multiple array copying. */
-		FSpecieLearnset GetSpecieLearnsets(int SpecieId);
+		FSpecieLearnset GetSpecieLearnsets(FName SpecieName);
 
 	
 };

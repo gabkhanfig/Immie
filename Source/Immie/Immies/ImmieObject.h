@@ -25,7 +25,7 @@ private:
 
 	UPROPERTY()
 		/**/
-		int SpecieId;
+		FName SpecieName;
 
 	UPROPERTY()
 		/* The current health of this Immie. If it ever exceeds the maximum given the specie and base stats, it should clamp to the max. */
@@ -53,10 +53,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		/* Make a new Immie object instance, also setting the specie id. */
-		static UImmie* NewImmieObject(UObject* Outer, int _SpecieId);
+		static UImmie* NewImmieObject(UObject* Outer, FName _SpecieName);
 
 	/* Load the data of this Immie from json. The specie id will already need to be known before hand to match the UClass, so it is passed in here to avoid extra work. */
-	void LoadJsonData(int _SpecieId, const FJsonObjectBP& Json);
+	void LoadJsonData(const FJsonObjectBP& Json);
 
 	/* Save this Immie's data to a json object. */
 	FJsonObjectBP SaveJsonData();
@@ -93,12 +93,8 @@ public:
 		void HealFromBaseStats(uint8 HealthBaseStat);
 
 	UFUNCTION(BlueprintPure)
-		/**/
-		inline int GetSpecieId() const { return SpecieId; }
-
-	UFUNCTION(BlueprintPure)
 		/* Get the name of this specie from it's specie id. NOT NECESSARILY display name. */
-		FName GetSpecieName() const;
+		FName GetSpecieName() const { return SpecieName; }
 
 	UFUNCTION(BlueprintPure)
 		/**/

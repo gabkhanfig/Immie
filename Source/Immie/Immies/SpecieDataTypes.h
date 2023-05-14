@@ -68,10 +68,6 @@ struct FSerializedSpecieData
 
 	UPROPERTY()
 		/**/
-		int SpecieId;
-
-	UPROPERTY()
-		/**/
 		FString JsonString;
 };
 

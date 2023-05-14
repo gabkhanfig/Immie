@@ -13,6 +13,10 @@ void UTrainerDataObject::LoadTrainerJsonData(const FJsonObjectBP& Json)
 {
   Team = UImmie::JsonToTeam(Json, "Team", this);
 
+  for (int i = 0; i < Team.Num(); i++) {
+    iLog("Trainer Team Member: " + Team[i]->GetSpecieName().ToString());
+  }
+
   Json.TryGetStringField("BattleIntroDialogue", BattleIntroDialogue);
   Json.TryGetStringField("BattleEndWinDialogue", BattleEndWinDialogue);
   Json.TryGetStringField("BattleEndLoseDialogue", BattleEndLoseDialogue);

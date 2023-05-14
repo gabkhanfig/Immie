@@ -8,13 +8,10 @@
 void USpecieDataManager::SetSpecieNamesAndIds()
 {
 	SpecieNames.Empty();
-	SpecieIds.Empty();
 
-	int Index = -1;
 
 #define DefineSpecieName(SpecieName) \
-	Index = SpecieNames.Add(SpecieName);\
-	SpecieIds.Add(SpecieName, Index);
+	SpecieNames.Add(SpecieName);\
 
 	DefineSpecieName("snamdon");
 }
@@ -53,7 +50,7 @@ TSubclassOf<USpecieDataObject> USpecieDataManager::LoadSpecieDataObjectClass(FNa
 	return DataObjectClass;
 }
 
-USpecieDataObject* USpecieDataManager::RegisterSpecie(UObject* Outer, FName SpecieName, int SpecieId, const FString& JsonString, bool LoadLearnsets)
+USpecieDataObject* USpecieDataManager::RegisterSpecie(UObject* Outer, FName SpecieName, const FString& JsonString, bool LoadLearnsets)
 {
 	TSubclassOf<USpecieDataObject> DataObjectClass = LoadSpecieDataObjectClass(SpecieName);
 
@@ -63,183 +60,158 @@ USpecieDataObject* USpecieDataManager::RegisterSpecie(UObject* Outer, FName Spec
 		return nullptr;
 	}
 
-	USpecieDataObject* SpecieDataObject = USpecieDataObject::CreateSpecieDataObject(Outer, SpecieId, DataObjectClass);
+	USpecieDataObject* SpecieDataObject = USpecieDataObject::CreateSpecieDataObject(Outer, DataObjectClass);
 	SpecieDataObject->LoadSpecieJsonData(SpecieJson, LoadLearnsets);
 	return SpecieDataObject;
 }
 
-void USpecieDataManager::RegisterSpeciesFromDisk(UObject* Outer, const FString& FolderName, TMap<int, USpecieDataObject*>* SpeciesOut, bool LoadLearnsets)
+void USpecieDataManager::RegisterSpeciesFromDisk(UObject* Outer, const FString& FolderName, TMap<FName, USpecieDataObject*>* SpeciesOut, bool LoadLearnsets)
 {
 	SpeciesOut->Empty();
 
 	for (int i = 0; i < SpecieNames.Num(); i++) {
 		FString JsonString = LoadSpecieJsonFileToString(SpecieNames[i], FolderName);
-		const int SpecieId = *SpecieIds.Find(SpecieNames[i]);
 		SpeciesOut->Add(
-			SpecieId,
-			RegisterSpecie(Outer, SpecieNames[i], SpecieId, JsonString, LoadLearnsets)
+			SpecieNames[i],
+			RegisterSpecie(Outer, SpecieNames[i], JsonString, LoadLearnsets)
 		); 
-#ifdef DEVELOPMENT
-			ULogger::Log("Loaded specie data object from disk with json data [" + SpecieNames[i].ToString() + "] using internal specie id of: " + FString::FromInt(SpecieId));
-#else
-			ULogger::Log("Loaded ability data object from disk with json data [" + SpecieNames[i].ToString() + "]");
-#endif
+		ULogger::Log("Loaded specie data object from disk with json data [" + SpecieNames[i].ToString() + "]");
 	}
 }
 
-void USpecieDataManager::RegisterSpeciesFromSerialized(UObject* Outer, const TArray<FSerializedSpecieData>& SpecieData, TMap<int, USpecieDataObject*>* SpeciesOut, bool LoadLearnsets)
+void USpecieDataManager::RegisterSpeciesFromSerialized(UObject* Outer, const TArray<FSerializedSpecieData>& SpecieData, TMap<FName, USpecieDataObject*>* SpeciesOut, bool LoadLearnsets)
 {
 	SpeciesOut->Empty();
 
 	for (int i = 0; i < SpecieData.Num(); i++) {
 		SpeciesOut->Add(
-			SpecieData[i].SpecieId,
-			RegisterSpecie(Outer, SpecieData[i].SpecieName, SpecieData[i].SpecieId, SpecieData[i].JsonString, LoadLearnsets)
+			SpecieData[i].SpecieName,
+			RegisterSpecie(Outer, SpecieData[i].SpecieName, SpecieData[i].JsonString, LoadLearnsets)
 		);
-#ifdef DEVELOPMENT
-		ULogger::Log("Loaded specie data object from serialized json data [" + SpecieData[i].SpecieName.ToString() + "] using internal specie id of: " + FString::FromInt(SpecieData[i].SpecieId));
-#else
-		ULogger::Log("Loaded ability data object from serialized json data [" + SpecieData[i].SpecieName.ToString() + "]");
-#endif
+		ULogger::Log("Loaded specie data object from serialized json data [" + SpecieData[i].SpecieName.ToString() + "]");
 	}
 }
 
-USpecieDataObject* USpecieDataManager::GetSpecieDataObjectFromMap(TMap<int, USpecieDataObject*>& Map, int SpecieId)
+USpecieDataObject* USpecieDataManager::GetSpecieDataObjectFromMap(TMap<FName, USpecieDataObject*>& Map, FName SpecieName)
 {
-	USpecieDataObject** Found = Map.Find(SpecieId);
+	USpecieDataObject** Found = Map.Find(SpecieName);
 	if (Found) {
 		return *Found;
 	}
 
-	iLog("Could not find specie data object for specie id " + FString::FromInt(SpecieId), LogVerbosity_Error);
+	iLog("Could not find specie data object for specie id " + SpecieName.ToString(), LogVerbosity_Error);
 	return nullptr;
 }
 
-USpecieDataObject* USpecieDataManager::GetSpecieDataObject(int SpecieId)
+USpecieDataObject* USpecieDataManager::GetSpecieDataObject(FName SpecieName)
 {
-	return GetSpecieDataObjectFromMap(Species, SpecieId);
+	return GetSpecieDataObjectFromMap(Species, SpecieName);
 }
 
-int USpecieDataManager::GetSpecieIdFromMap(TMap<FName, int>& Map, FName SpecieName)
+FName USpecieDataManager::GetSpecieNameFromMap(TMap<FName, USpecieDataObject*>& Map, FName SpecieName)
 {
-	int* Found = Map.Find(SpecieName);
-	if (Found) {
-		return *Found;
-	}
-
-	iLog("Could not find specie id for " + SpecieName.ToString(), LogVerbosity_Error);
-	return INVALID_SPECIE_ID;
-}
-
-int USpecieDataManager::GetSpecieId(FName Name)
-{
-	return GetSpecieIdFromMap(SpecieIds, Name);
-}
-
-FName USpecieDataManager::GetSpecieNameFromMap(TMap<int, USpecieDataObject*>& Map, int SpecieId)
-{
-	USpecieDataObject** Found = Map.Find(SpecieId);
+	USpecieDataObject** Found = Map.Find(SpecieName);
 	if (Found) {
 		return (*Found)->GetSpecieName();
 	}
 
-	iLog("Could not find name for specie id " + FString::FromInt(SpecieId));
+	iLog("Could not find name for specie id " + SpecieName.ToString());
 	return FName();
 }
 
-FName USpecieDataManager::GetSpecieName(int SpecieId)
+FName USpecieDataManager::GetSpecieName(FName SpecieName)
 {
-	return GetSpecieNameFromMap(Species, SpecieId);
+	return GetSpecieNameFromMap(Species, SpecieName);
 }
 
-bool USpecieDataManager::IsValidSpecieFromMap(TMap<int, USpecieDataObject*>& Map, int SpecieId)
+bool USpecieDataManager::IsValidSpecieFromMap(TMap<FName, USpecieDataObject*>& Map, FName SpecieName)
 {
-	return IsValid(*Map.Find(SpecieId));
+	return IsValid(*Map.Find(SpecieName));
 }
 
-bool USpecieDataManager::IsValidSpecie(int SpecieId)
+bool USpecieDataManager::IsValidSpecie(FName SpecieName)
 {
-	return IsValidSpecieFromMap(Species, SpecieId);
+	return IsValidSpecieFromMap(Species, SpecieName);
 }
 
-int USpecieDataManager::GetSpecieTypeBitmaskFromMap(TMap<int, USpecieDataObject*>& Map, int SpecieId)
+int USpecieDataManager::GetSpecieTypeBitmaskFromMap(TMap<FName, USpecieDataObject*>& Map, FName SpecieName)
 {
-	USpecieDataObject** Found = Map.Find(SpecieId);
+	USpecieDataObject** Found = Map.Find(SpecieName);
 	if (Found) {
 		return (*Found)->GetTypeBitmask();
 	}
 
-	iLog("Unable to find type bitmask for specie id " + FString::FromInt(SpecieId), LogVerbosity_Error);
+	iLog("Unable to find type bitmask for specie id " + SpecieName.ToString(), LogVerbosity_Error);
 	return Type_Neutral;
 }
 
-int USpecieDataManager::GetSpecieTypeBitmask(int SpecieId)
+int USpecieDataManager::GetSpecieTypeBitmask(FName SpecieName)
 {
-	return GetSpecieTypeBitmaskFromMap(Species, SpecieId);
+	return GetSpecieTypeBitmaskFromMap(Species, SpecieName);
 }
 
-FBaseStats USpecieDataManager::GetSpecieBaseStatsFromMap(TMap<int, USpecieDataObject*>& Map, int SpecieId)
+FBaseStats USpecieDataManager::GetSpecieBaseStatsFromMap(TMap<FName, USpecieDataObject*>& Map, FName SpecieName)
 {
-	USpecieDataObject** Found = Map.Find(SpecieId);
+	USpecieDataObject** Found = Map.Find(SpecieName);
 	if (Found) {
 		return (*Found)->GetBaseStats();
 	}
 
-	iLog("Unable to find base stats for specie id " + FString::FromInt(SpecieId), LogVerbosity_Error);
+	iLog("Unable to find base stats for specie id " + SpecieName.ToString(), LogVerbosity_Error);
 	return FBaseStats();
 }
 
-FBaseStats USpecieDataManager::GetSpecieBaseStats(int SpecieId)
+FBaseStats USpecieDataManager::GetSpecieBaseStats(FName SpecieName)
 {
-	return GetSpecieBaseStatsFromMap(Species, SpecieId);
+	return GetSpecieBaseStatsFromMap(Species, SpecieName);
 }
 
-UClass* USpecieDataManager::GetImmieObjectClassFromMap(TMap<int, USpecieDataObject*>& Map, int SpecieId)
+UClass* USpecieDataManager::GetImmieObjectClassFromMap(TMap<FName, USpecieDataObject*>& Map, FName SpecieName)
 {
-	USpecieDataObject** Found = Map.Find(SpecieId);
+	USpecieDataObject** Found = Map.Find(SpecieName);
 	if (Found) {
 		return (*Found)->GetImmieObjectClass();
 	}
 
-	iLog("Unable to find Immie object UClass for specie id " + FString::FromInt(SpecieId), LogVerbosity_Error);
+	iLog("Unable to find Immie object UClass for specie id " + SpecieName.ToString(), LogVerbosity_Error);
 	return nullptr;
 }
 
-UClass* USpecieDataManager::GetImmieObjectClass(int SpecieId)
+UClass* USpecieDataManager::GetImmieObjectClass(FName SpecieName)
 {
-	return GetImmieObjectClassFromMap(Species, SpecieId);
+	return GetImmieObjectClassFromMap(Species, SpecieName);
 }
 
-UClass* USpecieDataManager::GetImmieCharacterClassFromMap(TMap<int, USpecieDataObject*>& Map, int SpecieId)
+UClass* USpecieDataManager::GetImmieCharacterClassFromMap(TMap<FName, USpecieDataObject*>& Map, FName SpecieName)
 {
-	USpecieDataObject** Found = Map.Find(SpecieId);
+	USpecieDataObject** Found = Map.Find(SpecieName);
 	if (Found) {
 		return (*Found)->GetImmieCharacterClass();
 	}
 
-	iLog("Unable to find Immie character UClass for specie id " + FString::FromInt(SpecieId), LogVerbosity_Error);
+	iLog("Unable to find Immie character UClass for specie id " + SpecieName.ToString(), LogVerbosity_Error);
 	return nullptr;
 }
 
-UClass* USpecieDataManager::GetImmieCharacterClass(int SpecieId)
+UClass* USpecieDataManager::GetImmieCharacterClass(FName SpecieName)
 {
-	return GetImmieCharacterClassFromMap(Species, SpecieId);
+	return GetImmieCharacterClassFromMap(Species, SpecieName);
 }
 
-FSpecieLearnset USpecieDataManager::GetSpecieLearnsetsFromMap(TMap<int, USpecieDataObject*>& Map, int SpecieId)
+FSpecieLearnset USpecieDataManager::GetSpecieLearnsetsFromMap(TMap<FName, USpecieDataObject*>& Map, FName SpecieName)
 {
-	USpecieDataObject** Found = Map.Find(SpecieId);
+	USpecieDataObject** Found = Map.Find(SpecieName);
 	if (Found) {
 		return (*Found)->GetLearnset();
 	}
 
-	iLog("Could not find specie learnset for Id number " + FString::FromInt(SpecieId), LogVerbosity_Error);
+	iLog("Could not find specie learnset for Id number " + SpecieName.ToString(), LogVerbosity_Error);
 	return FSpecieLearnset();
 }
 
-FSpecieLearnset USpecieDataManager::GetSpecieLearnsets(int SpecieId)
+FSpecieLearnset USpecieDataManager::GetSpecieLearnsets(FName SpecieName)
 {
-	return GetSpecieLearnsetsFromMap(Species, SpecieId);
+	return GetSpecieLearnsetsFromMap(Species, SpecieName);
 }
 
 

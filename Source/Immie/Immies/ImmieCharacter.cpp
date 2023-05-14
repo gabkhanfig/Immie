@@ -226,9 +226,8 @@ void AImmieCharacter::SetImmieObjectFromJsonString(const FString& JsonString)
 	FJsonObjectBP ImmieJson;
 	if (FJsonObjectBP::LoadJsonString(JsonString, ImmieJson)) {
 		FName ParsedSpecieName = FName(ImmieJson.GetStringField("Specie"));
-		const int SpecieId = GetSpecieDataManager()->GetSpecieId(ParsedSpecieName);
-		ImmieObject = UImmie::NewImmieObject(this, SpecieId);
-		ImmieObject->LoadJsonData(SpecieId, ImmieJson);
+		ImmieObject = UImmie::NewImmieObject(this, ParsedSpecieName);
+		ImmieObject->LoadJsonData(ImmieJson);
 	}
 }
 
@@ -316,7 +315,7 @@ void AImmieCharacter::UnPossessed()
 
 AImmieCharacter* AImmieCharacter::NewImmieCharacter(AActor* _Owner, const FTransform& Transform, UImmie* _ImmieObject, bool EnabledOnSpawn, ESpawnActorCollisionHandlingMethod SpawnCollisionHandling)
 {
-	UClass* ImmieCharacterClass = GetSpecieDataManager()->GetImmieCharacterClass(_ImmieObject->GetSpecieId());
+	UClass* ImmieCharacterClass = GetSpecieDataManager()->GetImmieCharacterClass(_ImmieObject->GetSpecieName());
 	checkf(IsValid(ImmieCharacterClass), TEXT("UClass for Immie character must be valid for spawning"));
 	AImmieCharacter* SpawnedImmie = 
 		_Owner->GetWorld()->SpawnActorDeferred<AImmieCharacter>(ImmieCharacterClass, Transform, _Owner, nullptr, SpawnCollisionHandling);
@@ -395,8 +394,7 @@ void AImmieCharacter::InitializeForBattle(ABattleTeam* OwningTeam, int SlotOnTea
 	Team = OwningTeam;
 	TeamSlot = SlotOnTeam;
 
-	const int SpecieId = ImmieObject->GetSpecieId();
-	USpecieDataObject* SpecieDataObject = GetBattleInstance()->GetBattleSpecieManager()->GetSpecieDataObject(SpecieId);
+	USpecieDataObject* SpecieDataObject = GetBattleInstance()->GetBattleSpecieManager()->GetSpecieDataObject(ImmieObject->GetSpecieName());
 
 	const int SpecieTypeBitmask = SpecieDataObject->GetTypeBitmask();
 	Type = GetBattleInstance()->GetBattleTypeManager()->GetTypes(SpecieTypeBitmask);
@@ -565,14 +563,9 @@ void AImmieCharacter::WildTick(float DeltaTime)
 	BP_WildTick(DeltaTime);
 }
 
-int AImmieCharacter::GetSpecieId() const
-{
-	return ImmieObject->GetSpecieId();
-}
-
 FName AImmieCharacter::GetSpecieName() const
 {
-	return GetSpecieDataManager()->GetSpecieName(GetSpecieId());
+	return ImmieObject->GetSpecieName();
 }
 
 bool AImmieCharacter::BP_AllClientBattleSubobjectsValid_Implementation()

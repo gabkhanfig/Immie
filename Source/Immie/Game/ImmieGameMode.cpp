@@ -33,7 +33,7 @@ void AImmieGameMode::StartSingleplayerBattle()
 	TArray<FBattleTeamInit> Teams;
 	for (int i = 0; i < 2; i++) {
 		FBattleTeamInit Team;
-		UImmie* Immie = UImmie::NewImmieObject(this, 0);
+		UImmie* Immie = UImmie::NewImmieObject(this, "snamdon");
 		if (i == 0) {
 			Immie->SetDisplayName("some display name idk");
 		}

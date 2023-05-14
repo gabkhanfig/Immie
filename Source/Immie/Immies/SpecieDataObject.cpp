@@ -33,7 +33,6 @@
 
 USpecieDataObject::USpecieDataObject()
 {
-    SpecieId = -1;
 }
 
 void USpecieDataObject::LoadClasses()
@@ -67,10 +66,9 @@ const FString& USpecieDataObject::GetImmiesBlueprintFolder()
     return ImmiesBlueprintFolder;
 }
 
-USpecieDataObject* USpecieDataObject::CreateSpecieDataObject(UObject* Outer, int _SpecieId, UClass* DataObjectClass)
+USpecieDataObject* USpecieDataObject::CreateSpecieDataObject(UObject* Outer, UClass* DataObjectClass)
 {
     USpecieDataObject* SpecieDataObject = NewObject<USpecieDataObject>(Outer, DataObjectClass);
-    SpecieDataObject->SpecieId = _SpecieId;
     SpecieDataObject->LoadClasses();
     return SpecieDataObject;
 }

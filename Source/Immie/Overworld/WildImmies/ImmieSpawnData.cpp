@@ -20,7 +20,7 @@ void UImmieSpawnData::LoadJsonData(const FJsonObjectBP& Json)
 	}
 
 	ImmieName = FName(Json.GetStringField("ImmieName"));
-	if (!GetSpecieDataManager()->IsValidSpecie(GetSpecieDataManager()->GetSpecieId(ImmieName))) {
+	if (!GetSpecieDataManager()->IsValidSpecie(ImmieName)) {
 		iLog(ERROR_PREFIX + "ImmieName of " + ImmieName.ToString() + " is not a valid specie");
 	}
 

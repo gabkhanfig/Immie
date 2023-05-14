@@ -23,27 +23,27 @@
 
 UImmie::UImmie()
 {
-    SpecieId = INVALID_SPECIE_ID;
     Health = 0;
     Xp = 1;
     StatLevels = { 0, 0, 0, 0 };
     AbilityIds.Reserve(MAX_ABILITY_COUNT);
 }
 
-UImmie* UImmie::NewImmieObject(UObject* Outer, int _SpecieId)
+UImmie* UImmie::NewImmieObject(UObject* Outer, FName _SpecieName)
 {
   check(Outer);
-  UClass* ImmieObjectClass = GetSpecieDataManager()->GetImmieObjectClass(_SpecieId);
+  UClass* ImmieObjectClass = GetSpecieDataManager()->GetImmieObjectClass(_SpecieName);
+  if (ImmieObjectClass == nullptr) {
+    iLog(_SpecieName.ToString() + " <- specie name for new immie object");
+  }
   check(ImmieObjectClass);
   UImmie* Immie = NewObject<UImmie>(Outer, ImmieObjectClass);
-  Immie->SpecieId = _SpecieId;
+  Immie->SpecieName = _SpecieName;
   return Immie;
 }
 
-void UImmie::LoadJsonData(int _SpecieId, const FJsonObjectBP& Json)
+void UImmie::LoadJsonData(const FJsonObjectBP& Json)
 {
-    SpecieId = _SpecieId;
-
     bool SetDisplayNameToSpecie = false;
 
     FString _DisplayName;
@@ -169,7 +169,7 @@ FJsonObjectBP UImmie::SaveJsonData()
 {
     FJsonObjectBP JsonWriter;
 
-    JsonWriter.SetStringField(JSON_FIELD_SPECIE, GetSpecieName().ToString());
+    JsonWriter.SetStringField(JSON_FIELD_SPECIE, SpecieName.ToString());
     JsonWriter.SetStringField(JSON_FIELD_DISPLAY_NAME, DisplayName);
     JsonWriter.SetIntegerField(JSON_FIELD_XP, Xp);
     JsonWriter.SetFloatField(JSON_FIELD_HEALTH, Health);
@@ -196,7 +196,7 @@ FJsonObjectBP UImmie::SaveJsonData()
 
 UImmie* UImmie::MakeCopy(UObject* Outer)
 {
-  UImmie* Copy = UImmie::NewImmieObject(Outer, SpecieId);
+  UImmie* Copy = UImmie::NewImmieObject(Outer, SpecieName);
   Copy->Health = Health;
   Copy->Xp = Xp;
   Copy->StatLevels = StatLevels;
@@ -250,14 +250,13 @@ TArray<UImmie*> UImmie::JsonToTeam(const FJsonObjectBP& TeamJsonObject, const FS
         }
 
         FName ParsedSpecieName = FName(ParsedSpecieString);
-        const int SpecieId = GetSpecieDataManager()->GetSpecieId(ParsedSpecieName);
-        if (!GetSpecieDataManager()->IsValidSpecie(SpecieId)) {
+        if (!GetSpecieDataManager()->IsValidSpecie(ParsedSpecieName)) {
             iLog("Parsed specie name " + ParsedSpecieName.ToString() + " is not a valid Immie specie", LogVerbosity_Error);
             continue;
         }
 
-        UImmie* Immie = UImmie::NewImmieObject(Outer, SpecieId);
-        Immie->LoadJsonData(SpecieId, JsonTeam[i]);
+        UImmie* Immie = UImmie::NewImmieObject(Outer, ParsedSpecieName);
+        Immie->LoadJsonData(JsonTeam[i]);
         Team.Add(Immie);
     }
 
@@ -276,7 +275,7 @@ void UImmie::Release()
 
 void UImmie::Heal()
 {
-    HealFromBaseStats(GetSpecieDataManager()->GetSpecieBaseStats(SpecieId).Health);
+    HealFromBaseStats(GetSpecieDataManager()->GetSpecieBaseStats(SpecieName).Health);
 }
 
 void UImmie::HealFromBaseStats(uint8 HealthBaseStat)
@@ -300,11 +299,6 @@ void UImmie::SetHealth(float NewHealth)
 void UImmie::SetDisplayName(const FString& _DisplayName)
 {
     DisplayName = _DisplayName;
-}
-
-FName UImmie::GetSpecieName() const
-{
-    return GetSpecieDataManager()->GetSpecieName(SpecieId);
 }
 
 void UImmie::SetXp(int NewXp)
@@ -335,7 +329,7 @@ void UImmie::SetLevel(uint8 NewLevel)
 float UImmie::GetMaxHealth(bool UseBaseStatOverride, uint8 BaseHealth) const
 {
     if (!UseBaseStatOverride) {
-        BaseHealth = GetSpecieDataManager()->GetSpecieBaseStats(SpecieId).Health;
+        BaseHealth = GetSpecieDataManager()->GetSpecieBaseStats(SpecieName).Health;
     }
 
     return UFormula::HealthStat(BaseHealth, GetLevel(), StatLevels.Health);
@@ -344,7 +338,7 @@ float UImmie::GetMaxHealth(bool UseBaseStatOverride, uint8 BaseHealth) const
 float UImmie::GetAttack(bool UseBaseStatOverride, uint8 BaseAttack) const
 {
     if (!UseBaseStatOverride) {
-        BaseAttack = GetSpecieDataManager()->GetSpecieBaseStats(SpecieId).Attack;
+        BaseAttack = GetSpecieDataManager()->GetSpecieBaseStats(SpecieName).Attack;
     }
 
     return UFormula::AttackStat(BaseAttack, GetLevel(), StatLevels.Attack);
@@ -353,7 +347,7 @@ float UImmie::GetAttack(bool UseBaseStatOverride, uint8 BaseAttack) const
 float UImmie::GetDefense(bool UseBaseStatOverride, uint8 BaseDefense) const
 {
     if (!UseBaseStatOverride) {
-        BaseDefense = GetSpecieDataManager()->GetSpecieBaseStats(SpecieId).Defense;
+        BaseDefense = GetSpecieDataManager()->GetSpecieBaseStats(SpecieName).Defense;
     }
 
     return UFormula::DefenseStat(BaseDefense, GetLevel(), StatLevels.Defense);
@@ -362,7 +356,7 @@ float UImmie::GetDefense(bool UseBaseStatOverride, uint8 BaseDefense) const
 float UImmie::GetSpeed(bool UseBaseStatOverride, uint8 BaseSpeed) const
 {
     if (!UseBaseStatOverride) {
-        BaseSpeed = GetSpecieDataManager()->GetSpecieBaseStats(SpecieId).Speed;
+        BaseSpeed = GetSpecieDataManager()->GetSpecieBaseStats(SpecieName).Speed;
     }
 
     return UFormula::SpeedStat(BaseSpeed, StatLevels.Speed);

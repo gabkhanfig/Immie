@@ -27,7 +27,7 @@ private:
 
 	UPROPERTY()
 		/**/
-		TMap<int, USpecieDataObject*> SpeciesOverride;
+		TMap<FName, USpecieDataObject*> SpeciesOverride;
 
 	UPROPERTY()
 		/* Does this manager use it's own data or the system default. */
@@ -49,15 +49,15 @@ public:
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		USpecieDataObject* GetSpecieDataObject(int SpecieId);
+		USpecieDataObject* GetSpecieDataObject(FName SpecieName);
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		int GetSpecieTypeBitmask(int SpecieId);
+		int GetSpecieTypeBitmask(FName SpecieName);
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		FBaseStats GetSpecieBaseStats(int SpecieId);
+		FBaseStats GetSpecieBaseStats(FName SpecieName);
 
 		
 };
