@@ -20,6 +20,21 @@ public:
 
 	void LoadJsonData(const FJsonObjectBP& Json);
 
+	UFUNCTION(BlueprintPure)
+		FName GetImmieName() const { return ImmieName; }
+
+	UFUNCTION(BlueprintPure)
+		uint8 GetMinLevel() const { return MinLevel; }
+
+	UFUNCTION(BlueprintPure)
+		uint8 GetMaxLevel() const { return MaxLevel; }
+
+	UFUNCTION(BlueprintPure)
+		int GetMaxBatchSize() const { return MaxBatchSize; }
+
+	UFUNCTION(BlueprintPure)
+		int GetWeight() const { return Weight; }
+
 protected:
 
 	UFUNCTION(BlueprintImplementableEvent)

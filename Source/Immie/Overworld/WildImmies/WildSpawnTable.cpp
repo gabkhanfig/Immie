@@ -10,10 +10,13 @@
 
 UWildSpawnTable::UWildSpawnTable()
 {
+	MaxWeight = 0;
 }
 
 void UWildSpawnTable::LoadJsonData(const FJsonObjectBP& Json)
 {
+	MaxWeight = 0;
+
 	TArray<FJsonObjectBP> TableElements = FJsonObjectBP::ArrayFromObjects(Json.GetArrayField("SpawnTable").GetObjectArray());
 	for (int i = 0; i < TableElements.Num(); i++) {
 		if (!TableElements[i].HasField("ImmieName")) {
@@ -27,11 +30,29 @@ void UWildSpawnTable::LoadJsonData(const FJsonObjectBP& Json)
 		UClass* SpawnDataClass = GetSpecieDataManager()->GetSpecieDataObject(ImmieName)->GetSpawnDataClass();
 		UImmieSpawnData* SpawnDataObject = NewObject<UImmieSpawnData>(this, SpawnDataClass);
 		SpawnDataObject->LoadJsonData(TableElements[i]);
-		Spawns.Add(SpawnDataObject);
+
+		const int Weight = SpawnDataObject->GetWeight();
+		MaxWeight += Weight;
+
+		FWildImmieSpawnTableElement TableElement;
+		TableElement.ImmieSpawnData = SpawnDataObject;
+		TableElement.WeightIncrement = MaxWeight;
+		Spawns.Add(TableElement);
 	}
 }
 
 UImmieSpawnData* UWildSpawnTable::GetWeightedRandomSpawnData()
 {
-	return Spawns[0];
+	checkf(Spawns.Num() > 0, TEXT("Attempted to get a weighted random wild immie spawn data from an empty spawn table"));
+
+	int Rand = FMath::RandRange(0, MaxWeight);
+	for (int i = 0; i < Spawns.Num(); i++) {
+		const FWildImmieSpawnTableElement TableElement = Spawns[i];
+		if (Rand <= TableElement.WeightIncrement) {
+			return TableElement.ImmieSpawnData;
+		}
+	}
+
+	checkf(false, TEXT("Unreachable code block in UWildSpawnTable"));
+	return nullptr;
 }

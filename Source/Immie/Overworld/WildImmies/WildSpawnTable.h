@@ -9,6 +9,19 @@
 
 class UImmieSpawnData;
 
+USTRUCT(BlueprintType)
+/**/
+struct FWildImmieSpawnTableElement 
+{
+	GENERATED_BODY(BlueprintReadWrite)
+
+	UPROPERTY()
+		UImmieSpawnData* ImmieSpawnData;
+
+	UPROPERTY(BlueprintReadWrite)
+		int WeightIncrement;
+};
+
 /* Class that stores multiple immie spawn data objects. 
 Wild immie spawners use these to spawn immies into the world. */
 UCLASS()
@@ -22,11 +35,19 @@ public:
 
 	void LoadJsonData(const FJsonObjectBP& Json);
 
-	UImmieSpawnData* GetWeightedRandomSpawnData();
+	UFUNCTION(BlueprintCallable)
+		/**/
+		UImmieSpawnData* GetWeightedRandomSpawnData();
 
 private:
 
 	UPROPERTY()
-		TArray<UImmieSpawnData*> Spawns;
+		/**/
+		TArray<FWildImmieSpawnTableElement> Spawns;
+
+	UPROPERTY()
+		/**/
+		int MaxWeight;
+
 	
 };
