@@ -33,6 +33,18 @@ void AWildImmieSpawner::BeginPlay()
 	Super::BeginPlay();
 }
 
+AImmieCharacter* AWildImmieSpawner::SpawnWildImmie(UImmieSpawnData* SpawnData, FVector Location)
+{
+	UImmie* ImmieObject = UImmie::NewImmieObject(this, SpawnData->GetImmieName());
+	const uint8 Level = FMath::RandRange(SpawnData->GetMinLevel(), SpawnData->GetMaxLevel());
+	ImmieObject->SetLevel(Level);
+	const FRotator SpawnRotation{ 0, FMath::RandRange(-1.0, 1.0), 0 };
+	const FTransform SpawnTransform{ SpawnRotation, Location };
+	AImmieCharacter* SpawnedCharacter = AImmieCharacter::SpawnWildImmieCharacter(this, SpawnTransform, ImmieObject);
+	SpawnedImmies.Add(SpawnedCharacter);
+	return SpawnedCharacter;
+}
+
 // Called every frame
 void AWildImmieSpawner::Tick(float DeltaTime)
 {

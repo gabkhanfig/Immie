@@ -29,6 +29,10 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UFUNCTION(BlueprintCallable)
+		/* Already added to the SpawnedImmies array. */
+		AImmieCharacter* SpawnWildImmie(UImmieSpawnData* SpawnData, FVector Location);
+
 protected:	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (NoResetToDefault))

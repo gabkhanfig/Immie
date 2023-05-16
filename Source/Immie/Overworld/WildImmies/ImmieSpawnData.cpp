@@ -4,9 +4,12 @@
 #include "ImmieSpawnData.h"
 #include "../../Game/Global/Managers/ConfigDataManager.h"
 #include "../../Game/Global/Managers/SpecieDataManager.h"
+#include "../../Immies/ImmieCharacter.h"
+#include "WildImmieSpawner.h"
+#include "../../Immies/ImmieObject.h"
 
 UImmieSpawnData::UImmieSpawnData()
-	: MinLevel(1), MaxLevel(1), MaxBatchSize(1), Weight(1)
+	: MinLevel(1), MaxLevel(1), Weight(1)
 {
 }
 
@@ -44,12 +47,6 @@ void UImmieSpawnData::LoadJsonData(const FJsonObjectBP& Json)
 		}
 		MinLevel = _MinLevel;
 		MaxLevel = _MaxLevel;
-	}
-
-	Json.TryGetIntegerField("MaxBatchSize", MaxBatchSize, true, 1);
-	if (MaxBatchSize < 1) {
-		iLog(ERROR_PREFIX + "MaxBatchSize of " + FString::FromInt(MaxBatchSize) + " cannot be less than 1", LogVerbosity_Error);
-		MaxBatchSize = 1;
 	}
 
 	Json.TryGetIntegerField("Weight", Weight, true, 1); 

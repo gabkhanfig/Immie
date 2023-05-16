@@ -558,7 +558,7 @@ void AImmieCharacter::EventPlayerDealtDamage_Implementation(const TScriptInterfa
 
 void AImmieCharacter::WildTick(float DeltaTime)
 {
-	iLog("Wild tick immie character");
+	iLog("Wild tick immie character", LogVerbosity_Display, 0);
 
 	BP_WildTick(DeltaTime);
 }

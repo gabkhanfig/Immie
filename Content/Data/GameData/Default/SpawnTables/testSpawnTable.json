@@ -4,14 +4,12 @@
             "ImmieName": "snamdon",
             "MinLevel": 1,
             "MaxLevel": 100,
-            "MaxBatchSize": 1,
             "Weight": 1
         },
         {
             "ImmieName": "snamdon",
             "MinLevel": 6,
             "MaxLevel": 100,
-            "MaxBatchSize": 1,
             "Weight": 1
         }
     ]

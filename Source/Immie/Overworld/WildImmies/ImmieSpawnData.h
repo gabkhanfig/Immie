@@ -8,6 +8,9 @@
 #include "../../Util/Json/BlueprintJsonObject.h"
 #include "ImmieSpawnData.generated.h"
 
+class AImmieCharacter;
+class AWildImmieSpawner;
+
 /* Object containing spawn data for particular spawn table set with conditions and more. */
 UCLASS(Blueprintable)
 class IMMIE_API UImmieSpawnData : public UObject
@@ -28,9 +31,6 @@ public:
 
 	UFUNCTION(BlueprintPure)
 		uint8 GetMaxLevel() const { return MaxLevel; }
-
-	UFUNCTION(BlueprintPure)
-		int GetMaxBatchSize() const { return MaxBatchSize; }
 
 	UFUNCTION(BlueprintPure)
 		int GetWeight() const { return Weight; }
@@ -56,13 +56,7 @@ protected:
 		uint8 MaxLevel;
 
 	UPROPERTY(BlueprintReadWrite)
-		/* Immies, when spawned, can spawn in batches of 1 - MaxBatchSize randomly (default 1). Json field "MaxBatchSize" */
-		int MaxBatchSize;
-
-	UPROPERTY(BlueprintReadWrite)
 		/* Likelihood that this Immie(s) will be spawned relative to others within the spawn table (default 1). Json field "Weight" */
 		int Weight;
 
-	
-	
 };
