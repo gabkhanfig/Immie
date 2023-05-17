@@ -30,8 +30,6 @@ public:
 	virtual TArray<UImmie*> GetTeam_Implementation() const override;
 	virtual APawn* GetPawn_Implementation() const override;
 	virtual FBattleTeamInit GetBattleTeamInit_Implementation() const override;
-	//virtual void Disable_Implementation() override;
-	//virtual void Enable_Implementation() override;
 	virtual void OnBattleStart_Implementation() override;
 	virtual void OnBattleEnd_Implementation(EBattleTeamWinState WinState) override;
 	virtual bool CanBeBattled_Implementation() const override;
@@ -71,7 +69,5 @@ protected:
 	UPROPERTY(BlueprintReadWrite)
 		/**/
 		TArray<ATrainerPawn*> NearbyBattleEligibleTrainers;
-
-
 
 };

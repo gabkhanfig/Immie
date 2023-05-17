@@ -18,7 +18,7 @@ struct FWildImmieSpawnTableElement
 	UPROPERTY()
 		UImmieSpawnData* ImmieSpawnData;
 
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY()
 		int WeightIncrement;
 };
 
@@ -49,5 +49,4 @@ private:
 		/**/
 		int MaxWeight;
 
-	
 };
