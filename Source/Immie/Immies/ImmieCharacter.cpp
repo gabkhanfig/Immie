@@ -27,6 +27,7 @@
 #include <Immie/Battle/UI/ImmieBattleHud.h>
 #include <Immie/Battle/UI/FloatingBattleHealthbar.h>
 #include <Immie/Overworld/WildImmies/WildImmieSpawner.h>
+#include "Components/SphereComponent.h"
 
 AImmieCharacter::AImmieCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UImmieMovementComponent>(ACharacter::CharacterMovementComponentName))
@@ -51,6 +52,11 @@ AImmieCharacter::AImmieCharacter(const FObjectInitializer& ObjectInitializer)
 	FloatingBattleHealthbarComponent->SetWidgetSpace(EWidgetSpace::Screen);
 	FloatingBattleHealthbarComponent->SetVisibility(false, true);
 	FloatingBattleHealthbarComponent->SetWidget(nullptr);
+
+	WildBattlerCollider = CreateDefaultSubobject<USphereComponent>(TEXT("WildBattlerCollider"));
+	WildBattlerCollider->SetupAttachment(RootComponent);
+	WildBattlerCollider->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECR_Ignore);
+	WildBattlerCollider->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	ImmieObject = nullptr;
 	bEnabled = true;
@@ -335,6 +341,7 @@ AImmieCharacter* AImmieCharacter::SpawnBattleImmieCharacter(ABattleTeam* BattleT
 {
 	AImmieCharacter* SpawnedImmie = NewImmieCharacter(BattleTeam, Transform, _ImmieObject, false, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 	SpawnedImmie->ImmieCharacterMode = EImmieCharacterMode::Battle;
+	SpawnedImmie->WildBattlerCollider->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	return SpawnedImmie;
 }
 
@@ -343,17 +350,20 @@ AImmieCharacter* AImmieCharacter::SpawnWildImmieCharacter(AWildImmieSpawner* Spa
 	AImmieCharacter* SpawnedImmie = NewImmieCharacter(Spawner, Transform, _ImmieObject, true, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
 	_ImmieObject->ChangeOuter(SpawnedImmie);
 	SpawnedImmie->ImmieCharacterMode = EImmieCharacterMode::Wild;
+	SpawnedImmie->WildBattlerCollider->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	return SpawnedImmie;
 }
 
 void AImmieCharacter::MakeBattle(ABattleTeam* BattleTeam)
 {
 	ImmieCharacterMode = EImmieCharacterMode::Battle;
+	WildBattlerCollider->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void AImmieCharacter::MakeWild(AWildImmieSpawner* Spawner)
 {
 	ImmieCharacterMode = EImmieCharacterMode::Wild;
+	WildBattlerCollider->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 }
 
 void AImmieCharacter::PossessForBattle(AController* NewController)

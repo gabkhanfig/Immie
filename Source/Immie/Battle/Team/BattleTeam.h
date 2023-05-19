@@ -41,6 +41,9 @@ private:
 	/* If the team is current alive. */
 	uint8 bTeamAlive : 1;
 
+	/**/
+	uint8 bIsTeamOwnerWildImmie : 1;
+
 protected:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)

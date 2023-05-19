@@ -22,6 +22,7 @@ class UImmieMovementComponent;
 class UImmieBattleHud;
 class UFloatingBattleHealthbar;
 class AWildImmieSpawner;
+class USphereComponent;
 
 UCLASS()
 class IMMIE_API AImmieCharacter : public ACharacter, public IBattleActor
@@ -103,9 +104,13 @@ protected:
 		/**/
 		TEnumAsByte<EImmieCharacterMode> ImmieCharacterMode;
 
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite, Category = "Wild")
 		/**/
 		AWildImmieSpawner* WildSpawner;
+
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
+		/**/
+		USphereComponent* WildBattlerCollider;
 
 protected:
 

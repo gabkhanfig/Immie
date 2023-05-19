@@ -121,6 +121,10 @@ void ABattleTeam::InitializeTeam(ABattleInstance* _BattleInstance, const FBattle
 		}
 	}
 
+	if (Cast<AImmieCharacter>(TeamOwner.GetObject())) {
+		bIsTeamOwnerWildImmie = true;
+	}
+
 	BP_CreateTeam(TeamData);
 	BP_InitializeTeam(TeamData);
 
