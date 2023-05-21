@@ -8,13 +8,17 @@
 #include <Immie/Game/ImmieGameMode.h>
 #include <Kismet/GameplayStatics.h>
 #include "../Trainer/TrainerPawn.h"
+#include "../../Battle/Team/BattleTeam.h"
 
 // Sets default values
 AOverworldPlayer::AOverworldPlayer()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	TimerForBattleReady = 0;
+	TimerForBattleReady = 0; /// Script / Engine.Blueprint'/Game/Battle/Team/BP_PlayerSingleplayerBattleTeam.BP_PlayerSingleplayerBattleTeam'
+
+	static ConstructorHelpers::FClassFinder<ABattleTeam> BattleTeamFoundClass(TEXT("/Game/Battle/Team/BP_PlayerSingleplayerBattleTeam"));
+	BattleTeamClass = BattleTeamFoundClass.Class;
 }
 
 // Called when the game starts or when spawned
@@ -82,6 +86,7 @@ FBattleTeamInit AOverworldPlayer::GetBattleTeamInit_Implementation() const
 {
 	FBattleTeamInit TeamInit = DefaultBattleTeamInit();
 	TeamInit.Controller = GetController();
+	TeamInit.BattleTeamClass = BattleTeamClass;
 	return TeamInit;
 }
 

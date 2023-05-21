@@ -8,6 +8,7 @@
 #include "OverworldPlayer.generated.h"
 
 class ATrainerPawn;
+class ABattleTeam;
 
 UCLASS()
 class IMMIE_API AOverworldPlayer : public ACharacter, public IBattler
@@ -69,5 +70,10 @@ protected:
 	UPROPERTY(BlueprintReadWrite)
 		/**/
 		TArray<ATrainerPawn*> NearbyBattleEligibleTrainers;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		/**/
+		TSubclassOf<ABattleTeam> BattleTeamClass;
+
 
 };

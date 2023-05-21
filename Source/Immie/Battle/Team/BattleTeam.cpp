@@ -34,9 +34,8 @@ void ABattleTeam::BeginPlay()
 
 void ABattleTeam::CreateTeamFromImmies(const TArray<UImmie*>& TeamImmies)
 {
-	FTransform SpawnTransform = FTransform(DefaultSpawnRotation, DefaultSpawnLocation, { 1, 1, 1 });
 	for (int i = 0; i < TeamImmies.Num(); i++) {
-		AImmieCharacter* ImmieCharacter = AImmieCharacter::SpawnBattleImmieCharacter(this, SpawnTransform, TeamImmies[i]);
+		AImmieCharacter* ImmieCharacter = AImmieCharacter::SpawnBattleImmieCharacter(this, ImmieSpawnTransform, TeamImmies[i]);
 		ImmieCharacter->InitializeForBattle(this, i);
 		Team.Add(ImmieCharacter);
 	}
@@ -106,11 +105,9 @@ void ABattleTeam::Tick(float DeltaTime)
 void ABattleTeam::InitializeTeam(ABattleInstance* _BattleInstance, const FBattleTeamInit& TeamData)
 {
 	BattleInstance = _BattleInstance;
-	DefaultSpawnLocation = TeamData.SpawnLocation;
-	DefaultSpawnRotation = TeamData.SpawnRotation;
+	ImmieSpawnTransform = TeamData.SpawnTransform;
 	Controller = TeamData.Controller;
 	TeamOwner = TeamData.Trainer;
-	TeamType = TeamData.TeamType;
 
 	if (Controller == nullptr) {
 		if (IsValid(AIControllerClass)) {
@@ -119,10 +116,6 @@ void ABattleTeam::InitializeTeam(ABattleInstance* _BattleInstance, const FBattle
 		else {
 			iLog("null controller");
 		}
-	}
-
-	if (Cast<AImmieCharacter>(TeamOwner.GetObject())) {
-		bIsTeamOwnerWildImmie = true;
 	}
 
 	BP_CreateTeam(TeamData);

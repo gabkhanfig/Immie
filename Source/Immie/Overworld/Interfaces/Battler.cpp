@@ -29,10 +29,8 @@ FBattleTeamInit IBattler::DefaultBattleTeamInit() const
 
 	FBattleTeamInit TeamInit;
 	TeamInit.Team = IBattler::Execute_GetTeam(this->_getUObject());
-	TeamInit.SpawnLocation = AsPawn->GetActorLocation();
-	TeamInit.SpawnRotation = AsPawn->GetActorRotation();
+	TeamInit.SpawnTransform = AsPawn->GetActorTransform();
 	TeamInit.Trainer = this->_getUObject();
-	TeamInit.TeamType = IBattler::Execute_GetBattleTeamType(this->_getUObject());
 	return TeamInit;
 }
 

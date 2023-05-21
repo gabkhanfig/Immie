@@ -8,6 +8,7 @@
 class UImmie;
 class UAbility;
 class IBattler;
+class ABattleTeam;
 
 UENUM(BlueprintType)
 enum EBattleTeamType
@@ -57,11 +58,7 @@ struct FBattleTeamInit
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/**/
-		FVector SpawnLocation;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		/**/
-		FRotator SpawnRotation;
+		FTransform SpawnTransform;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/* Can be null. If set to nullptr, an AI controller will be created for this battle team. */
@@ -73,7 +70,7 @@ struct FBattleTeamInit
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/**/
-		TEnumAsByte<EBattleTeamType> TeamType;
+		TSubclassOf<ABattleTeam> BattleTeamClass;
 
 	FBattleTeamInit();
 

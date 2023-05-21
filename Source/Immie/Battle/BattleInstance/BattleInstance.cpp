@@ -119,11 +119,8 @@ void ABattleInstance::SyncClientManagers()
 void ABattleInstance::CreateTeams()
 {
 	for (int i = 0; i < InitTeams.Num(); i++) {
-		UClass* TeamClass = GetBattleDataManager()->GetTeamClass(InitTeams[i].TeamType);
-		checkf(TeamClass, TEXT("Invalid battle team class for battle"));
-		FTransform SpawnTransform = FTransform(InitTeams[i].SpawnRotation, InitTeams[i].SpawnLocation, { 1, 1, 1 });
-		ABattleTeam* Team = GetWorld()->SpawnActorDeferred<ABattleTeam>(TeamClass, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-		UGameplayStatics::FinishSpawningActor(Team, SpawnTransform);
+		ABattleTeam* Team = GetWorld()->SpawnActorDeferred<ABattleTeam>(InitTeams[i].BattleTeamClass, InitTeams[i].SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+		UGameplayStatics::FinishSpawningActor(Team, InitTeams[i].SpawnTransform);
 		Teams.Add(Team);
 	}
 }
@@ -591,9 +588,9 @@ void ABattleInstance::BattleInit(const TArray<FBattleTeamInit>& _InitTeams)
 		ClientsValidSpawnedManagers.Init(false, TeamCount);
 		ClientsValidTeamObjects.Init(false, TeamCount);
 		for (int i = 0; i < TeamCount; i++) {
-			const bool IsPlayerTeam =
-				InitTeams[i].TeamType == EBattleTeamType::BattleTeam_PlayerMultiplayer;
-			if (!IsPlayerTeam) {
+			//const bool IsPlayerTeam =
+				//InitTeams[i].TeamType == EBattleTeamType::BattleTeam_PlayerMultiplayer;
+			if (true) {
 				ClientsValidSpawnedManagers[i] = true;
 				ClientsValidTeamObjects[i] = true;
 			}

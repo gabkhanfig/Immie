@@ -5,6 +5,7 @@
 #include "../../Immies/ImmieObject.h"
 #include "TrainerDataObject.h"
 #include "../../Game/Global/Managers/TrainerDataManager.h"
+#include "../../Battle/Team/BattleTeam.h"
 
 // Sets default values
 ATrainerPawn::ATrainerPawn()
@@ -14,6 +15,9 @@ ATrainerPawn::ATrainerPawn()
 
 	BattleTeamType = EBattleTeamType::BattleTeam_Trainer;
 	CanOverworldPlayerInitiateBattle = true;
+
+	static ConstructorHelpers::FClassFinder<ABattleTeam> BattleTeamFoundClass(TEXT("/Game/Battle/Team/BP_TrainerBattleTeam"));
+	BattleTeamClass = BattleTeamFoundClass.Class;
 }
 
 // Called when the game starts or when spawned
@@ -64,7 +68,9 @@ APawn* ATrainerPawn::GetPawn_Implementation() const
 
 FBattleTeamInit ATrainerPawn::GetBattleTeamInit_Implementation() const
 {
-	return DefaultBattleTeamInit();
+	FBattleTeamInit TeamInit = DefaultBattleTeamInit();
+	TeamInit.BattleTeamClass = BattleTeamClass;
+	return TeamInit;
 }
 
 void ATrainerPawn::OnBattleStart_Implementation()

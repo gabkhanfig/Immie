@@ -48,7 +48,7 @@ void AImmieGameMode::StartSingleplayerBattle()
 		//Immie2->SetHealth(10000);
 		//Team.Team.Add(Immie2);
 
-		Team.TeamType = EBattleTeamType::BattleTeam_PlayerSingleplayer;
+		//Team.TeamType = EBattleTeamType::BattleTeam_PlayerSingleplayer;
 		Teams.Add(Team);
 	}
 	

@@ -26,29 +26,29 @@ private:
 
 	ABattleInstance* BattleInstance;
 
-	FVector DefaultSpawnLocation;
-
-	FRotator DefaultSpawnRotation;
-
 	AController* Controller;
 
 	TScriptInterface<IBattler> TeamOwner;
-
-	TEnumAsByte<EBattleTeamType> TeamType;
 
 	TArray<AAbilityActor*> AbilityActors;
 
 	/* If the team is current alive. */
 	uint8 bTeamAlive : 1;
 
-	/**/
-	uint8 bIsTeamOwnerWildImmie : 1;
 
 protected:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/**/
 		TSubclassOf<AImmieAIController> AIControllerClass;
+
+	UPROPERTY(BlueprintReadWrite)
+		/**/
+		FTransform ImmieSpawnTransform;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		/**/
+		TEnumAsByte<EBattleTeamType> TeamType;
 
 protected:
 

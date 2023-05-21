@@ -56,7 +56,7 @@ void AMultiplayerGameMode::ForceStartMultiplayerBattle(AImmiePlayerController* P
 
 		FBattleTeamInit BattleTeam;
 		BattleTeam.Controller = PlayerTeams[i].Controller;
-		BattleTeam.TeamType = EBattleTeamType::BattleTeam_PlayerMultiplayer;
+		//BattleTeam.TeamType = EBattleTeamType::BattleTeam_PlayerMultiplayer;
 		FJsonObjectBP PlayerImmiesJson;
 		if (!FJsonObjectBP::LoadJsonString(PlayerTeams[i].TeamJsonString, PlayerImmiesJson)) {
 			ULogger::Log("Unable to parse player supplied team string into a json object from player team index " + FString::FromInt(i) + ". Outputting string.", LogVerbosity_Error);
@@ -84,7 +84,7 @@ FBattleTeamInit AMultiplayerGameMode::GenerateTestAiTeam() const
 
 	FBattleTeamInit Team;
 	Team.Team = Immies;
-	Team.TeamType = EBattleTeamType::BattleTeam_PlayerSingleplayer;
+	//Team.TeamType = EBattleTeamType::BattleTeam_PlayerSingleplayer;
 	return Team;
 }
 

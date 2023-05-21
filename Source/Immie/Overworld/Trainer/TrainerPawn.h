@@ -8,6 +8,7 @@
 #include "TrainerPawn.generated.h"
 
 class UTrainerDataObject;
+class ABattleTeam;
 
 UCLASS()
 class IMMIE_API ATrainerPawn : public APawn, public IBattler
@@ -30,6 +31,10 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite)
 		bool CanOverworldPlayerInitiateBattle;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		/**/
+		TSubclassOf<ABattleTeam> BattleTeamClass;
 
 public:
 	// Sets default values for this pawn's properties
