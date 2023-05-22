@@ -65,8 +65,13 @@ AImmieCharacter::AImmieCharacter(const FObjectInitializer& ObjectInitializer)
 	BattleHud = nullptr;
 	ImmieCharacterMode = EImmieCharacterMode::None;
 
+	WildSpawner = nullptr;
+
 	// TODO remove this later
 	AbilityColliders.Add(GetCapsuleComponent());
+
+	static ConstructorHelpers::FClassFinder<ABattleTeam> BattleTeamFoundClass(TEXT("/Game/Battle/Team/BP_WildBattleTeam"));
+	BattleTeamClass = BattleTeamFoundClass.Class;
 }
 
 void AImmieCharacter::BeginPlay()
@@ -356,14 +361,21 @@ AImmieCharacter* AImmieCharacter::SpawnWildImmieCharacter(AWildImmieSpawner* Spa
 
 void AImmieCharacter::MakeBattle(ABattleTeam* BattleTeam)
 {
+	if (ImmieCharacterMode == EImmieCharacterMode::Wild && IsValid(WildSpawner)) {
+		WildSpawner->StopTrackingWildImmie(this);
+	}
 	ImmieCharacterMode = EImmieCharacterMode::Battle;
 	WildBattlerCollider->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	SetOwner(BattleTeam);
 }
 
 void AImmieCharacter::MakeWild(AWildImmieSpawner* Spawner)
 {
 	ImmieCharacterMode = EImmieCharacterMode::Wild;
+	WildSpawner = Spawner;
+	WildSpawner->StartTrackingWildImmie(this);
 	WildBattlerCollider->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	SetOwner(WildSpawner);
 }
 
 void AImmieCharacter::PossessForBattle(AController* NewController)
@@ -631,3 +643,41 @@ FString AImmieCharacter::GetDisplayName_Implementation() const
 {
 	return ImmieObject->GetDisplayName();
 }
+
+#pragma region BattlerInterface
+
+TArray<UImmie*> AImmieCharacter::GetBattlerTeam_Implementation() const
+{
+	const TArray<UImmie*> Immies = { ImmieObject };
+	return Immies;
+}
+
+APawn* AImmieCharacter::GetPawn_Implementation() const
+{
+	return (APawn*)this;
+}
+
+FBattleTeamInit AImmieCharacter::GetBattleTeamInit_Implementation() const
+{
+	return DefaultBattleTeamInit();
+}
+
+void AImmieCharacter::OnBattleStart_Implementation()
+{
+}
+
+void AImmieCharacter::OnBattleEnd_Implementation(EBattleTeamWinState WinState)
+{
+}
+
+bool AImmieCharacter::CanBeBattled_Implementation() const
+{
+	return true;
+}
+
+TSubclassOf<ABattleTeam> AImmieCharacter::GetBattleTeamClass_Implementation() const
+{
+	return BattleTeamClass;
+}
+
+#pragma endregion

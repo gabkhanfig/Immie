@@ -25,6 +25,7 @@ ABattleTeam::ABattleTeam()
 
 	ActiveImmie = nullptr;
 	bTeamAlive = true;
+	bUseOuterImmieCharacters = true;
 }
 
 void ABattleTeam::BeginPlay()
@@ -32,10 +33,23 @@ void ABattleTeam::BeginPlay()
 	Super::BeginPlay();
 }
 
+AImmieCharacter* ABattleTeam::MakeBattleImmie(UImmie* ImmieObject)
+{
+	AImmieCharacter* ObjectOuterAsImmie = Cast<AImmieCharacter>(ImmieObject->GetOuter());
+	// If the Immie Object's that's not an immie character, make a new battle immie character,
+	// OR if this battle team is flagged to not use an outer immie character
+	if (!bUseOuterImmieCharacters || ObjectOuterAsImmie == nullptr) {
+		return AImmieCharacter::SpawnBattleImmieCharacter(this, ImmieSpawnTransform, ImmieObject);
+	}
+	// Otherwise, use the existing character.
+	ObjectOuterAsImmie->MakeBattle(this);
+	return ObjectOuterAsImmie;
+}
+
 void ABattleTeam::CreateTeamFromImmies(const TArray<UImmie*>& TeamImmies)
 {
 	for (int i = 0; i < TeamImmies.Num(); i++) {
-		AImmieCharacter* ImmieCharacter = AImmieCharacter::SpawnBattleImmieCharacter(this, ImmieSpawnTransform, TeamImmies[i]);
+		AImmieCharacter* ImmieCharacter = MakeBattleImmie(TeamImmies[i]);
 		ImmieCharacter->InitializeForBattle(this, i);
 		Team.Add(ImmieCharacter);
 	}

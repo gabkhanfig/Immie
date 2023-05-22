@@ -8,7 +8,7 @@
 #include "Battler.generated.h"
 
 class UImmie;
-
+class ABattleTeam;
 
 // This class does not need to be modified.
 UINTERFACE(Blueprintable)
@@ -35,13 +35,11 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintPure)
 		/**/
-		EBattleTeamType GetBattleTeamType() const;// { return GetBattleTeamType(); }
-	//virtual EBattleTeamType GetBattleTeamType() const = 0; 
+		EBattleTeamType GetBattleTeamType() const;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintPure)
 		/**/
-		TArray<UImmie*> GetTeam() const;// { return GetTeam(); }
-	//virtual TArray<UImmie*> GetTeam() const = 0;
+		TArray<UImmie*> GetBattlerTeam() const;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintPure)
 		/**/
@@ -49,18 +47,11 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintPure)
 		/**/
-		FBattleTeamInit GetBattleTeamInit() const;// { return GetBattleTeamInit(); }
-	//virtual FBattleTeamInit GetBattleTeamInit() const;
+		FBattleTeamInit GetBattleTeamInit() const;
 
-	//UFUNCTION(BlueprintCallable)
-	//	/**/
-	//	void Disable();// { Disable(); };
-	////virtual void Disable();
-
-	//UFUNCTION(BlueprintCallable)
-	//	/**/
-	//	void Enable();// { Enable(); }
-	//virtual void Enable();
+	UFUNCTION(BlueprintNativeEvent, BlueprintPure)
+		/**/
+		TSubclassOf<ABattleTeam> GetBattleTeamClass() const;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 		/**/
@@ -69,11 +60,10 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 		/**/
-		void OnBattleEnd(EBattleTeamWinState WinState);// { OnBattleEnd(); };
+		void OnBattleEnd(EBattleTeamWinState WinState);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 		/**/
 		bool CanBeBattled() const;
-	//virtual void OnBattleEnd();
 
 };

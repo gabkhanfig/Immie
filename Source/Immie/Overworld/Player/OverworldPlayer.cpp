@@ -67,12 +67,7 @@ void AOverworldPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &AOverworldPlayer::StopJumping);
 }
 
-EBattleTeamType AOverworldPlayer::GetBattleTeamType_Implementation() const
-{
-	return EBattleTeamType::BattleTeam_PlayerSingleplayer;
-}
-
-TArray<UImmie*> AOverworldPlayer::GetTeam_Implementation() const
+TArray<UImmie*> AOverworldPlayer::GetBattlerTeam_Implementation() const
 {
 	return GetPlayerImmies()->GetTeam();
 }
@@ -86,7 +81,6 @@ FBattleTeamInit AOverworldPlayer::GetBattleTeamInit_Implementation() const
 {
 	FBattleTeamInit TeamInit = DefaultBattleTeamInit();
 	TeamInit.Controller = GetController();
-	TeamInit.BattleTeamClass = BattleTeamClass;
 	return TeamInit;
 }
 
@@ -120,6 +114,11 @@ void AOverworldPlayer::OnBattleEnd_Implementation(EBattleTeamWinState WinState)
 bool AOverworldPlayer::CanBeBattled_Implementation() const
 {
 	return true;
+}
+
+TSubclassOf<ABattleTeam> AOverworldPlayer::GetBattleTeamClass_Implementation() const
+{
+	return BattleTeamClass;
 }
 
 void AOverworldPlayer::YawInput(float AxisValue)

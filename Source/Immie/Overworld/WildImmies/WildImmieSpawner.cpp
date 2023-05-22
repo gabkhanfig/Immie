@@ -12,10 +12,20 @@
 AWildImmieSpawner::AWildImmieSpawner()
 	: SpawnTable(nullptr)
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	SetActorEnableCollision(false);
+}
+
+void AWildImmieSpawner::StartTrackingWildImmie(AImmieCharacter* ImmieCharacter)
+{
+	SpawnedImmies.Add(ImmieCharacter);
+}
+
+void AWildImmieSpawner::StopTrackingWildImmie(AImmieCharacter* ImmieCharacter)
+{
+	SpawnedImmies.RemoveSingle(ImmieCharacter);
 }
 
 // Called when the game starts or when spawned

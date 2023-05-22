@@ -30,8 +30,7 @@ private:
 
 	TArray<AAbilityActor*> AbilityActors;
 
-	/* If the team is current alive. */
-	uint8 bTeamAlive : 1;
+	
 
 protected:
 
@@ -44,8 +43,16 @@ protected:
 		FTransform ImmieSpawnTransform;
 
 	UPROPERTY(BlueprintReadOnly)
-		/**/
+		/* Blueprint implementations are free to cast this to whatever valid data type. 
+		For example, singleplayer teams could cast this object to AOverworldPlayer. */
 		UObject* TeamOwnerAsObject;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		/* If an Immie Object's outer is an immie character, use that character for battle instead of making a new one. */
+		uint8 bUseOuterImmieCharacters : 1;
+
+	/* If the team is current alive. */
+	uint8 bTeamAlive : 1;
 
 protected:
 
@@ -64,7 +71,13 @@ protected:
 		void SyncClientSubobjects(ABattleInstance* BattleInstanceObject, AController* ControllerObject, const TArray<AImmieCharacter*>& TeamCharacterObjects);
 
 	UFUNCTION(BlueprintCallable)
-		/* Creates a team of Immie characters from an array of Immie objects. */
+		/* Makes an battle immie character from an immie object. If the object's outer is an immie character,
+		that character can be used instead of making a new one. See flag bUseOuterImmieCharacters. */
+		AImmieCharacter* MakeBattleImmie(UImmie* ImmieObject);
+
+	UFUNCTION(BlueprintCallable)
+		/* Creates a team of Immie characters from an array of Immie objects. 
+		If the Immie object's owner is a wild immie character, that character can be made into a battle immie character instead of making a new one. */
 		void CreateTeamFromImmies(const TArray<UImmie*>& TeamImmies);
 
 	UFUNCTION(BlueprintCallable)

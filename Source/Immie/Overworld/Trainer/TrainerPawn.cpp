@@ -13,7 +13,6 @@ ATrainerPawn::ATrainerPawn()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	BattleTeamType = EBattleTeamType::BattleTeam_Trainer;
 	CanOverworldPlayerInitiateBattle = true;
 
 	static ConstructorHelpers::FClassFinder<ABattleTeam> BattleTeamFoundClass(TEXT("/Game/Battle/Team/BP_TrainerBattleTeam"));
@@ -51,12 +50,7 @@ void ATrainerPawn::Tick(float DeltaTime)
 
 }
 
-EBattleTeamType ATrainerPawn::GetBattleTeamType_Implementation() const
-{
-	return BattleTeamType;
-}
-
-TArray<UImmie*> ATrainerPawn::GetTeam_Implementation() const
+TArray<UImmie*> ATrainerPawn::GetBattlerTeam_Implementation() const
 {
 	return Team;
 }
@@ -68,9 +62,7 @@ APawn* ATrainerPawn::GetPawn_Implementation() const
 
 FBattleTeamInit ATrainerPawn::GetBattleTeamInit_Implementation() const
 {
-	FBattleTeamInit TeamInit = DefaultBattleTeamInit();
-	TeamInit.BattleTeamClass = BattleTeamClass;
-	return TeamInit;
+	return DefaultBattleTeamInit();
 }
 
 void ATrainerPawn::OnBattleStart_Implementation()
@@ -98,5 +90,10 @@ void ATrainerPawn::OnBattleEnd_Implementation(EBattleTeamWinState WinState)
 bool ATrainerPawn::CanBeBattled_Implementation() const
 {
 	return true;
+}
+
+TSubclassOf<ABattleTeam> ATrainerPawn::GetBattleTeamClass_Implementation() const
+{
+	return BattleTeamClass;
 }
 

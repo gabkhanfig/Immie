@@ -21,10 +21,6 @@ protected:
 		/**/
 		FName TrainerName;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		/**/
-		TEnumAsByte<EBattleTeamType> BattleTeamType;
-
 	UPROPERTY(BlueprintReadWrite)
 		/**/
 		TArray<UImmie*> Team;
@@ -44,15 +40,13 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	/* Battler interface. */
-	virtual EBattleTeamType GetBattleTeamType_Implementation() const override;
-	virtual TArray<UImmie*> GetTeam_Implementation() const override;
+	virtual TArray<UImmie*> GetBattlerTeam_Implementation() const override;
 	virtual APawn* GetPawn_Implementation() const override;
 	virtual FBattleTeamInit GetBattleTeamInit_Implementation() const override;
-	//virtual void Disable_Implementation() override;
-	//virtual void Enable_Implementation() override;
 	virtual void OnBattleStart_Implementation() override;
 	virtual void OnBattleEnd_Implementation(EBattleTeamWinState WinState) override;
 	virtual bool CanBeBattled_Implementation() const override;
+	virtual TSubclassOf<ABattleTeam> GetBattleTeamClass_Implementation() const override;
 
 	bool GetCanOverworldPlayerInitiateBattle() const { return CanOverworldPlayerInitiateBattle; }
 

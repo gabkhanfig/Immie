@@ -28,56 +28,9 @@ FBattleTeamInit IBattler::DefaultBattleTeamInit() const
 	APawn* AsPawn = IBattler::Execute_GetPawn(this->_getUObject());
 
 	FBattleTeamInit TeamInit;
-	TeamInit.Team = IBattler::Execute_GetTeam(this->_getUObject());
+	TeamInit.Team = IBattler::Execute_GetBattlerTeam(this->_getUObject());
 	TeamInit.SpawnTransform = AsPawn->GetActorTransform();
 	TeamInit.TeamOwner = this->_getUObject();
+	TeamInit.BattleTeamClass = IBattler::Execute_GetBattleTeamClass(this->_getUObject());
 	return TeamInit;
 }
-
-//APawn* IBattler::GetPawn() const
-//{
-//	APawn* AsPawn = Cast<APawn>(this->_getUObject());
-//	checkf(IsValid(AsPawn), TEXT("Casting a ITrainer to APawn must be valid"));
-//	return AsPawn;
-//}
-
-//FBattleTeamInit IBattler::GetBattleTeamInit() const
-//{
-//	APawn* AsPawn = GetPawn();
-//
-//	FBattleTeamInit TeamInit;
-//	TeamInit.Team = GetTeam();
-//	TeamInit.SpawnLocation = AsPawn->GetActorLocation();
-//	TeamInit.SpawnRotation = AsPawn->GetActorRotation();
-//	TeamInit.Trainer = this->_getUObject();
-//	TeamInit.TeamType = GetBattleTeamType();
-//	return TeamInit;
-//}
-
-//void IBattler::Disable()
-//{
-//	APawn* AsPawn = GetPawn();
-//
-//	AsPawn->SetActorEnableCollision(false);
-//	AsPawn->SetActorHiddenInGame(true);
-//	AsPawn->SetActorTickEnabled(false);
-//}
-
-//void IBattler::Enable()
-//{
-//	APawn* AsPawn = GetPawn();
-//
-//	AsPawn->SetActorEnableCollision(true);
-//	AsPawn->SetActorHiddenInGame(false);
-//	AsPawn->SetActorTickEnabled(true);
-//}
-
-//void IBattler::OnBattleStart()
-//{
-//	Disable();
-//}
-
-//void IBattler::OnBattleEnd()
-//{
-//	Enable();
-//}

@@ -25,6 +25,14 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintCallable)
+		/**/
+		void StartTrackingWildImmie(AImmieCharacter* ImmieCharacter);
+
+	UFUNCTION(BlueprintCallable)
+		/**/
+		void StopTrackingWildImmie(AImmieCharacter* ImmieCharacter);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -32,6 +40,7 @@ protected:
 	UFUNCTION(BlueprintCallable)
 		/* Already added to the SpawnedImmies array. */
 		AImmieCharacter* SpawnWildImmie(UImmieSpawnData* SpawnData, FVector Location);
+
 
 protected:	
 	

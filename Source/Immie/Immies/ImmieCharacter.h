@@ -25,7 +25,7 @@ class AWildImmieSpawner;
 class USphereComponent;
 
 UCLASS()
-class IMMIE_API AImmieCharacter : public ACharacter, public IBattleActor
+class IMMIE_API AImmieCharacter : public ACharacter, public IBattleActor, public IBattler
 {
 	GENERATED_BODY()
 
@@ -111,6 +111,10 @@ protected:
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
 		/**/
 		USphereComponent* WildBattlerCollider;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		/* Class to be used to create a battle team. */
+		TSubclassOf<ABattleTeam> BattleTeamClass;
 
 protected:
 
@@ -256,11 +260,12 @@ public:
 		static AImmieCharacter* SpawnWildImmieCharacter(AWildImmieSpawner* Spawner, const FTransform& Transform, UImmie* _ImmieObject);
 
 	UFUNCTION(BlueprintCallable)
-		/* Turns the immie character into a battle immie character. */
+		/* Turns the immie character into a battle immie character. Changes ownership to the battle team.
+		If currently a wild immie, will remove it from the spawner. */
 		void MakeBattle(ABattleTeam* BattleTeam);
 
 	UFUNCTION(BlueprintCallable)
-		/* Turns the immie character into a wild immie character. */
+		/* Turns the immie character into a wild immie character. Changes ownership to the spawner. */
 		void MakeWild(AWildImmieSpawner* Spawner);
 
 
@@ -352,6 +357,10 @@ public:
 		/**/
 		bool IsControlledByLocalPlayer() const;
 
+	UFUNCTION(BlueprintPure)
+		/**/
+		TEnumAsByte<EImmieCharacterMode> GetImmieCharacterMode() const { return ImmieCharacterMode; }
+
 #pragma region BattleActorInterface
 
 	virtual UDamageComponent* GetDamageComponent_Implementation() const override;
@@ -376,6 +385,13 @@ public:
 
 #pragma region BattlerInterface
 
+	virtual TArray<UImmie*> GetBattlerTeam_Implementation() const override;
+	virtual APawn* GetPawn_Implementation() const override;
+	virtual FBattleTeamInit GetBattleTeamInit_Implementation() const override;
+	virtual void OnBattleStart_Implementation() override;
+	virtual void OnBattleEnd_Implementation(EBattleTeamWinState WinState) override;
+	virtual bool CanBeBattled_Implementation() const override;
+	virtual TSubclassOf<ABattleTeam> GetBattleTeamClass_Implementation() const override;
 
 #pragma endregion
 
