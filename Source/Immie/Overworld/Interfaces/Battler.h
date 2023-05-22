@@ -35,10 +35,6 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintPure)
 		/**/
-		EBattleTeamType GetBattleTeamType() const;
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintPure)
-		/**/
 		TArray<UImmie*> GetBattlerTeam() const;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintPure)
