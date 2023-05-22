@@ -107,23 +107,19 @@ void ABattleTeam::InitializeTeam(ABattleInstance* _BattleInstance, const FBattle
 	BattleInstance = _BattleInstance;
 	ImmieSpawnTransform = TeamData.SpawnTransform;
 	Controller = TeamData.Controller;
-	TeamOwner = TeamData.Trainer;
+	TeamOwnerAsObject = TeamData.TeamOwner;
 
 	if (Controller == nullptr) {
 		if (IsValid(AIControllerClass)) {
-			iLog("null controller but valid ai controller class");
+			//iLog("null controller but valid ai controller class");
 		}
 		else {
-			iLog("null controller");
+			//iLog("null controller");
 		}
 	}
 
 	BP_CreateTeam(TeamData);
 	BP_InitializeTeam(TeamData);
-
-	if (TeamOwner != nullptr) {
-		IBattler::Execute_OnBattleStart(TeamOwner->_getUObject());
-	}
 }
 
 void ABattleTeam::BP_CreateTeam_Implementation(const FBattleTeamInit& TeamData)
@@ -305,10 +301,6 @@ void ABattleTeam::OnBattleEnd_Implementation(EBattleTeamWinState WinState)
 {
 	if (HasAuthority()) {
 		DestroyBattleActors();
-		if (TeamOwner != nullptr) { // Don't use IsValid() due to being unable to get the UObject if its null
-			//TeamOwner->OnBattleEnd();
-			IBattler::Execute_OnBattleEnd(TeamOwner->_getUObject(), WinState);
-		}
 	}
 
 	AImmiePlayerController* AsPlayerController = Cast<AImmiePlayerController>(Controller);

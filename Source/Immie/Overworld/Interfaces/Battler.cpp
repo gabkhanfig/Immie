@@ -30,7 +30,7 @@ FBattleTeamInit IBattler::DefaultBattleTeamInit() const
 	FBattleTeamInit TeamInit;
 	TeamInit.Team = IBattler::Execute_GetTeam(this->_getUObject());
 	TeamInit.SpawnTransform = AsPawn->GetActorTransform();
-	TeamInit.Trainer = this->_getUObject();
+	TeamInit.TeamOwner = this->_getUObject();
 	return TeamInit;
 }
 

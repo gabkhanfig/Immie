@@ -7,5 +7,5 @@ FBattleTeamInit::FBattleTeamInit()
 {
 	//Team.Reserve(8);
 	Controller = nullptr;
-	Trainer = nullptr;
+	TeamOwner = nullptr;
 }

@@ -28,13 +28,10 @@ private:
 
 	AController* Controller;
 
-	TScriptInterface<IBattler> TeamOwner;
-
 	TArray<AAbilityActor*> AbilityActors;
 
 	/* If the team is current alive. */
 	uint8 bTeamAlive : 1;
-
 
 protected:
 
@@ -46,9 +43,9 @@ protected:
 		/**/
 		FTransform ImmieSpawnTransform;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadOnly)
 		/**/
-		TEnumAsByte<EBattleTeamType> TeamType;
+		UObject* TeamOwnerAsObject;
 
 protected:
 
@@ -156,10 +153,6 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category = "BattleEvents", DisplayName = "Player Dealt Damage")
 		/* Event that executes immediately before an ability that an Immie character owns is dealing damage. The amount of damage done can be freely modified. */
 		void EventPlayerDealtDamage(const TScriptInterface<IBattleActor>& Target, UPARAM(ref) float& Amount, UPARAM(ref) FBattleDamage& Damage, AImmieCharacter* ImmieCharacter);
-
-	UFUNCTION(BlueprintPure)
-		/* Returns the type of team this is. Override this for all blueprint child classes. */
-		TEnumAsByte<EBattleTeamType> GetBattleTeamType() const { return TeamType; };
 
 	UFUNCTION(BlueprintPure)
 		/**/

@@ -97,6 +97,18 @@ void AOverworldPlayer::OnBattleStart_Implementation()
 
 void AOverworldPlayer::OnBattleEnd_Implementation(EBattleTeamWinState WinState)
 {
+	switch (WinState) {
+	case BattleTeamWinState_Win:
+		iLog("you won!", LogVerbosity_Display, 7.5, FLinearColor(0.1, 0.65, 0.15));
+		break;
+	case BattleTeamWinState_Lose:
+		iLog("you lost :<", LogVerbosity_Display, 7.5, FLinearColor(1, 0.3, 0.3));
+		break;
+	case BattleTeamWinState_Draw:
+		iLog("you drew", LogVerbosity_Display, 7.5, FLinearColor(0.9, 0.55, 0.2));
+		break;
+	}
+
 	EnablePawn();
 	TimerForBattleReady = 10;
 

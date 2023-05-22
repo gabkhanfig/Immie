@@ -66,7 +66,7 @@ struct FBattleTeamInit
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/* The actor that "owns" the team. */
-		TScriptInterface<IBattler> Trainer;
+		UObject* TeamOwner;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/**/
