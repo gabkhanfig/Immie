@@ -41,6 +41,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		/**/
+		void CaptureWildImmie(UImmie* ImmieObject, bool Heal = true);
+
+	UFUNCTION(BlueprintCallable)
+		/**/
 		bool AddToTeam(UImmie* ImmieObject, bool Heal = true);
 
 	UFUNCTION(BlueprintCallable)

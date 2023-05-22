@@ -263,7 +263,7 @@ TArray<UImmie*> UImmie::JsonToTeam(const FJsonObjectBP& TeamJsonObject, const FS
 
 void UImmie::ChangeOuter(UObject* NewOuter)
 {
-    Rename(*GetFName().ToString(), NewOuter);
+    Rename(nullptr, NewOuter);
 }
 
 void UImmie::Release()

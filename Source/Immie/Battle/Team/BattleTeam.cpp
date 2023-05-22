@@ -12,6 +12,8 @@
 #include <Immie/Battle/Components/DamageComponent.h>
 #include "../../Overworld/Interfaces/Battler.h"
 #include "../../Controller/Ai/ImmieAIController.h"
+#include "../../Overworld/WildImmies/WildImmieSpawner.h"
+#include "../../Game/Player/PlayerImmies.h"
 
 ABattleTeam::ABattleTeam()
 {
@@ -26,6 +28,7 @@ ABattleTeam::ABattleTeam()
 	ActiveImmie = nullptr;
 	bTeamAlive = true;
 	bUseOuterImmieCharacters = true;
+	bDestroyAllCharactersOnBattleEnd = true;
 }
 
 void ABattleTeam::BeginPlay()
@@ -82,8 +85,7 @@ bool ABattleTeam::SwapInNextImmie()
 
 void ABattleTeam::AuthorityBattleTickBattleActors(float DeltaTime)
 {
-	const bool ActiveImmieAlive = ActiveImmie->GetCurrentHealth() > 0;
-	if (ActiveImmieAlive) {
+	if (ActiveImmie->IsAlive()) {
 		IBattleActor::Execute_AuthorityBattleTick(ActiveImmie, DeltaTime);
 		//ActiveImmie->AuthorityBattleTick(DeltaTime);
 	}
@@ -286,13 +288,8 @@ void ABattleTeam::ClientBattleTick_Implementation(float DeltaTime)
 	ClientBattleTickBattleActors(DeltaTime);
 }
 
-void ABattleTeam::DestroyBattleActors()
+void ABattleTeam::DestroyAllAbilityActors()
 {
-	RemoveActiveImmieFromBattle();
-	for (int i = 0; i < Team.Num(); i++) {
-		Team[i]->Destroy();
-	}
-
 	for (int i = 0; i < AbilityActors.Num(); i++) {
 		AAbilityActor* AbilityActor = AbilityActors[i];
 		if (!IsValid(AbilityActor)) {
@@ -300,6 +297,26 @@ void ABattleTeam::DestroyBattleActors()
 		}
 		RemoveAbilityActor(AbilityActor);
 		i--;
+	}
+}
+
+void ABattleTeam::DestroyAllImmies()
+{
+	for (int i = 0; i < Team.Num(); i++) {
+		Team[i]->Destroy();
+	}
+	Team.Empty();
+}
+
+void ABattleTeam::CaptureOrReturnWildImmieToSpawner(AImmieCharacter* ImmieCharacter, AWildImmieSpawner* Spawner, bool Heal)
+{
+	if (ImmieCharacter->IsAlive()) {
+		ImmieCharacter->MakeWild(Spawner);
+	}
+	else {
+		GetPlayerImmies()->CaptureWildImmie(ImmieCharacter->GetImmieObject(), Heal);
+		checkf(ImmieCharacter->GetImmieObject()->GetOuter() != ImmieCharacter, TEXT("Captured Immie Object's owner is still an Immie Character. Cannot destroy character"));
+		ImmieCharacter->Destroy();
 	}
 }
 
@@ -314,7 +331,12 @@ void ABattleTeam::EventPlayerDealtDamage_Implementation(const TScriptInterface<I
 void ABattleTeam::OnBattleEnd_Implementation(EBattleTeamWinState WinState)
 {
 	if (HasAuthority()) {
-		DestroyBattleActors();
+		DestroyAllAbilityActors();
+		RemoveActiveImmieFromBattle();
+		if (bDestroyAllCharactersOnBattleEnd) {
+			DestroyAllImmies();
+		}
+		//DestroyBattleActors();
 	}
 
 	AImmiePlayerController* AsPlayerController = Cast<AImmiePlayerController>(Controller);

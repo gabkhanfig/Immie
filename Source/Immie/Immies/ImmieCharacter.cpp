@@ -367,6 +367,7 @@ void AImmieCharacter::MakeBattle(ABattleTeam* BattleTeam)
 	}
 	ImmieCharacterMode = EImmieCharacterMode::Battle;
 	WildBattlerCollider->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	SetImmieEnabled(false);
 	SetOwner(BattleTeam);
 }
 
@@ -376,6 +377,7 @@ void AImmieCharacter::MakeWild(AWildImmieSpawner* Spawner)
 	WildSpawner = Spawner;
 	WildSpawner->StartTrackingWildImmie(this);
 	WildBattlerCollider->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	SetImmieEnabled(true);
 	SetOwner(WildSpawner);
 }
 
@@ -645,7 +647,7 @@ FString AImmieCharacter::GetDisplayName_Implementation() const
 	return ImmieObject->GetDisplayName();
 }
 
-#pragma region BattlerInterface
+#pragma region Battler_Interface
 
 TArray<UImmie*> AImmieCharacter::GetBattlerTeam_Implementation() const
 {

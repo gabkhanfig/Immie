@@ -75,5 +75,9 @@ protected:
 		/**/
 		TSubclassOf<ABattleTeam> BattleTeamClass;
 
+	UFUNCTION(Exec)
+		/**/
+		void DisplayPlayerTeam();
+
 
 };

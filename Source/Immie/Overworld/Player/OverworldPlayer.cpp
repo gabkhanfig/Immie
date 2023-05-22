@@ -9,6 +9,7 @@
 #include <Kismet/GameplayStatics.h>
 #include "../Trainer/TrainerPawn.h"
 #include "../../Battle/Team/BattleTeam.h"
+#include "../../Immies/ImmieObject.h"
 
 // Sets default values
 AOverworldPlayer::AOverworldPlayer()
@@ -175,4 +176,14 @@ void AOverworldPlayer::StartBattleWithBattler(const TScriptInterface<IBattler>& 
 	AImmieGameMode* GameMode = Cast<AImmieGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	checkf(IsValid(GameMode), TEXT("Overworld player attempting to start a trainer battle on an invalid ImmieGameMode"));
 	GameMode->StartBattle("Singleplayer", Teams, { 0, 0, 0 });
+}
+
+void AOverworldPlayer::DisplayPlayerTeam()
+{
+	TArray<UImmie*> Team = GetPlayerImmies()->GetTeam();
+	iLog("Player has " + FString::FromInt(Team.Num()) + " Immies");
+	for (UImmie* Immie : Team) {
+		iLog("Team member: " + Immie->GetSpecieName().ToString());
+	}
+	iLog("");
 }

@@ -2,6 +2,7 @@
 
 
 #include "PlayerImmies.h"
+#include "../../Immies/ImmieObject.h"
 
 #define PLAYER_MAX_TEAM_SIZE 8
 
@@ -13,6 +14,14 @@ UPlayerImmies::UPlayerImmies()
 bool UPlayerImmies::DoesPlayerTeamHaveSpace()
 {
 	return Team.Num() < PLAYER_MAX_TEAM_SIZE;
+}
+
+void UPlayerImmies::CaptureWildImmie(UImmie* ImmieObject, bool Heal)
+{
+	ImmieObject->ChangeOuter(this);
+	if (!AddToTeam(ImmieObject, Heal)) {
+		AddToChester(ImmieObject, Heal);
+	}
 }
 
 bool UPlayerImmies::AddToTeam(UImmie* ImmieObject, bool Heal)

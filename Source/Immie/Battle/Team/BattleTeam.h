@@ -30,8 +30,6 @@ private:
 
 	TArray<AAbilityActor*> AbilityActors;
 
-	
-
 protected:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
@@ -50,6 +48,10 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 		/* If an Immie Object's outer is an immie character, use that character for battle instead of making a new one. */
 		uint8 bUseOuterImmieCharacters : 1;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		/**/
+		uint8 bDestroyAllCharactersOnBattleEnd : 1;
 
 	/* If the team is current alive. */
 	uint8 bTeamAlive : 1;
@@ -153,7 +155,15 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		/**/
-		void DestroyBattleActors();
+		void DestroyAllAbilityActors();
+
+	UFUNCTION(BlueprintCallable)
+		/**/
+		void DestroyAllImmies();
+
+	UFUNCTION(BlueprintCallable)
+		/* If the Immie Character has been defeated, it can be captured by the player, otherwise it will be given to the spawner. */
+		void CaptureOrReturnWildImmieToSpawner(AImmieCharacter* ImmieCharacter, AWildImmieSpawner* Spawner, bool Heal = true);
 
 	UFUNCTION(NetMulticast, Reliable)
 		/**/

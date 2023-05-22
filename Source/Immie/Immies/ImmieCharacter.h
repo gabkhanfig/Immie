@@ -353,6 +353,10 @@ public:
 		/**/
 		inline float GetCurrentHealth() const { return ActiveStats.Health; }
 
+	UFUNCTION(BlueprintPure, Category = "Battle")
+		/**/
+		inline bool IsAlive() const { return ActiveStats.Health > 0; }
+
 	UFUNCTION(BlueprintPure)
 		/**/
 		bool IsControlledByLocalPlayer() const;
@@ -361,7 +365,7 @@ public:
 		/**/
 		TEnumAsByte<EImmieCharacterMode> GetImmieCharacterMode() const { return ImmieCharacterMode; }
 
-#pragma region BattleActorInterface
+#pragma region Battle_Actor_Interface
 
 	virtual UDamageComponent* GetDamageComponent_Implementation() const override;
 	virtual float TotalHealingFromAbility_Implementation(const FAbilityInstigatorDamage& AbilityHealing) const override;
@@ -383,7 +387,7 @@ public:
 
 #pragma endregion
 
-#pragma region BattlerInterface
+#pragma region Battler_Interface
 
 	virtual TArray<UImmie*> GetBattlerTeam_Implementation() const override;
 	virtual APawn* GetPawn_Implementation() const override;
