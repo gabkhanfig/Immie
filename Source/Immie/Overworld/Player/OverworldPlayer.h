@@ -47,11 +47,11 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 		/**/
-		void AddNearbyBattleEligibleTrainer(ATrainerPawn* Trainer);
+		void AddNearbyBattleEligibleBattler(const TScriptInterface<IBattler>& Battler);
 
 	UFUNCTION(BlueprintCallable)
 		/**/
-		void RemoveNearbyBattleEligibleTrainer(ATrainerPawn* Trainer);
+		void RemoveNearbyBattleEligibleBattler(const TScriptInterface<IBattler>& Battler);
 
 	UFUNCTION(BlueprintCallable)
 		/**/
@@ -69,7 +69,7 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite)
 		/**/
-		TArray<ATrainerPawn*> NearbyBattleEligibleTrainers;
+		TArray<TScriptInterface<IBattler>> NearbyBattleEligibleBattlers;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/**/

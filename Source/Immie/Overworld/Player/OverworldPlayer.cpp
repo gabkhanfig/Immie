@@ -32,10 +32,10 @@ void AOverworldPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	for (int i = 0; i < NearbyBattleEligibleTrainers.Num(); i++) {
-		ATrainerPawn* Trainer = NearbyBattleEligibleTrainers[i];
-		if (!IsValid(Trainer)) {
-			NearbyBattleEligibleTrainers.RemoveSingle(Trainer);
+	for (int i = 0; i < NearbyBattleEligibleBattlers.Num(); i++) {
+		TScriptInterface<IBattler> Battler = NearbyBattleEligibleBattlers[i];
+		if (!IsValid(Battler.GetObject())) {
+			NearbyBattleEligibleBattlers.RemoveSingle(Battler);
 			i--;
 		}
 	}
@@ -141,30 +141,30 @@ void AOverworldPlayer::RightMovement(float ScaleValue)
 	AddMovementInput(UKismetMathLibrary::GetRightVector(FRotator(0, GetControlRotation().Yaw, 0)), ScaleValue, false);
 }
 
-void AOverworldPlayer::AddNearbyBattleEligibleTrainer(ATrainerPawn* Trainer)
+void AOverworldPlayer::AddNearbyBattleEligibleBattler(const TScriptInterface<IBattler>& Battler)
 {
-	NearbyBattleEligibleTrainers.Add(Trainer);
+	NearbyBattleEligibleBattlers.Add(Battler);
 }
 
-void AOverworldPlayer::RemoveNearbyBattleEligibleTrainer(ATrainerPawn* Trainer)
+void AOverworldPlayer::RemoveNearbyBattleEligibleBattler(const TScriptInterface<IBattler>& Battler)
 {
-	NearbyBattleEligibleTrainers.RemoveSingle(Trainer);
+	NearbyBattleEligibleBattlers.Add(Battler);
 }
 
 void AOverworldPlayer::StartBattleWithFirstNearbyBattleEligibleTrainer()
 {
-	if (NearbyBattleEligibleTrainers.Num() == 0) return;
+	if (NearbyBattleEligibleBattlers.Num() == 0) return;
 	
-	ATrainerPawn* Trainer = nullptr;
-	for (int i = 0; i < NearbyBattleEligibleTrainers.Num(); i++) {
-		if (IsValid(NearbyBattleEligibleTrainers[i])) {
-			Trainer = NearbyBattleEligibleTrainers[i];
+	TScriptInterface<IBattler> Battler = nullptr;
+	for (int i = 0; i < NearbyBattleEligibleBattlers.Num(); i++) {
+		if (IsValid(NearbyBattleEligibleBattlers[i].GetObject())) {
+			Battler = NearbyBattleEligibleBattlers[i];
 			break;
 		}
 	}
-	if (Trainer == nullptr) return;
+	if (Battler == nullptr) return;
 
-	StartBattleWithBattler(Trainer);
+	StartBattleWithBattler(Battler);
 }
 
 void AOverworldPlayer::StartBattleWithBattler(const TScriptInterface<IBattler>& Battler)

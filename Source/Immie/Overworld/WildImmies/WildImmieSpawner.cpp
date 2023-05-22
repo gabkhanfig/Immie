@@ -48,6 +48,7 @@ AImmieCharacter* AWildImmieSpawner::SpawnWildImmie(UImmieSpawnData* SpawnData, F
 	UImmie* ImmieObject = UImmie::NewImmieObject(this, SpawnData->GetImmieName());
 	const uint8 Level = FMath::RandRange(SpawnData->GetMinLevel(), SpawnData->GetMaxLevel());
 	ImmieObject->SetLevel(Level);
+	ImmieObject->Heal();
 	const FRotator SpawnRotation{ 0, FMath::RandRange(-1.0, 1.0), 0 };
 	const FTransform SpawnTransform{ SpawnRotation, Location };
 	AImmieCharacter* SpawnedCharacter = AImmieCharacter::SpawnWildImmieCharacter(this, SpawnTransform, ImmieObject);

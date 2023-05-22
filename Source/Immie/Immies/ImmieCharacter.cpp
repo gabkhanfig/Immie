@@ -356,6 +356,7 @@ AImmieCharacter* AImmieCharacter::SpawnWildImmieCharacter(AWildImmieSpawner* Spa
 	_ImmieObject->ChangeOuter(SpawnedImmie);
 	SpawnedImmie->ImmieCharacterMode = EImmieCharacterMode::Wild;
 	SpawnedImmie->WildBattlerCollider->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	SpawnedImmie->WildSpawner = Spawner;
 	return SpawnedImmie;
 }
 
@@ -659,7 +660,10 @@ APawn* AImmieCharacter::GetPawn_Implementation() const
 
 FBattleTeamInit AImmieCharacter::GetBattleTeamInit_Implementation() const
 {
-	return DefaultBattleTeamInit();
+	FBattleTeamInit TeamInit = DefaultBattleTeamInit();
+	// Wild spawner is the owner of the team, so that it can potentially regain control of the immie afterwards.
+	TeamInit.TeamOwner = WildSpawner;
+	return TeamInit;
 }
 
 void AImmieCharacter::OnBattleStart_Implementation()
