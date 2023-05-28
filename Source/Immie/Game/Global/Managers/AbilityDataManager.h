@@ -68,4 +68,6 @@ public:
 	UFUNCTION(BlueprintPure)
 		/**/
 		UClass* GetActorClass(FName AbilityName);
+
+	static FName AbilityNameFromBlueprintClassName(const FString ClassName, FString RightChop);
 };

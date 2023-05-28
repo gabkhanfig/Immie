@@ -15,6 +15,10 @@ class IMMIE_API ADummyAbilityActor : public AActor
 	GENERATED_BODY()
 
 protected:
+	
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (NoResetToDefault))
+		/**/
+		FName AbilityName;
 
 	UPROPERTY(BlueprintReadOnly)
 		/* The actual ability actor that has battle relevance. */
@@ -31,6 +35,8 @@ protected:
 public:	
 	// Sets default values for this actor's properties
 	ADummyAbilityActor();
+
+	void PostLoad() override;
 
 protected:
 	

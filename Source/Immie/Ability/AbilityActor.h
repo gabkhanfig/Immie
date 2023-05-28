@@ -42,6 +42,10 @@ private:
 
 protected:
 
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (NoResetToDefault))
+		/**/
+		FName AbilityName;
+
 	UPROPERTY(BlueprintReadWrite, replicated)
 		/* The active stats of this ability actor. Health is the current health. Uses stat modifiers. Replicated via lifetime props. */
 		FBattleStats ActiveStats;
@@ -136,6 +140,8 @@ public:
 	/**/
 	AAbilityActor();
 
+	void PostLoad() override;
+
 	/**/
 	virtual void Tick(float DeltaTime) override;
 
@@ -194,7 +200,7 @@ public:
 
 	UFUNCTION(BlueprintPure)
 		/* Get the name of this ability. */
-		FName GetAbilityName() const;
+		FName GetAbilityName() const { return AbilityName; }
 
 	UFUNCTION(BlueprintPure)
 		/**/

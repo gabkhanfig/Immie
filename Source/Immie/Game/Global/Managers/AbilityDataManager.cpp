@@ -5,9 +5,22 @@
 #include <Immie/Ability/Ability.h>
 #include <Immie/Ability/AbilityDataObject.h>
 
+static TArray<FName> AllAbilityNames() {
+	TArray<FName> AbilityNames;
+	AbilityNames.Add("EmptyAbility");
+	AbilityNames.Add("Fireball");
+	AbilityNames.Add("TerraSpike");
+	AbilityNames.Add("VoltBolt");
+	AbilityNames.Add("SunshineBow");
+	AbilityNames.Add("LeafVolley");
+	return AbilityNames;
+}
+
 void UAbilityDataManager::SetAbilityNamesAndIds()
 {
 	AbilityNames.Empty();
+	AbilityNames = AllAbilityNames();
+	/*
 
 #define DefineAbilityName(AbilityName) \
 	AbilityNames.Add(AbilityName)
@@ -18,7 +31,7 @@ void UAbilityDataManager::SetAbilityNamesAndIds()
 	DefineAbilityName("terraSpike");
 	DefineAbilityName("voltBolt");
 	DefineAbilityName("sunshineBow");
-	DefineAbilityName("leafVolley");
+	DefineAbilityName("leafVolley");*/
 }
 
 void UAbilityDataManager::LoadDefaultGameData()
@@ -43,8 +56,8 @@ FString UAbilityDataManager::LoadAbilityJsonFileToString(FName AbilityName, cons
 
 TSubclassOf<UAbilityDataObject> UAbilityDataManager::LoadAbilityDataObjectClass(FName AbilityName)
 {
-	const FString AbilityCapitalizedName = UStringUtils::ToUpperFirstLetter(AbilityName.ToString());
-	const FString DataObjectClassReferenceString = UAbilityDataObject::GetAbilitiesBlueprintFolder() + AbilityCapitalizedName + "/BP_" + AbilityCapitalizedName + "DataObject.BP_" + AbilityCapitalizedName + "DataObject_C'";
+	const FString AbilityString = AbilityName.ToString();
+	const FString DataObjectClassReferenceString = UAbilityDataObject::GetAbilitiesBlueprintFolder() + AbilityString + "/BP_" + AbilityString + "DataObject.BP_" + AbilityString + "DataObject_C'";
 	TSubclassOf<UAbilityDataObject> DataObjectClass = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *DataObjectClassReferenceString));
 
 	if (!IsValid(DataObjectClass)) {
@@ -151,4 +164,25 @@ UClass* UAbilityDataManager::GetActorClassFromMap(TMap<FName, UAbilityDataObject
 UClass* UAbilityDataManager::GetActorClass(FName AbilityName)
 {
 	return GetActorClassFromMap(Abilities, AbilityName);
+}
+
+FName UAbilityDataManager::AbilityNameFromBlueprintClassName(const FString ClassName, FString RightChop)
+{
+	const FString BlueprintIdentifier = "BP_";
+	if (!ClassName.Contains(BlueprintIdentifier)) {
+		iLog("[UAbilityDataManager Ability Name From Blueprint Class Name]: Blueprint class identifier of BP_ not found in class name " + ClassName, LogVerbosity_Error);
+		return FName();
+	}
+
+	const uint32 Start = 3;
+	const uint32 End = ClassName.Find(RightChop);
+	if (End == INDEX_NONE) {
+		iLog("[UAbilityDataManager Ability  Name From Blueprint Class Name]: Unable to find right chop string of " + RightChop + " in ability blueprint class name " + ClassName, LogVerbosity_Error);
+		return FName();
+	}
+	const FName FoundAbilityName = FName(ClassName.Mid(Start, End - Start));
+	if (!AllAbilityNames().Contains(FoundAbilityName)) {
+		iLog("[UAbilityDataManager Ability  Name From Blueprint Class Name]: Found ability name of " + FoundAbilityName.ToString() + " from blueprint class name " + ClassName + " is not a valid ability", LogVerbosity_Error);
+	}
+	return FoundAbilityName;
 }

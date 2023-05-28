@@ -17,6 +17,7 @@
 #include "Camera/CameraComponent.h"
 #include "../Battle/BattleInstance/BattleInstance.h"
 #include "Camera/CameraComponent.h"
+#include <Immie/Game/Global/Managers/AbilityDataManager.h>
 
 bool AAbilityActor::HasBattleActorCollidedAlready(const TScriptInterface<IBattleActor>& BattleActor) const
 {
@@ -74,6 +75,19 @@ AAbilityActor::AAbilityActor()
 	ProjectileComponent->bRotationFollowsVelocity = true;
 
 	bShouldSpawnVisualDummy = true;
+}
+
+void AAbilityActor::PostLoad()
+{
+	const FName ClassName = GetClass()->GetFName();
+	if (ClassName == "AbilityActor") {
+		Super::PostLoad();
+		return;
+	}
+
+	AbilityName = UAbilityDataManager::AbilityNameFromBlueprintClassName(ClassName.ToString(), "Actor_C");
+
+	Super::PostLoad();
 }
 
 void AAbilityActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const 
@@ -361,11 +375,6 @@ bool AAbilityActor::HasBattleAuthority() const
 UAbilityDataObject* AAbilityActor::GetAbilityDataObject() const
 {
 	return GetAbility()->GetAbilityDataObject();
-}
-
-FName AAbilityActor::GetAbilityName() const
-{
-	return GetAbility()->GetAbilityName();
 }
 
 float AAbilityActor::GetDamagePower() const

@@ -41,6 +41,19 @@ UAbility::UAbility()
 	bTypeSameAsImmie = false;
 }
 
+void UAbility::PostLoad()
+{
+	const FName ClassName = GetClass()->GetFName();
+	if (ClassName == "Ability") {
+		Super::PostLoad();
+		return;
+	}
+
+	AbilityName = UAbilityDataManager::AbilityNameFromBlueprintClassName(ClassName.ToString(), "_C");
+
+	Super::PostLoad();
+}
+
 void UAbility::BeginPlay()
 {
 	Super::BeginPlay();
@@ -55,7 +68,6 @@ UAbility* UAbility::NewAbility(AImmieCharacter* Owner, FName _AbilityName)
 {
 	UClass* AbilityClass = GetAbilityDataManager()->GetAbilityClass(_AbilityName);
 	UAbility* Ability = NewObject<UAbility>(Owner, AbilityClass);
-	Ability->AbilityName = _AbilityName;
 	return Ability;
 }
 

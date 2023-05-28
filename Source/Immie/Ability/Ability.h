@@ -18,18 +18,19 @@ UCLASS(Blueprintable)
 class IMMIE_API UAbility : public UActorComponent
 {
 	GENERATED_BODY()
+	
 
-private:
-
-	FName AbilityName;
+protected:
+	
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (NoResetToDefault))
+		/**/
+		FName AbilityName;
 
 	/* The ability data object containing the relevant unmodifiable ability data. Copied on client side from network syncing within the battle ability manager itself. */
 	UAbilityDataObject* AbilityDataObject;
 
 	/* Is the input for this ability currently being held down. Replicates from client TO server. */
 	uint8 bInputHeld : 1;
-
-protected:
 
 	UPROPERTY(BlueprintReadWrite, Category = "Battle|Stats")
 		/* The unmodified stats of this ability. Health is the max health. Attack, defense, and speed are all the stat values without any modifiers. */
@@ -160,6 +161,8 @@ protected:
 public:	
 
 	UAbility();
+		
+	void PostLoad() override;
 
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 

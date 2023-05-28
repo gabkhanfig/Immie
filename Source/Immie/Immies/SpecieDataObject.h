@@ -16,7 +16,7 @@ class UImmieSpawnData;
 UCLASS(Blueprintable)
 /* Data object storing specie data. Override in blueprints for custom specie data.
 Automatically loads references to other specie classes.
-Ensure those classes follow correct naming conventions (example SnamdonCharacter_BP). 
+Ensure those classes follow correct naming conventions (example BP_SnamdonCharacter). 
 The value of SpecieName MUST be set. From the above example, the name would be "snamdon". */
 class IMMIE_API USpecieDataObject : public UObject
 {

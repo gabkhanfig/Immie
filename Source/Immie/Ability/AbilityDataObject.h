@@ -18,25 +18,23 @@ class IMMIE_API UAbilityDataObject : public UObject
 {
 	GENERATED_BODY()
 
-private:
+protected:
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (NoResetToDefault))
+		/* This must be set in blueprint. Ability name should be camelCase formatted. */
+		FName AbilityName;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (NoResetToDefault))
 		/**/
 		UClass* AbilityClass;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (NoResetToDefault))
 		/**/
 		UClass* ActorClass;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (NoResetToDefault))
 		/**/
 		UClass* DummyActorClass;
-
-protected:
-
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-		/* This must be set in blueprint. Ability name should be camelCase formatted. */
-		FName AbilityName;
 
 	UPROPERTY(BlueprintReadOnly)
 		/* Bitmask containing all of this ability's types. Used in MOST cases to figure out which battle types to use. */
@@ -112,8 +110,15 @@ public:
 
 	UAbilityDataObject();
 
-	/* Load the ability's relevant UClass* references. */
-	void LoadClasses();
+	void PostLoad() override;
+
+	UClass* FetchAbilityComponentClass() const;
+
+	/* Not all abilities require an ability actor class so this function returning nullptr is fine. */
+	UClass* FetchAbiltyActorClass() const;
+
+	/* Not all abilities require a dummy ability actor class so this function returning nullptr is fine. */
+	UClass* FetchDummyAbilityActorClass() const;
 
 	static const FString& GetAbilitiesBlueprintFolder();
 

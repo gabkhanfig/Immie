@@ -7,6 +7,9 @@
 #include <Immie/Game/Global/Managers/AbilityDataManager.h>
 #include <Immie/Game/Global/Managers/SpecieDataManager.h>
 #include <Immie/Game/Global/Managers/ConfigDataManager.h>
+#include "Ability.h"
+#include "AbilityActor.h"
+#include "DummyAbilityActor.h"
 
 #define ABILITY_DO_JSON_FIELD_TYPES "Types"
 #define ABILITY_DO_JSON_FIELD_INITIAL_COOLDOWN "InitialCooldown"
@@ -39,39 +42,71 @@ class ADummyAbilityActor;
 
 UAbilityDataObject::UAbilityDataObject()
 {
-	AbilityClass = nullptr;
-	ActorClass = nullptr;
-	DummyActorClass = nullptr;
+	//AbilityClass = nullptr;
+	//ActorClass = nullptr;
+	//DummyActorClass = nullptr;
 }
 
-void UAbilityDataObject::LoadClasses()
+void UAbilityDataObject::PostLoad()
 {
-	if (AbilityName == "None") {
-		iLog("Ability name is \"None\" for ability data object " + GetFName().ToString(), LogVerbosity_Error);
+	const FName ClassName = GetClass()->GetFName();
+	if (ClassName == "AbilityDataObject") {
+		Super::PostLoad();
 		return;
 	}
 
-	const FString AbilityCapitalizedName = UStringUtils::ToUpperFirstLetter(AbilityName.ToString());
+	AbilityName = UAbilityDataManager::AbilityNameFromBlueprintClassName(ClassName.ToString(), "DataObject_C"); 
+	AbilityClass = FetchAbilityComponentClass();
+	ActorClass = FetchAbiltyActorClass();
+	DummyActorClass = FetchDummyAbilityActorClass();
 
-	const FString AbilityClassReferenceString = GetAbilitiesBlueprintFolder() + AbilityCapitalizedName + "/BP_" + AbilityCapitalizedName + ".BP_" + AbilityCapitalizedName + "_C'";
-	UClass* AbilityClassReference = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *AbilityClassReferenceString));
-	checkf(IsValid(AbilityClassReference), TEXT("Ability data object failed to load the required ability component UClass"));
-	ULogger::Log("Loaded UClass for ability component " + AbilityName.ToString());
-	AbilityClass = AbilityClassReference;
+	Super::PostLoad();
+}
 
-	const FString ActorClassReferenceString = GetAbilitiesBlueprintFolder() + AbilityCapitalizedName + "/BP_" + AbilityCapitalizedName + "Actor.BP_" + AbilityCapitalizedName + "Actor_C'";
-	UClass* ActorClassReference = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *ActorClassReferenceString));
-	if (IsValid(ActorClassReference)) {
-		ULogger::Log("Loaded UClass for ability actor " + AbilityName.ToString());
-		ActorClass = ActorClassReference;
+UClass* UAbilityDataObject::FetchAbilityComponentClass() const
+{
+	if (AbilityName == "None") {
+		iLog("Cannot fetch ability component class for an ability with a name of None", LogVerbosity_Error);
+		return nullptr;
 	}
-
-	const FString DummyActorClassReferenceString = GetAbilitiesBlueprintFolder() + AbilityCapitalizedName + "/BP_" + AbilityCapitalizedName + "DummyActor.BP_" + AbilityCapitalizedName + "DummyActor_C'";
-	UClass* DummyActorClassReference = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *DummyActorClassReferenceString));
-	if (IsValid(DummyActorClassReference)) {
-		ULogger::Log("Loaded UClass for dummy ability actor  " + AbilityName.ToString());
-		DummyActorClass = DummyActorClassReference;
+	const FString AbilityString = AbilityName.ToString(); 
+	const FString AbilityClassReferenceString = GetAbilitiesBlueprintFolder() + AbilityString + "/BP_" + AbilityString + ".BP_" + AbilityString + "_C'";
+	TSubclassOf<UAbility> AbilityClassReference = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *AbilityClassReferenceString)); 
+	if (!IsValid(AbilityClassReference)) {
+		iLog("Unable to find ability component class for ability " + AbilityName.ToString(), LogVerbosity_Error);
+		return nullptr;
 	}
+	return AbilityClassReference;
+}
+
+UClass* UAbilityDataObject::FetchAbiltyActorClass() const
+{
+	// No logging required. Not all abilities require a valid actor class.
+	if (AbilityName == "None") {
+		return nullptr;
+	}
+	const FString AbilityString = AbilityName.ToString();
+	const FString ActorClassReferenceString = GetAbilitiesBlueprintFolder() + AbilityString + "/BP_" + AbilityString + "Actor.BP_" + AbilityString + "Actor_C'";
+	TSubclassOf<AAbilityActor> ActorClassReference = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *ActorClassReferenceString)); 
+	if (!IsValid(ActorClassReference)) {
+		return nullptr;
+	}
+	return ActorClassReference;
+}
+
+UClass* UAbilityDataObject::FetchDummyAbilityActorClass() const
+{
+	// No logging required. Not all abilities require a valid dummy actor class.
+	if (AbilityName == "None") {
+		return nullptr;
+	}
+	const FString AbilityString = AbilityName.ToString();
+	const FString DummyActorClassReferenceString = GetAbilitiesBlueprintFolder() + AbilityString + "/BP_" + AbilityString + "DummyActor.BP_" + AbilityString + "DummyActor_C'";
+	TSubclassOf<ADummyAbilityActor> DummyActorClassReference = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *DummyActorClassReferenceString));
+	if (!IsValid(DummyActorClassReference)) {
+		return nullptr;
+	}
+	return DummyActorClassReference;
 }
 
 const FString& UAbilityDataObject::GetAbilitiesBlueprintFolder()
@@ -83,7 +118,6 @@ const FString& UAbilityDataObject::GetAbilitiesBlueprintFolder()
 UAbilityDataObject* UAbilityDataObject::CreateAbilityDataObject(UObject* Outer, UClass* DataObjectClass)
 {
 	UAbilityDataObject* AbilityDataObject = NewObject<UAbilityDataObject>(Outer, DataObjectClass);
-	AbilityDataObject->LoadClasses();
 	return AbilityDataObject;
 }
 

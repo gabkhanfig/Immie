@@ -11,16 +11,16 @@
 			"SpeedLevel": 0,
 			"Abilities": [
 				{
-					"Ability": "fireball"
+					"Ability": "Fireball"
 				},
 				{
-					"Ability": "fireball"
+					"Ability": "Fireball"
 				},
 				{
-					"Ability": "fireball"
+					"Ability": "Fireball"
 				},
 				{
-					"Ability": "fireball"
+					"Ability": "Fireball"
 				}
 			],
 			"SpecieSpecific":

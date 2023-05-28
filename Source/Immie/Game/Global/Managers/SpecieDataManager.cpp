@@ -40,7 +40,7 @@ FString USpecieDataManager::LoadSpecieJsonFileToString(FName SpecieName, const F
 
 TSubclassOf<USpecieDataObject> USpecieDataManager::LoadSpecieDataObjectClass(FName SpecieName)
 {
-	const FString SpecieString = UStringUtils::ToUpperFirstLetter(SpecieName.ToString());
+	const FString SpecieString = SpecieName.ToString();
 	const FString DataObjectClassReferenceString = USpecieDataObject::GetImmiesBlueprintFolder() + SpecieString + "/BP_" + SpecieString + "DataObject.BP_" + SpecieString + "DataObject_C'";
 	TSubclassOf<USpecieDataObject> DataObjectClass = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *DataObjectClassReferenceString));
 
@@ -216,7 +216,7 @@ FName USpecieDataManager::SpecieNameFromBlueprintClassName(const FString ClassNa
 	}
 	const FName FoundSpecieName = FName(ClassName.Mid(Start, End - Start));
 	if (!AllSpecieNames().Contains(FoundSpecieName)) {
-		iLog("[USpecieDataManager Specie Name From Blueprint Class Name]: Found specie name of " + FoundSpecieName.ToString() + " from specie blueprint class name " + ClassName + " is not a valid specie", LogVerbosity_Error);
+		iLog("[USpecieDataManager Specie Name From Blueprint Class Name]: Found specie name of " + FoundSpecieName.ToString() + " from blueprint class name " + ClassName + " is not a valid specie", LogVerbosity_Error);
 	}
 	return FoundSpecieName;
 }

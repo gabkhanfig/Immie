@@ -7,6 +7,7 @@
 #include "AbilityDataObject.h"
 #include <GameFramework/ProjectileMovementComponent.h>
 #include <Components/ArrowComponent.h>
+#include <Immie/Game/Global/Managers/AbilityDataManager.h>
 
 // Sets default values
 ADummyAbilityActor::ADummyAbilityActor()
@@ -26,6 +27,19 @@ ADummyAbilityActor::ADummyAbilityActor()
 	ProjectileComponent->MaxSpeed = 0;
 	ProjectileComponent->ProjectileGravityScale = 0;
 	ProjectileComponent->bRotationFollowsVelocity = true;
+}
+
+void ADummyAbilityActor::PostLoad()
+{
+	const FName ClassName = GetClass()->GetFName();
+	if (ClassName == "DummyAbilityActor") {
+		Super::PostLoad();
+		return;
+	}
+
+	AbilityName = UAbilityDataManager::AbilityNameFromBlueprintClassName(ClassName.ToString(), "DummyActor_C");
+
+	Super::PostLoad();
 }
 
 void ADummyAbilityActor::BeginPlay()
