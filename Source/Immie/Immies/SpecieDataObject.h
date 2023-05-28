@@ -22,25 +22,23 @@ class IMMIE_API USpecieDataObject : public UObject
 {
 	GENERATED_BODY()
 
-private:
-
-	UPROPERTY()
-		/**/
-		UClass* ObjectClass;
-
-	UPROPERTY()
-		/**/
-		UClass* CharacterClass;
-
-	UPROPERTY()
-		/**/
-		UClass* SpawnDataClass;
-
 protected:
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (NoResetToDefault))
-		/* This must be set in blueprint. Specie name should be lower case formatted. */
+		/* Automatically set given the name of the blueprint class. */
 		FName SpecieName;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (NoResetToDefault))
+		/* Automatically set given the name of the blueprint class. If the class doesn't exist, create it and restart the engine. */
+		UClass* ObjectClass;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (NoResetToDefault))
+		/* Automatically set given the name of the blueprint class. If the class doesn't exist, create it and restart the engine. */
+		UClass* CharacterClass;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (NoResetToDefault))
+		/* Automatically set given the name of the blueprint class. If the class doesn't exist, create it and restart the engine. */
+		UClass* SpawnDataClass;
 
 	UPROPERTY(BlueprintReadWrite)
 		/**/
@@ -78,16 +76,15 @@ public:
 
 	void PostLoad() override;
 
-	/* Load the specie's relevant UClass* references. */
-	void LoadClasses();
+	UClass* FetchSpecieObjectClass() const;
+
+	UClass* FetchSpecieCharacterClass() const;
+
+	UClass* FetchSpecieSpawnDataClass() const;
 
 	static const FString& GetImmiesBlueprintFolder();
 
 	static USpecieDataObject* CreateSpecieDataObject(UObject* Outer, UClass* DataObjectClass);
-
-	UFUNCTION(BlueprintCallable)
-		/**/
-		void CheckClassesValid();
 
 	void LoadSpecieJsonData(const FJsonObjectBP& Json, bool LoadJsonLearnsets = true);
 

@@ -45,33 +45,59 @@ void USpecieDataObject::PostLoad()
   }
 
   SpecieName = USpecieDataManager::SpecieNameFromBlueprintClassName(ClassName.ToString(), "DataObject_C");
+  ObjectClass = FetchSpecieObjectClass();
+  CharacterClass = FetchSpecieCharacterClass();
+  SpawnDataClass = FetchSpecieSpawnDataClass();
 
   Super::PostLoad();
 }
 
-void USpecieDataObject::LoadClasses()
+UClass* USpecieDataObject::FetchSpecieObjectClass() const
 {
-    if (SpecieName == "None") {
-        iLog("Specie name is \"None\" for specie data object " + GetFName().ToString(), LogVerbosity_Error);
-        return;
-    }
+  if (SpecieName == "None") {
+    iLog("Cannot get specie object class for a name of None", LogVerbosity_Error);
+    return nullptr;
+  }
+  const FString SpecieString = SpecieName.ToString();
+  const FString ObjectClassReferenceString = GetImmiesBlueprintFolder() + SpecieString + "/BP_" + SpecieString + "Object.BP_" + SpecieString + "Object_C'"; 
+  TSubclassOf<UImmie> SpecieObjectClass = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *ObjectClassReferenceString));
+  if (!IsValid(SpecieObjectClass)) {
+    iLog("Unable to find specie object class for specie " + SpecieName.ToString(), LogVerbosity_Error);
+    return nullptr;
+  }
+  return SpecieObjectClass;
+}
 
-    FString SpecieString = SpecieName.ToString();
+UClass* USpecieDataObject::FetchSpecieCharacterClass() const
+{
+  if (SpecieName == "None") {
+    iLog("Cannot get specie spawn data class for a name of None", LogVerbosity_Error);
+    return nullptr;
+  }
+  const FString SpecieString = SpecieName.ToString();
+  const FString CharacterClassReferenceString = GetImmiesBlueprintFolder() + SpecieString + "/BP_" + SpecieString + "Character.BP_" + SpecieString + "Character_C'";
+  TSubclassOf<AImmieCharacter> SpecieCharacterClass = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *CharacterClassReferenceString));
+  if (!IsValid(SpecieCharacterClass)) {
+    iLog("Unable to find specie spawn data class for specie " + SpecieName.ToString(), LogVerbosity_Error);
+    return nullptr;
+  }
+  return SpecieCharacterClass;
+}
 
-    const FString ObjectClassReferenceString = GetImmiesBlueprintFolder() + SpecieString + "/BP_" + SpecieString + "Object.BP_" + SpecieString + "Object_C'";
-    const FString CharacterClassReferenceString = GetImmiesBlueprintFolder() + SpecieString + "/BP_" + SpecieString + "Character.BP_" + SpecieString + "Character_C'";
-    const FString SpawnDataClassReferenceString = GetImmiesBlueprintFolder() + SpecieString + "/BP_" + SpecieString + "SpawnData.BP_" + SpecieString + "SpawnData_C'";
-
-    TSubclassOf<UImmie> SpecieObjectClass = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *ObjectClassReferenceString));
-    checkf(IsValid(SpecieObjectClass), TEXT("Failed to load specie object UClass"));
-    TSubclassOf<AImmieCharacter> SpecieCharacterClass = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *CharacterClassReferenceString));
-    checkf(IsValid(SpecieCharacterClass), TEXT("Failed to load specie character UClass"));
-    TSubclassOf<UImmieSpawnData> SpecieSpawnDataClass = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *SpawnDataClassReferenceString));
-    checkf(IsValid(SpecieSpawnDataClass), TEXT("Failed to load specie spawn data UClass"));
-
-    ObjectClass = SpecieObjectClass;
-    CharacterClass = SpecieCharacterClass;
-    SpawnDataClass = SpecieSpawnDataClass;
+UClass* USpecieDataObject::FetchSpecieSpawnDataClass() const
+{
+  if (SpecieName == "None") {
+    iLog("Cannot get specie character class for a name of None", LogVerbosity_Error);
+    return nullptr;
+  }
+  const FString SpecieString = SpecieName.ToString();
+  const FString SpawnDataClassReferenceString = GetImmiesBlueprintFolder() + SpecieString + "/BP_" + SpecieString + "SpawnData.BP_" + SpecieString + "SpawnData_C'";
+  TSubclassOf<UImmieSpawnData> SpecieSpawnDataClass = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *SpawnDataClassReferenceString));
+  if (!IsValid(SpecieSpawnDataClass)) {
+    iLog("Unable to find specie character class for specie " + SpecieName.ToString(), LogVerbosity_Error);
+    return nullptr;
+  }
+  return SpecieSpawnDataClass;
 }
 
 const FString& USpecieDataObject::GetImmiesBlueprintFolder()
@@ -83,14 +109,7 @@ const FString& USpecieDataObject::GetImmiesBlueprintFolder()
 USpecieDataObject* USpecieDataObject::CreateSpecieDataObject(UObject* Outer, UClass* DataObjectClass)
 {
     USpecieDataObject* SpecieDataObject = NewObject<USpecieDataObject>(Outer, DataObjectClass);
-    SpecieDataObject->LoadClasses();
     return SpecieDataObject;
-}
-
-void USpecieDataObject::CheckClassesValid()
-{
-    iLog(IsValid(ObjectClass) ? "object class is valid" : "object class no valid :(");
-    iLog(IsValid(CharacterClass) ? "character class is valid" : "character class no valid :(");
 }
 
 void USpecieDataObject::LoadSpecieJsonData(const FJsonObjectBP& Json, bool LoadJsonLearnsets)
