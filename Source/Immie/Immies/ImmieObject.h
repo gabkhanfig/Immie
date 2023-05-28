@@ -21,9 +21,9 @@ class IMMIE_API UImmie : public UObject
 {
 	GENERATED_BODY()
 
-private:
+protected:
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (NoResetToDefault))
 		/**/
 		FName SpecieName;
 
@@ -50,6 +50,8 @@ private:
 public:
 
 	UImmie();
+
+	void PostLoad() override;
 
 	UFUNCTION(BlueprintCallable)
 		/* Make a new Immie object instance, also setting the specie id. */

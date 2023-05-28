@@ -21,10 +21,12 @@ public:
 
 	UImmieSpawnData();
 
+	void PostLoad() override;
+
 	void LoadJsonData(const FJsonObjectBP& Json);
 
 	UFUNCTION(BlueprintPure)
-		FName GetImmieName() const { return ImmieName; }
+		FName GetImmieName() const { return SpecieName; }
 
 	UFUNCTION(BlueprintPure)
 		uint8 GetMinLevel() const { return MinLevel; }
@@ -43,9 +45,9 @@ protected:
 
 protected:
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (NoResetToDefault))
 		/**/
-		FName ImmieName;
+		FName SpecieName;
 
 	UPROPERTY(BlueprintReadWrite)
 		/* Minimum spawn level (default 1). Json field: "MinLevel" */

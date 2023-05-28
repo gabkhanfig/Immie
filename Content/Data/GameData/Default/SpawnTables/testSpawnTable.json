@@ -1,13 +1,13 @@
 {
     "SpawnTable": [
         {
-            "ImmieName": "snamdon",
+            "ImmieName": "Snamdon",
             "MinLevel": 1,
             "MaxLevel": 100,
             "Weight": 1
         },
         {
-            "ImmieName": "snamdon",
+            "ImmieName": "Snamdon",
             "MinLevel": 6,
             "MaxLevel": 100,
             "Weight": 1

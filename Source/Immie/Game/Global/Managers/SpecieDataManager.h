@@ -91,5 +91,7 @@ public:
 		/* Avoid repeated calls due to potentially expensive multiple array copying. */
 		FSpecieLearnset GetSpecieLearnsets(FName SpecieName);
 
-	
+	static FName SpecieNameFromBlueprintClassName(const FString ClassName, FString RightChop);
+
+
 };

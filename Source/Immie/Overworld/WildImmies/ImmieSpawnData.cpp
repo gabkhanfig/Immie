@@ -13,20 +13,23 @@ UImmieSpawnData::UImmieSpawnData()
 {
 }
 
+void UImmieSpawnData::PostLoad()
+{
+	const FName ClassName = GetClass()->GetFName();
+	if (ClassName == "ImmieSpawnData") {
+		Super::PostLoad();
+		return;
+	}
+
+	SpecieName = USpecieDataManager::SpecieNameFromBlueprintClassName(ClassName.ToString(), "SpawnData_C");
+
+	Super::PostLoad();
+}
+
 #define ERROR_PREFIX FString("[UImmieSpawnData Json]: ") 
 
 void UImmieSpawnData::LoadJsonData(const FJsonObjectBP& Json)
 {
-	if (!Json.HasField("ImmieName")) {
-		iLog("Immie spawn data json requires the field \"ImmieName\"", LogVerbosity_Error);
-		return;
-	}
-
-	ImmieName = FName(Json.GetStringField("ImmieName"));
-	if (!GetSpecieDataManager()->IsValidSpecie(ImmieName)) {
-		iLog(ERROR_PREFIX + "ImmieName of " + ImmieName.ToString() + " is not a valid specie");
-	}
-
 	int _MinLevel;
 	int _MaxLevel;
 	Json.TryGetIntegerField("MinLevel", _MinLevel, true, 1);

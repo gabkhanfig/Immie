@@ -29,6 +29,19 @@ UImmie::UImmie()
     Abilities.Reserve(MAX_ABILITY_COUNT);
 }
 
+void UImmie::PostLoad()
+{
+  const FName ClassName = GetClass()->GetFName();
+  if (ClassName == "Immie" || ClassName == "ImmieObject_BP_C") {
+    Super::PostLoad();
+    return;
+  }
+
+  SpecieName = USpecieDataManager::SpecieNameFromBlueprintClassName(ClassName.ToString(), "Object_C");
+
+  Super::PostLoad();
+}
+
 UImmie* UImmie::NewImmieObject(UObject* Outer, FName _SpecieName)
 {
   check(Outer);
@@ -38,7 +51,6 @@ UImmie* UImmie::NewImmieObject(UObject* Outer, FName _SpecieName)
   }
   check(ImmieObjectClass);
   UImmie* Immie = NewObject<UImmie>(Outer, ImmieObjectClass);
-  Immie->SpecieName = _SpecieName;
   return Immie;
 }
 

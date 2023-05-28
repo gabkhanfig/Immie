@@ -31,6 +31,10 @@ class IMMIE_API AImmieCharacter : public ACharacter, public IBattleActor, public
 
 protected:
 
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (NoResetToDefault))
+		/**/
+		FName SpecieName;
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/**/
 		UCameraComponent* FollowCamera;
@@ -233,6 +237,8 @@ public:
 
 	AImmieCharacter(const FObjectInitializer& ObjectInitializer);
 
+	void PostLoad() override;
+
 	/**/
 	//virtual void OnActorChannelOpen(class FInBunch& InBunch, class UNetConnection* Connection) override;
 
@@ -327,7 +333,7 @@ public:
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		FName GetSpecieName() const;
+		FName GetSpecieName() const { return SpecieName; }
 
 	UFUNCTION(BlueprintPure, Category = "Battle")
 		/**/

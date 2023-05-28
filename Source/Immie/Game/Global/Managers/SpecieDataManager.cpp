@@ -5,15 +5,17 @@
 #include <Immie/Immies/SpecieDataObject.h>
 #include <Immie/Type/ImmieType.h>
 
+static TArray<FName> AllSpecieNames() {
+	TArray<FName> SpecieNames;
+	SpecieNames.Add("Snamdon");
+	SpecieNames.Add("Arborea");
+	return SpecieNames;
+}
+
 void USpecieDataManager::SetSpecieNamesAndIds()
 {
 	SpecieNames.Empty();
-
-
-#define DefineSpecieName(SpecieName) \
-	SpecieNames.Add(SpecieName);\
-
-	DefineSpecieName("snamdon");
+	SpecieNames = AllSpecieNames();
 }
 
 void USpecieDataManager::LoadDefaultGameData()
@@ -196,6 +198,27 @@ FSpecieLearnset USpecieDataManager::GetSpecieLearnsetsFromMap(TMap<FName, USpeci
 FSpecieLearnset USpecieDataManager::GetSpecieLearnsets(FName SpecieName)
 {
 	return GetSpecieLearnsetsFromMap(Species, SpecieName);
+}
+
+FName USpecieDataManager::SpecieNameFromBlueprintClassName(const FString ClassName, FString RightChop)
+{
+	const FString BlueprintIdentifier = "BP_";
+	if (!ClassName.Contains(BlueprintIdentifier)) {
+		iLog("[USpecieDataManager Specie Name From Blueprint Class Name]: Blueprint class identifier of BP_ not found in class name " + ClassName, LogVerbosity_Error);
+		return FName();
+	}
+
+	const uint32 Start = 3;
+	const uint32 End = ClassName.Find(RightChop);
+	if (End == INDEX_NONE) {
+		iLog("[USpecieDataManager Specie Name From Blueprint Class Name]: Unable to find right chop string of " + RightChop + " in specie blueprint class name " + ClassName, LogVerbosity_Error);
+		return FName();
+	}
+	const FName FoundSpecieName = FName(ClassName.Mid(Start, End - Start));
+	if (!AllSpecieNames().Contains(FoundSpecieName)) {
+		iLog("[USpecieDataManager Specie Name From Blueprint Class Name]: Found specie name of " + FoundSpecieName.ToString() + " from specie blueprint class name " + ClassName + " is not a valid specie", LogVerbosity_Error);
+	}
+	return FoundSpecieName;
 }
 
 

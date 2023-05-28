@@ -72,6 +72,20 @@ AImmieCharacter::AImmieCharacter(const FObjectInitializer& ObjectInitializer)
 
 	static ConstructorHelpers::FClassFinder<ABattleTeam> BattleTeamFoundClass(TEXT("/Game/Battle/Team/BP_WildBattleTeam"));
 	BattleTeamClass = BattleTeamFoundClass.Class;
+
+}
+
+void AImmieCharacter::PostLoad()
+{
+	const FName ClassName = GetClass()->GetFName();
+	if (ClassName == "ImmieCharacter" || ClassName == "ImmieCharacter_BP_C") {
+		Super::PostLoad();
+		return;
+	}
+
+	SpecieName = USpecieDataManager::SpecieNameFromBlueprintClassName(ClassName.ToString(), "Character_C");
+	
+	Super::PostLoad();
 }
 
 void AImmieCharacter::BeginPlay()
@@ -586,11 +600,6 @@ void AImmieCharacter::WildTick(float DeltaTime)
 	iLog("Wild tick immie character", LogVerbosity_Display, 0);
 
 	BP_WildTick(DeltaTime);
-}
-
-FName AImmieCharacter::GetSpecieName() const
-{
-	return ImmieObject->GetSpecieName();
 }
 
 bool AImmieCharacter::BP_AllClientBattleSubobjectsValid_Implementation()

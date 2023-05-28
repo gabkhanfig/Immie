@@ -4,6 +4,7 @@
 
 #include "SpecieDataObject.h"
 #include <Immie/ImmieCore.h>
+#include <Immie/Game/Global/Managers/SpecieDataManager.h>
 #include <Immie/Game/Global/Managers/TypeDataManager.h>
 #include <Immie/Game/Global/Managers/AbilityDataManager.h>
 #include <Immie/Game/Global/Managers/ConfigDataManager.h>
@@ -35,6 +36,19 @@ USpecieDataObject::USpecieDataObject()
 {
 }
 
+void USpecieDataObject::PostLoad()
+{
+  const FName ClassName = GetClass()->GetFName();
+  if (ClassName == "SpecieDataObject") {
+    Super::PostLoad();
+    return;
+  }
+
+  SpecieName = USpecieDataManager::SpecieNameFromBlueprintClassName(ClassName.ToString(), "DataObject_C");
+
+  Super::PostLoad();
+}
+
 void USpecieDataObject::LoadClasses()
 {
     if (SpecieName == "None") {
@@ -42,7 +56,7 @@ void USpecieDataObject::LoadClasses()
         return;
     }
 
-    FString SpecieString = FName::NameToDisplayString(SpecieName.ToString(), false);
+    FString SpecieString = SpecieName.ToString();
 
     const FString ObjectClassReferenceString = GetImmiesBlueprintFolder() + SpecieString + "/BP_" + SpecieString + "Object.BP_" + SpecieString + "Object_C'";
     const FString CharacterClassReferenceString = GetImmiesBlueprintFolder() + SpecieString + "/BP_" + SpecieString + "Character.BP_" + SpecieString + "Character_C'";

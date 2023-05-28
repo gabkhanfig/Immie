@@ -38,7 +38,7 @@ private:
 
 protected:
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (NoResetToDefault))
 		/* This must be set in blueprint. Specie name should be lower case formatted. */
 		FName SpecieName;
 
@@ -75,6 +75,8 @@ protected:
 public:
 
 	USpecieDataObject();
+
+	void PostLoad() override;
 
 	/* Load the specie's relevant UClass* references. */
 	void LoadClasses();
