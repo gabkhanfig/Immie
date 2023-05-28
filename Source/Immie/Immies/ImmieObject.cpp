@@ -46,9 +46,6 @@ UImmie* UImmie::NewImmieObject(UObject* Outer, FName _SpecieName)
 {
   check(Outer);
   UClass* ImmieObjectClass = GetSpecieDataManager()->GetImmieObjectClass(_SpecieName);
-  if (ImmieObjectClass == nullptr) {
-    iLog(_SpecieName.ToString() + " <- specie name for new immie object");
-  }
   check(ImmieObjectClass);
   UImmie* Immie = NewObject<UImmie>(Outer, ImmieObjectClass);
   return Immie;

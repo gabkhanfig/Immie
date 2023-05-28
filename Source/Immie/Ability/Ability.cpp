@@ -114,13 +114,12 @@ void UAbility::InitializeForBattle()
 
 void UAbility::SyncToClients()
 {
-	SyncClientAbilityData(AbilityName, InitialStats, ActiveStats, Type, CurrentCooldown, CurrentUses);
+	SyncClientAbilityData(InitialStats, ActiveStats, Type, CurrentCooldown, CurrentUses);
 	BP_SyncToClients();
 }
 
-void UAbility::SyncClientAbilityData_Implementation(FName _AbilityName, FBattleStats _InitialStats, FBattleStats _ActiveStats, const TArray<UImmieType*>& _Type, float _CurrentCooldown, int _CurrentUses)
+void UAbility::SyncClientAbilityData_Implementation(FBattleStats _InitialStats, FBattleStats _ActiveStats, const TArray<UImmieType*>& _Type, float _CurrentCooldown, int _CurrentUses)
 {
-	AbilityName = _AbilityName;
 	AbilityDataObject = GetBattleInstance()->GetBattleAbilityManager()->GetAbilityDataObject(AbilityName);
 	InitialStats = _InitialStats;
 	ActiveStats = _ActiveStats;

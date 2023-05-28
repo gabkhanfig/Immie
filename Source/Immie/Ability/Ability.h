@@ -67,7 +67,6 @@ protected:
 	UFUNCTION(NetMulticast, Reliable)
 		/* Multicast RPC to sync ability data to all connected clients. */
 		void SyncClientAbilityData(
-			FName _AbilityName,
 			FBattleStats _InitialStats,
 			FBattleStats _ActiveStats,
 			const TArray<UImmieType*>& _Type, 
