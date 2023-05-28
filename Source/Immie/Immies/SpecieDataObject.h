@@ -29,15 +29,18 @@ protected:
 		FName SpecieName;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (NoResetToDefault))
-		/* Automatically set given the name of the blueprint class. If the class doesn't exist, create it and restart the engine. */
+		/* Automatically set given the name of the blueprint class. If the class doesn't exist, create it and restart the engine.
+		Must be formatted as BP_*SpecieName*Object */
 		UClass* ObjectClass;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (NoResetToDefault))
-		/* Automatically set given the name of the blueprint class. If the class doesn't exist, create it and restart the engine. */
+		/* Automatically set given the name of the blueprint class. If the class doesn't exist, create it and restart the engine.
+		Must be formatted as BP_*SpecieName*Character */
 		UClass* CharacterClass;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (NoResetToDefault))
-		/* Automatically set given the name of the blueprint class. If the class doesn't exist, create it and restart the engine. */
+		/* Automatically set given the name of the blueprint class. If the class doesn't exist, create it and restart the engine.
+		Must be formatted as BP_*SpecieName*SpawnData */
 		UClass* SpawnDataClass;
 
 	UPROPERTY(BlueprintReadWrite)
