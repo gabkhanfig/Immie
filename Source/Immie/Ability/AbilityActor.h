@@ -175,7 +175,7 @@ public:
 		FBattleActorHitscanResult HitscanShotFromImmie(
 			AImmieCharacter* Start,
 			float MaxDistance,
-			UPARAM(meta = (Bitmask, BitmaskEnum = EAbilityHitscanShotTarget)) int TargetBitmask
+			UPARAM(meta = (Bitmask, BitmaskEnum = "/Script/Immie.EAbilityHitscanShotTarget")) int TargetBitmask
 		);
 
 	UFUNCTION(BlueprintPure)
