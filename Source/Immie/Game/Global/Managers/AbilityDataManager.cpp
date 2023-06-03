@@ -20,18 +20,6 @@ void UAbilityDataManager::SetAbilityNamesAndIds()
 {
 	AbilityNames.Empty();
 	AbilityNames = AllAbilityNames();
-	/*
-
-#define DefineAbilityName(AbilityName) \
-	AbilityNames.Add(AbilityName)
-
-	//DefineAbilityName("testAbility");
-	DefineAbilityName("emptyAbility");
-	DefineAbilityName("fireball");
-	DefineAbilityName("terraSpike");
-	DefineAbilityName("voltBolt");
-	DefineAbilityName("sunshineBow");
-	DefineAbilityName("leafVolley");*/
 }
 
 void UAbilityDataManager::LoadDefaultGameData()
@@ -50,15 +38,16 @@ FString UAbilityDataManager::LoadAbilityJsonFileToString(FName AbilityName, cons
 	}
 
 	FString JsonString;
+
 	FFileHelper::LoadFileToString(JsonString, *JsonPath);
 	return JsonString;
 }
 
 TSubclassOf<UAbilityDataObject> UAbilityDataManager::LoadAbilityDataObjectClass(FName AbilityName)
 {
-	const FString AbilityString = AbilityName.ToString();
+	const FString AbilityString = AbilityName.ToString(); 
 	const FString DataObjectClassReferenceString = UAbilityDataObject::GetAbilitiesBlueprintFolder() + AbilityString + "/BP_" + AbilityString + "DataObject.BP_" + AbilityString + "DataObject_C'";
-	TSubclassOf<UAbilityDataObject> DataObjectClass = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *DataObjectClassReferenceString));
+	TSubclassOf<UAbilityDataObject> DataObjectClass = StaticLoadClass(UAbilityDataObject::StaticClass(), NULL, *DataObjectClassReferenceString);
 
 	if (!IsValid(DataObjectClass)) {
 		iLog("Data object UClass for ability " + AbilityName.ToString() + " is not valid.", LogVerbosity_Error);
@@ -183,6 +172,7 @@ FName UAbilityDataManager::AbilityNameFromBlueprintClassName(const FString Class
 	const FName FoundAbilityName = FName(ClassName.Mid(Start, End - Start));
 	if (!AllAbilityNames().Contains(FoundAbilityName)) {
 		iLog("[UAbilityDataManager Ability  Name From Blueprint Class Name]: Found ability name of " + FoundAbilityName.ToString() + " from blueprint class name " + ClassName + " is not a valid ability", LogVerbosity_Error);
+		return FName();
 	}
 	return FoundAbilityName;
 }

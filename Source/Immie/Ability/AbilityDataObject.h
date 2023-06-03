@@ -124,10 +124,6 @@ public:
 
 	static UAbilityDataObject* CreateAbilityDataObject(UObject* Outer, UClass* DataObjectClass);
 
-	UFUNCTION(BlueprintCallable)
-		/**/
-		void CheckClassesValid();
-
 	void LoadAbilityJsonData(const FJsonObjectBP& Json);
 
 	FJsonObjectBP AbilityDataToJson();

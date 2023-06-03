@@ -121,12 +121,6 @@ UAbilityDataObject* UAbilityDataObject::CreateAbilityDataObject(UObject* Outer, 
 	return AbilityDataObject;
 }
 
-void UAbilityDataObject::CheckClassesValid()
-{
-	iLog(IsValid(AbilityClass) ? "ability class is valid" : "ability class no valid :(");
-	iLog(IsValid(ActorClass) ? "ability actor class is valid" : "ability actor class not valid");
-}
-
 void UAbilityDataObject::LoadAbilityJsonData(const FJsonObjectBP& Json)
 {
 	if (Json.HasField(ABILITY_DO_JSON_FIELD_TYPES)) {
