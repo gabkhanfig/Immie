@@ -45,6 +45,11 @@ UAbilityDataObject::UAbilityDataObject()
 	//AbilityClass = nullptr;
 	//ActorClass = nullptr;
 	//DummyActorClass = nullptr;
+
+	bUseActorClass = false;
+	bUseDummyActorClass = false;
+	ActorClass = nullptr;
+	DummyActorClass = nullptr;
 }
 
 void UAbilityDataObject::PostLoad()
@@ -56,12 +61,43 @@ void UAbilityDataObject::PostLoad()
 	}
 
 	AbilityName = UAbilityDataManager::AbilityNameFromBlueprintClassName(ClassName.ToString(), "DataObject_C"); 
-	AbilityClass = FetchAbilityComponentClass();
-	ActorClass = FetchAbiltyActorClass();
-	DummyActorClass = FetchDummyAbilityActorClass();
+	AbilityClass = FetchAbilityComponentClass(); 
+	if (bUseActorClass) {
+		ActorClass = FetchAbiltyActorClass();
+	}
+	if (bUseDummyActorClass) {
+		DummyActorClass = FetchDummyAbilityActorClass();
+	}
 
 	Super::PostLoad();
 }
+
+#if WITH_EDITOR
+void UAbilityDataObject::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
+{
+	if (PropertyChangedEvent.Property != nullptr) {
+		const FName PropertyName(PropertyChangedEvent.Property->GetFName());
+		if (PropertyName == GET_MEMBER_NAME_CHECKED(UAbilityDataObject, bUseActorClass)) {
+			if (bUseActorClass) {
+				ActorClass = FetchAbiltyActorClass();
+			}
+			else {
+				ActorClass = nullptr;
+			}
+		}
+		else if (PropertyName == GET_MEMBER_NAME_CHECKED(UAbilityDataObject, bUseDummyActorClass)) {
+			if (bUseDummyActorClass) {
+				DummyActorClass = FetchDummyAbilityActorClass();
+			}
+			else {
+				DummyActorClass = nullptr;
+			}
+		}
+	}
+
+	Super::PostEditChangeProperty(PropertyChangedEvent);
+}
+#endif // WITH_EDITOR
 
 UClass* UAbilityDataObject::FetchAbilityComponentClass() const
 {
@@ -87,7 +123,7 @@ UClass* UAbilityDataObject::FetchAbiltyActorClass() const
 	}
 	const FString AbilityString = AbilityName.ToString();
 	const FString ActorClassReferenceString = GetAbilitiesBlueprintFolder() + AbilityString + "/BP_" + AbilityString + "Actor.BP_" + AbilityString + "Actor_C'";
-	TSubclassOf<AAbilityActor> ActorClassReference = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *ActorClassReferenceString)); 
+	TSubclassOf<AAbilityActor> ActorClassReference = StaticLoadClass(AAbilityActor::StaticClass(), NULL, *ActorClassReferenceString);
 	if (!IsValid(ActorClassReference)) {
 		return nullptr;
 	}

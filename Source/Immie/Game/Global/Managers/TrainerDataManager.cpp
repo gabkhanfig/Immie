@@ -14,7 +14,7 @@ void UTrainerDataManager::RegisterTrainers(UObject* Outer, TMap<FName, UTrainerD
 void UTrainerDataManager::RegisterTrainer(UObject* Outer, FName TrainerName, TMap<FName, UTrainerDataObject*>* MapOut)
 {
 	UTrainerDataObject* DataObject = LoadTrainerData(Outer, TrainerName);
-	MapOut->Add(TrainerName, DataObject);
+	MapOut->Add(TrainerName, DataObject); 
 }
 
 UTrainerDataObject* UTrainerDataManager::GetTrainerDataObject(FName TrainerName)
@@ -72,6 +72,7 @@ UTrainerDataObject* UTrainerDataManager::LoadTrainerData(UObject* Outer, FName T
 	}
 
 	UTrainerDataObject* DataObject = NewObject<UTrainerDataObject>(this, DataObjectClass);
-	DataObject->LoadTrainerJsonData(TrainerJson);
+	DataObject->LoadTrainerJsonData(TrainerJson); 
+	ULogger::Log("Loaded trainer data object from json data [" + TrainerName.ToString() + "]");
 	return DataObject;
 }

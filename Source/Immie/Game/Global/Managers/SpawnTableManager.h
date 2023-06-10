@@ -36,6 +36,8 @@ private:
 
 private:
 
-	TMap<FName, UWildSpawnTable*> ImmieSpawnTables;
+	UPROPERTY()
+		/**/
+		TMap<FName, UWildSpawnTable*> ImmieSpawnTables;
 	
 };

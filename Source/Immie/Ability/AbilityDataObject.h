@@ -9,6 +9,10 @@
 #include <Immie/Core/Structures.h>
 #include "AbilityDataObject.generated.h"
 
+class UAbility;
+class AAbilityActor;
+class ADummyAbilityActor;
+
 UCLASS(Blueprintable)
 /* Data object storing ability data. Override in blueprints for custom ability data.
 Automatically loads references to other ability classes.
@@ -26,15 +30,23 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (NoResetToDefault))
 		/**/
-		UClass* AbilityClass;
+		TSubclassOf<UAbility> AbilityClass;
 
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (NoResetToDefault))
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 		/**/
-		UClass* ActorClass;
+		bool bUseActorClass;
 
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (NoResetToDefault))
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 		/**/
-		UClass* DummyActorClass;
+		bool bUseDummyActorClass;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, meta = (NoResetToDefault))
+		/**/
+		TSubclassOf<AAbilityActor> ActorClass;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, meta = (NoResetToDefault))
+		/**/
+		TSubclassOf<ADummyAbilityActor> DummyActorClass;
 
 	UPROPERTY(BlueprintReadOnly)
 		/* Bitmask containing all of this ability's types. Used in MOST cases to figure out which battle types to use. */
@@ -112,6 +124,10 @@ public:
 
 	void PostLoad() override;
 
+#if WITH_EDITOR
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+#endif
+
 	UClass* FetchAbilityComponentClass() const;
 
 	/* Not all abilities require an ability actor class so this function returning nullptr is fine. */
@@ -134,15 +150,15 @@ public:
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		UClass* GetAbilityClass() const { return AbilityClass; }
+		TSubclassOf<UAbility> GetAbilityClass() const { return AbilityClass; }
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		UClass* GetActorClass() const { return ActorClass; }
+		TSubclassOf<AAbilityActor> GetActorClass() const { return ActorClass; }
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		UClass* GetDummyActorClass() const { return DummyActorClass; }
+		TSubclassOf<ADummyAbilityActor> GetDummyActorClass() const { return DummyActorClass; }
 
 	UFUNCTION(BlueprintPure)
 		/**/

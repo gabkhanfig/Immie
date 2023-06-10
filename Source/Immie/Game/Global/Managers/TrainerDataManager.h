@@ -18,7 +18,9 @@ class IMMIE_API UTrainerDataManager : public UGameDataManager
 
 private:
 
-	TMap<FName, UTrainerDataObject*> Trainers;
+	UPROPERTY()
+		/**/
+		TMap<FName, UTrainerDataObject*> Trainers;
 
 public:
 

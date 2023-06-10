@@ -215,9 +215,11 @@ UImmie* UImmie::MakeCopy(UObject* Outer)
 
 TArray<UImmie*> UImmie::MakeTeamCopy(const TArray<UImmie*>& Team, UObject* Outer)
 {
+  ULogger::Log("making team copy");
   TArray<UImmie*> Copy;
   Copy.Reserve(Team.Num());
   for (int i = 0; i < Team.Num(); i++) {
+    ULogger::Log("making copy number: " + FString::FromInt(i) + " " + Team[i]->GetSpecieName().ToString());
     Copy.Add(Team[i]->MakeCopy(Outer));
   }
   return Copy;

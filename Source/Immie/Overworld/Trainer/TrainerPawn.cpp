@@ -36,7 +36,7 @@ void ATrainerPawn::ConstructTeam()
 {
 	UTrainerDataObject* DataObject = GetTrainerDataObject();
 	if (!IsValid(DataObject)) {
-		iLog("Unable to get trainer data object for trainer " + TrainerName.ToString(), LogVerbosity_Error);
+		iLog("[ATrainerPawn::ConstructTeam]: Unable to get trainer data object for trainer " + TrainerName.ToString(), LogVerbosity_Error);
 		return;
 	}
 
