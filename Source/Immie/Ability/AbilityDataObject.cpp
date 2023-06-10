@@ -83,6 +83,8 @@ void UAbilityDataObject::PostEditChangeProperty(FPropertyChangedEvent& PropertyC
 			}
 			else {
 				ActorClass = nullptr;
+				DummyActorClass = nullptr;
+				bUseDummyActorClass = false;
 			}
 		}
 		else if (PropertyName == GET_MEMBER_NAME_CHECKED(UAbilityDataObject, bUseDummyActorClass)) {

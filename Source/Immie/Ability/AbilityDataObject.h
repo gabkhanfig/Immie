@@ -36,15 +36,15 @@ protected:
 		/**/
 		bool bUseActorClass;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, meta = (EditCondition = "bUseActorClass"))
 		/**/
 		bool bUseDummyActorClass;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, meta = (NoResetToDefault))
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, meta = (NoResetToDefault, EditCondition="bUseActorClass"))
 		/**/
 		TSubclassOf<AAbilityActor> ActorClass;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, meta = (NoResetToDefault))
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, meta = (NoResetToDefault, EditCondition="bUseDummyActorClass"))
 		/**/
 		TSubclassOf<ADummyAbilityActor> DummyActorClass;
 
