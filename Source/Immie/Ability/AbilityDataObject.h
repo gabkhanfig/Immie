@@ -128,13 +128,13 @@ public:
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 #endif
 
-	UClass* FetchAbilityComponentClass() const;
+	TSubclassOf<UAbility> FetchAbilityComponentClass() const;
 
 	/* Not all abilities require an ability actor class so this function returning nullptr is fine. */
-	UClass* FetchAbiltyActorClass() const;
+	TSubclassOf<AAbilityActor> FetchAbiltyActorClass() const;
 
 	/* Not all abilities require a dummy ability actor class so this function returning nullptr is fine. */
-	UClass* FetchDummyAbilityActorClass() const;
+	TSubclassOf<ADummyAbilityActor> FetchDummyAbilityActorClass() const;
 
 	static const FString& GetAbilitiesBlueprintFolder();
 

@@ -9,7 +9,7 @@
 #include <Immie/Immies/SpecieDataTypes.h>
 #include "SpecieDataObject.generated.h"
 
-class UImmieObject;
+class UImmie;
 class AImmieCharacter;
 class UImmieSpawnData;
 
@@ -31,17 +31,17 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (NoResetToDefault))
 		/* Automatically set given the name of the blueprint class. If the class doesn't exist, create it and restart the engine.
 		Must be formatted as BP_*SpecieName*Object */
-		UClass* ObjectClass;
+		TSubclassOf<UImmie> ObjectClass;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (NoResetToDefault))
 		/* Automatically set given the name of the blueprint class. If the class doesn't exist, create it and restart the engine.
 		Must be formatted as BP_*SpecieName*Character */
-		UClass* CharacterClass;
+		TSubclassOf<AImmieCharacter> CharacterClass;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (NoResetToDefault))
 		/* Automatically set given the name of the blueprint class. If the class doesn't exist, create it and restart the engine.
 		Must be formatted as BP_*SpecieName*SpawnData */
-		UClass* SpawnDataClass;
+		TSubclassOf<UImmieSpawnData> SpawnDataClass;
 
 	UPROPERTY(BlueprintReadWrite)
 		/**/
@@ -79,11 +79,11 @@ public:
 
 	void PostLoad() override;
 
-	UClass* FetchSpecieObjectClass() const;
+	TSubclassOf<UImmie> FetchSpecieObjectClass() const;
 
-	UClass* FetchSpecieCharacterClass() const;
+	TSubclassOf<AImmieCharacter> FetchSpecieCharacterClass() const;
 
-	UClass* FetchSpecieSpawnDataClass() const;
+	TSubclassOf<UImmieSpawnData> FetchSpecieSpawnDataClass() const;
 
 	static const FString& GetImmiesBlueprintFolder();
 
@@ -95,15 +95,15 @@ public:
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		UClass* GetImmieObjectClass() const { return ObjectClass; }
+		TSubclassOf<UImmie> GetImmieObjectClass() const { return ObjectClass; }
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		UClass* GetImmieCharacterClass() const { return CharacterClass; }
+		TSubclassOf<AImmieCharacter> GetImmieCharacterClass() const { return CharacterClass; }
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		UClass* GetSpawnDataClass() const { return SpawnDataClass; }
+		TSubclassOf<UImmieSpawnData> GetSpawnDataClass() const { return SpawnDataClass; }
 
 	UFUNCTION(BlueprintPure)
 		/**/

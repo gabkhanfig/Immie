@@ -101,7 +101,7 @@ void UAbilityDataObject::PostEditChangeProperty(FPropertyChangedEvent& PropertyC
 }
 #endif // WITH_EDITOR
 
-UClass* UAbilityDataObject::FetchAbilityComponentClass() const
+TSubclassOf<UAbility> UAbilityDataObject::FetchAbilityComponentClass() const
 {
 	if (AbilityName == "None") {
 		iLog("Cannot fetch ability component class for an ability with a name of None", LogVerbosity_Error);
@@ -117,7 +117,7 @@ UClass* UAbilityDataObject::FetchAbilityComponentClass() const
 	return AbilityClassReference;
 }
 
-UClass* UAbilityDataObject::FetchAbiltyActorClass() const
+TSubclassOf<AAbilityActor> UAbilityDataObject::FetchAbiltyActorClass() const
 {
 	// No logging required. Not all abilities require a valid actor class.
 	if (AbilityName == "None") {
@@ -132,7 +132,7 @@ UClass* UAbilityDataObject::FetchAbiltyActorClass() const
 	return ActorClassReference;
 }
 
-UClass* UAbilityDataObject::FetchDummyAbilityActorClass() const
+TSubclassOf<ADummyAbilityActor> UAbilityDataObject::FetchDummyAbilityActorClass() const
 {
 	// No logging required. Not all abilities require a valid dummy actor class.
 	if (AbilityName == "None") {

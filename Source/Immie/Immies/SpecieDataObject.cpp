@@ -52,7 +52,7 @@ void USpecieDataObject::PostLoad()
   Super::PostLoad();
 }
 
-UClass* USpecieDataObject::FetchSpecieObjectClass() const
+TSubclassOf<UImmie> USpecieDataObject::FetchSpecieObjectClass() const
 {
   if (SpecieName == "None") {
     iLog("Cannot get specie object class for a name of None", LogVerbosity_Error);
@@ -68,7 +68,7 @@ UClass* USpecieDataObject::FetchSpecieObjectClass() const
   return SpecieObjectClass;
 }
 
-UClass* USpecieDataObject::FetchSpecieCharacterClass() const
+TSubclassOf<AImmieCharacter> USpecieDataObject::FetchSpecieCharacterClass() const
 {
   if (SpecieName == "None") {
     iLog("Cannot get specie spawn data class for a name of None", LogVerbosity_Error);
@@ -84,7 +84,7 @@ UClass* USpecieDataObject::FetchSpecieCharacterClass() const
   return SpecieCharacterClass;
 }
 
-UClass* USpecieDataObject::FetchSpecieSpawnDataClass() const
+TSubclassOf<UImmieSpawnData> USpecieDataObject::FetchSpecieSpawnDataClass() const
 {
   if (SpecieName == "None") {
     iLog("Cannot get specie character class for a name of None", LogVerbosity_Error);
