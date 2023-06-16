@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include <Immie/ImmieCore.h>
-#include "../../Util/Json/BlueprintJsonObject.h"
+#include "../Util/Json/BlueprintJsonObject.h"
 #include "ImmieSpawnData.generated.h"
 
 class AImmieCharacter;

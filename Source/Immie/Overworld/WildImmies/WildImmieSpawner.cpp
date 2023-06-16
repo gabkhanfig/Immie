@@ -3,7 +3,7 @@
 
 #include "WildImmieSpawner.h"
 #include "WildSpawnTable.h"
-#include "ImmieSpawnData.h"
+#include "../../Immies/ImmieSpawnData.h"
 #include "../../Game/Global/Managers/SpawnTableManager.h"
 #include "../../Immies/ImmieCharacter.h"
 #include "../../Immies/ImmieObject.h"

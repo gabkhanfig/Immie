@@ -8,7 +8,7 @@
 #include <Immie/Game/Global/Managers/TypeDataManager.h>
 #include <Immie/Game/Global/Managers/AbilityDataManager.h>
 #include <Immie/Game/Global/Managers/ConfigDataManager.h>
-#include "../Overworld/WildImmies/ImmieSpawnData.h"
+#include "ImmieSpawnData.h"
 #include "ImmieObject.h"
 #include "ImmieCharacter.h"
 

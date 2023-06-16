@@ -2,7 +2,7 @@
 
 
 #include "WildSpawnTable.h"
-#include "ImmieSpawnData.h"
+#include "../../Immies/ImmieSpawnData.h"
 #include "../../Game/Global/Managers/SpecieDataManager.h"
 #include "../../Immies/SpecieDataObject.h"
 

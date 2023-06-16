@@ -2,11 +2,11 @@
 
 
 #include "ImmieSpawnData.h"
-#include "../../Game/Global/Managers/ConfigDataManager.h"
-#include "../../Game/Global/Managers/SpecieDataManager.h"
-#include "../../Immies/ImmieCharacter.h"
-#include "WildImmieSpawner.h"
-#include "../../Immies/ImmieObject.h"
+#include "../Game/Global/Managers/ConfigDataManager.h"
+#include "../Game/Global/Managers/SpecieDataManager.h"
+#include "../Overworld/WildImmies/WildImmieSpawner.h"
+#include "ImmieCharacter.h"
+#include "ImmieObject.h"
 
 UImmieSpawnData::UImmieSpawnData()
 	: MinLevel(1), MaxLevel(1), Weight(1)
