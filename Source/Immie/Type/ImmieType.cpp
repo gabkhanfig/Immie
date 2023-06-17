@@ -83,4 +83,3 @@ void UImmieType::SetClientTypeData_Implementation(int _TypeBitmask, int _Weaknes
 	
 	ULogger::Log("Synchronized client type data for type " + GetTypeName().ToString());
 }
-

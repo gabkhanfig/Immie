@@ -26,10 +26,10 @@ void UImmieSpawnData::PostLoad()
 	Super::PostLoad();
 }
 
-#define ERROR_PREFIX FString("[UImmieSpawnData Json]: ") 
-
 void UImmieSpawnData::LoadJsonData(const FJsonObjectBP& Json)
 {
+	const FString ERROR_PREFIX = FString("[UImmieSpawnData Json]: ");
+
 	int _MinLevel;
 	int _MaxLevel;
 	Json.TryGetIntegerField("MinLevel", _MinLevel, true, 1);

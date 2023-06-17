@@ -6,8 +6,6 @@
 #include "../../Game/Global/Managers/SpecieDataManager.h"
 #include "../../Immies/SpecieDataObject.h"
 
-#define ERROR_PREFIX FString("[UWildSpawnTable Json]: ") 
-
 UWildSpawnTable::UWildSpawnTable()
 {
 	MaxWeight = 0;
@@ -20,12 +18,12 @@ void UWildSpawnTable::LoadJsonData(const FJsonObjectBP& Json)
 	TArray<FJsonObjectBP> TableElements = FJsonObjectBP::ArrayFromObjects(Json.GetArrayField("SpawnTable").GetObjectArray());
 	for (int i = 0; i < TableElements.Num(); i++) {
 		if (!TableElements[i].HasField("ImmieName")) {
-			iLog("Immie spawn data json requires the field \"ImmieName\"", LogVerbosity_Error);
+			iLog("[UWildSpawnTable Json]: Immie spawn data json requires the field \"ImmieName\"", LogVerbosity_Error);
 			continue;
 		}
 		FName ImmieName = FName(TableElements[i].GetStringField("ImmieName"));
 		if (!GetSpecieDataManager()->IsValidSpecie(ImmieName)) {
-			iLog(ERROR_PREFIX + "ImmieName of " + ImmieName.ToString() + " is not a valid specie");
+			iLog("[UWildSpawnTable Json]: ImmieName of " + ImmieName.ToString() + " is not a valid specie", LogVerbosity_Error);
 		}
 		UClass* SpawnDataClass = GetSpecieDataManager()->GetSpecieDataObject(ImmieName)->GetSpawnDataClass();
 		UImmieSpawnData* SpawnDataObject = NewObject<UImmieSpawnData>(this, SpawnDataClass);

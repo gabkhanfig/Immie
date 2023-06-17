@@ -106,7 +106,7 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite)
 		/**/
-		TEnumAsByte<EImmieCharacterMode> ImmieCharacterMode;
+		EImmieCharacterMode ImmieCharacterMode;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Wild")
 		/**/
@@ -159,10 +159,10 @@ protected:
 	virtual void StopJumping() override;
 
 	/* Crouch input. */
-	void Crouch();
+	void InputCrouch();
 
 	/* Stop crouch input. */
-	void StopCrouching();
+	void InputUnCrouch();
 
 	UFUNCTION(Client, Reliable, Category = "Battle")
 		/* Client side execution for when this Immie character is possessed by an Immie player controller. */
@@ -369,7 +369,7 @@ public:
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		TEnumAsByte<EImmieCharacterMode> GetImmieCharacterMode() const { return ImmieCharacterMode; }
+		EImmieCharacterMode GetImmieCharacterMode() const { return ImmieCharacterMode; }
 
 #pragma region Battle_Actor_Interface
 

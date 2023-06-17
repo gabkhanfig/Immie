@@ -135,12 +135,14 @@ void AImmieCharacter::StopJumping()
 	Super::StopJumping();
 }
 
-void AImmieCharacter::Crouch()
+void AImmieCharacter::InputCrouch()
 {
+	Super::Crouch();
 }
 
-void AImmieCharacter::StopCrouching()
+void AImmieCharacter::InputUnCrouch()
 {
+	Super::UnCrouch();
 }
 
 void AImmieCharacter::Tick(float DeltaTime)
@@ -313,8 +315,8 @@ void AImmieCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &AImmieCharacter::StopJumping);
 
 	/* Crouch. */
-	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &AImmieCharacter::Crouch);
-	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &AImmieCharacter::StopCrouching);
+	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &AImmieCharacter::InputCrouch);
+	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &AImmieCharacter::InputUnCrouch);
 
 	/* Immie ability inputs. */
 	PlayerInputComponent->BindAction("InputAbility0", IE_Pressed, this, &AImmieCharacter::PressAbility0);
