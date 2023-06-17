@@ -43,6 +43,10 @@ private:
 
 public:
 
+	UFUNCTION(BlueprintPure)
+		/**/
+		static TArray<FName> AllSpecieNames();
+
 	/* Set maps to nullptr to not load that set of data. */
 	void RegisterSpeciesFromDisk(UObject* Outer, const FString& FolderName, TMap<FName, USpecieDataObject*>* SpeciesOut, bool LoadLearnsets = true);
 

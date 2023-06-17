@@ -2,10 +2,13 @@
 
 
 #include "SpecieDataManager.h"
+#include <Immie/Immies/ImmieObject.h>
+#include <Immie/Immies/ImmieCharacter.h>
+#include <Immie/Immies/ImmieSpawnData.h>
 #include <Immie/Immies/SpecieDataObject.h>
 #include <Immie/Type/ImmieType.h>
 
-static TArray<FName> AllSpecieNames() {
+TArray<FName> USpecieDataManager::AllSpecieNames() {
 	TArray<FName> SpecieNames;
 	SpecieNames.Add("Snamdon");
 	SpecieNames.Add("Arborea");
