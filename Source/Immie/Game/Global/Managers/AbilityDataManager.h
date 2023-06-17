@@ -41,6 +41,10 @@ private:
 	
 public:
 
+	UFUNCTION(BlueprintPure)
+		/**/
+		static TArray<FName> AllAbilityNames();
+
 	void RegisterAbilitiesFromDisk(UObject* Outer, const FString& FolderName, TMap<FName, UAbilityDataObject*>* AbilitiesOut);
 
 	void RegisterAbilitiesFromSerialized(UObject* Outer, const TArray<FSerializedAbilityData>& AbilityData, TMap<FName, UAbilityDataObject*>* AbilitiesOut);

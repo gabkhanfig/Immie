@@ -3,9 +3,11 @@
 
 #include "AbilityDataManager.h"
 #include <Immie/Ability/Ability.h>
+#include <Immie/Ability/AbilityActor.h>
+#include <Immie/Ability/DummyAbilityActor.h>
 #include <Immie/Ability/AbilityDataObject.h>
 
-static TArray<FName> AllAbilityNames() {
+TArray<FName> UAbilityDataManager::AllAbilityNames() {
 	TArray<FName> AbilityNames;
 	AbilityNames.Add("EmptyAbility");
 	AbilityNames.Add("Fireball");
