@@ -157,7 +157,7 @@ void UImmie::LoadJsonData(const FJsonObjectBP& Json)
 
         for (int i = 0; i < MAX_ABILITY_COUNT; i++) {
             const FName AbilityName = FoundAbilities.IsValidIndex(i) ? FName(FoundAbilities[i]) : "emptyAbility";
-            if (GetAbilityDataManager()->IsValidAbility(AbilityName)) {
+            if (UAbilityDataManager::IsValidAbilityName(AbilityName)) {
                 Abilities.Add(AbilityName);
             }
             else {

@@ -193,7 +193,7 @@ TArray<FName> USpecieDataObject::LoadAbilitySet(const FJsonObjectBP& Json, const
     for (int i = 0; i < ElementCount; i++) {
         const FName AbilityName = FName(Parsed[i]);
 
-        if (GetAbilityDataManager()->IsValidAbility(AbilityName)) {
+        if (UAbilityDataManager::IsValidAbilityName(AbilityName)) {
             Abilities.Add(AbilityName);
         }
         else {

@@ -19,16 +19,6 @@ class IMMIE_API UAbilityDataManager : public UGameDataManager
 
 private:
 
-	UPROPERTY()
-		/**/
-		TMap<FName, UAbilityDataObject*> Abilities;
-
-	UPROPERTY()
-		/**/
-		TArray<FName> AbilityNames;
-
-private:
-
 	void SetAbilityNamesAndIds();
 
 	virtual void LoadDefaultGameData() override;
@@ -43,7 +33,13 @@ public:
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		static TArray<FName> AllAbilityNames();
+		static TArray<FName> GetAllAbilityNames();
+
+	UFUNCTION(BlueprintPure)
+		/**/
+		static bool IsValidAbilityName(FName AbilityName);
+
+	static TSet<FName> GetSetOfAbilityNames();
 
 	void RegisterAbilitiesFromDisk(UObject* Outer, const FString& FolderName, TMap<FName, UAbilityDataObject*>* AbilitiesOut);
 
@@ -54,12 +50,6 @@ public:
 	UFUNCTION(BlueprintPure)
 		/* Get the global ability object corresponding to the ability id. Not for use in battle. */
 		UAbilityDataObject* GetAbilityDataObject(FName AbilityName);
-
-	static bool IsValidAbilityFromMap(TMap<FName, UAbilityDataObject*>& Map, FName AbilityName);
-
-	UFUNCTION(BlueprintPure)
-		/**/
-		bool IsValidAbility(FName AbilityName);
 
 	static UClass* GetAbilityClassFromMap(TMap<FName, UAbilityDataObject*>& Map, FName AbilityName);
 
@@ -74,4 +64,16 @@ public:
 		UClass* GetActorClass(FName AbilityName);
 
 	static FName AbilityNameFromBlueprintClassName(const FString ClassName, FString RightChop);
+
+private:
+
+	/* Global variable containing all of the ordered specie names. */
+	static const TArray<FName> AbilityNames;
+	/* Global variable that contains all FName's in SpecieNames, for fast look-up. */
+	static const TSet<FName> AbilityNamesSet;
+
+	UPROPERTY()
+		/**/
+		TMap<FName, UAbilityDataObject*> Abilities;
+
 };

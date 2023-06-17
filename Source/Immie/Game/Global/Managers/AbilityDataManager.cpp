@@ -7,7 +7,7 @@
 #include <Immie/Ability/DummyAbilityActor.h>
 #include <Immie/Ability/AbilityDataObject.h>
 
-TArray<FName> UAbilityDataManager::AllAbilityNames() {
+static TArray<FName> _AllAbilityNames() {
 	TArray<FName> AbilityNames;
 	AbilityNames.Add("EmptyAbility");
 	AbilityNames.Add("Fireball");
@@ -18,10 +18,34 @@ TArray<FName> UAbilityDataManager::AllAbilityNames() {
 	return AbilityNames;
 }
 
+static TSet<FName> _AbilityNamesSet() {
+	const TArray<FName> AbilityNames = _AllAbilityNames();
+	TSet<FName> NamesSet;
+	for (FName Ability : AbilityNames) {
+		NamesSet.Add(Ability);
+	}
+	return NamesSet;
+}
+
+const TArray<FName> UAbilityDataManager::AbilityNames = _AllAbilityNames();
+const TSet<FName> UAbilityDataManager::AbilityNamesSet = _AbilityNamesSet();
+
+TArray<FName> UAbilityDataManager::GetAllAbilityNames() {
+	return AbilityNames;
+}
+
+bool UAbilityDataManager::IsValidAbilityName(FName AbilityName)
+{
+	return AbilityNamesSet.Contains(AbilityName);
+}
+
+TSet<FName> UAbilityDataManager::GetSetOfAbilityNames()
+{
+	return AbilityNamesSet;
+}
+
 void UAbilityDataManager::SetAbilityNamesAndIds()
 {
-	AbilityNames.Empty();
-	AbilityNames = AllAbilityNames();
 }
 
 void UAbilityDataManager::LoadDefaultGameData()
@@ -115,16 +139,6 @@ UAbilityDataObject* UAbilityDataManager::GetAbilityDataObject(FName AbilityName)
 	return GetAbilityDataObjectFromMap(Abilities, AbilityName);
 }
 
-bool UAbilityDataManager::IsValidAbilityFromMap(TMap<FName, UAbilityDataObject*>& Map, FName AbilityName)
-{
-	return IsValid(*Map.Find(AbilityName));
-}
-
-bool UAbilityDataManager::IsValidAbility(FName AbilityName)
-{
-	return IsValidAbilityFromMap(Abilities, AbilityName);
-}
-
 UClass* UAbilityDataManager::GetAbilityClassFromMap(TMap<FName, UAbilityDataObject*>& Map, FName AbilityName)
 {
 	UAbilityDataObject** Found = Map.Find(AbilityName);
@@ -172,7 +186,7 @@ FName UAbilityDataManager::AbilityNameFromBlueprintClassName(const FString Class
 		return FName();
 	}
 	const FName FoundAbilityName = FName(ClassName.Mid(Start, End - Start));
-	if (!AllAbilityNames().Contains(FoundAbilityName)) {
+	if (!IsValidAbilityName(FoundAbilityName)) {
 		iLog("[UAbilityDataManager Ability  Name From Blueprint Class Name]: Found ability name of " + FoundAbilityName.ToString() + " from blueprint class name " + ClassName + " is not a valid ability", LogVerbosity_Error);
 		return FName();
 	}
