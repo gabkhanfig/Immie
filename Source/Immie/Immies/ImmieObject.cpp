@@ -259,7 +259,7 @@ TArray<UImmie*> UImmie::JsonToTeam(const FJsonObjectBP& TeamJsonObject, const FS
         }
 
         FName ParsedSpecieName = FName(ParsedSpecieString);
-        if (!GetSpecieDataManager()->IsValidSpecie(ParsedSpecieName)) {
+        if (!USpecieDataManager::IsValidSpecieName(ParsedSpecieName)) {
             iLog("Parsed specie name " + ParsedSpecieName.ToString() + " is not a valid Immie specie", LogVerbosity_Error);
             continue;
         }

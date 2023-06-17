@@ -8,17 +8,40 @@
 #include <Immie/Immies/SpecieDataObject.h>
 #include <Immie/Type/ImmieType.h>
 
-TArray<FName> USpecieDataManager::AllSpecieNames() {
+
+
+static TArray<FName> _AllSpecieNames() {
 	TArray<FName> SpecieNames;
 	SpecieNames.Add("Snamdon");
 	SpecieNames.Add("Arborea");
 	return SpecieNames;
 }
 
+static TSet<FName> _SpecieNamesSet() {
+	const TArray<FName> SpecieNames = _AllSpecieNames();
+	TSet<FName> NamesSet;
+	for (FName Specie : SpecieNames) {
+		NamesSet.Add(Specie);
+	}
+	return NamesSet;
+}
+
+const TArray<FName> USpecieDataManager::SpecieNames = _AllSpecieNames();
+const TSet<FName> USpecieDataManager::SpecieNamesSet = _SpecieNamesSet();
+
+TArray<FName> USpecieDataManager::GetAllSpecieNames() {
+	return SpecieNames;
+}
+
+bool USpecieDataManager::IsValidSpecieName(FName SpecieName)
+{
+	return SpecieNamesSet.Contains(SpecieName);
+}
+
 void USpecieDataManager::SetSpecieNamesAndIds()
 {
-	SpecieNames.Empty();
-	SpecieNames = AllSpecieNames();
+	//SpecieNames.Empty();
+	//SpecieNames = AllSpecieNames();
 }
 
 void USpecieDataManager::LoadDefaultGameData()
@@ -111,16 +134,6 @@ USpecieDataObject* USpecieDataManager::GetSpecieDataObjectFromMap(TMap<FName, US
 USpecieDataObject* USpecieDataManager::GetSpecieDataObject(FName SpecieName)
 {
 	return GetSpecieDataObjectFromMap(Species, SpecieName);
-}
-
-bool USpecieDataManager::IsValidSpecieFromMap(TMap<FName, USpecieDataObject*>& Map, FName SpecieName)
-{
-	return IsValid(*Map.Find(SpecieName));
-}
-
-bool USpecieDataManager::IsValidSpecie(FName SpecieName)
-{
-	return IsValidSpecieFromMap(Species, SpecieName);
 }
 
 int USpecieDataManager::GetSpecieTypeBitmaskFromMap(TMap<FName, USpecieDataObject*>& Map, FName SpecieName)
@@ -218,7 +231,7 @@ FName USpecieDataManager::SpecieNameFromBlueprintClassName(const FString ClassNa
 		return FName();
 	}
 	const FName FoundSpecieName = FName(ClassName.Mid(Start, End - Start));
-	if (!AllSpecieNames().Contains(FoundSpecieName)) {
+	if (!IsValidSpecieName(FoundSpecieName)) {
 		iLog("[USpecieDataManager Specie Name From Blueprint Class Name]: Found specie name of " + FoundSpecieName.ToString() + " from blueprint class name " + ClassName + " is not a valid specie", LogVerbosity_Error);
 	}
 	return FoundSpecieName;

@@ -19,15 +19,7 @@ class IMMIE_API USpecieDataManager : public UGameDataManager
 {
 	GENERATED_BODY()
 
-private:
 
-	UPROPERTY()
-		/**/
-		TMap<FName, USpecieDataObject*> Species;
-
-	UPROPERTY()
-		/**/
-		TArray<FName> SpecieNames;
 
 private:
 
@@ -45,7 +37,11 @@ public:
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		static TArray<FName> AllSpecieNames();
+		static TArray<FName> GetAllSpecieNames();
+
+	UFUNCTION(BlueprintPure)
+		/**/
+		static bool IsValidSpecieName(FName SpecieName);
 
 	/* Set maps to nullptr to not load that set of data. */
 	void RegisterSpeciesFromDisk(UObject* Outer, const FString& FolderName, TMap<FName, USpecieDataObject*>* SpeciesOut, bool LoadLearnsets = true);
@@ -58,12 +54,6 @@ public:
 	UFUNCTION(BlueprintPure)
 		/**/
 		USpecieDataObject* GetSpecieDataObject(FName SpecieName);
-
-	static bool IsValidSpecieFromMap(TMap<FName, USpecieDataObject*>& Map, FName SpecieName);
-
-	UFUNCTION(BlueprintPure)
-		/**/
-		bool IsValidSpecie(FName SpecieName);
 
 	static int GetSpecieTypeBitmaskFromMap(TMap<FName, USpecieDataObject*>& Map, FName SpecieName);
 
@@ -97,5 +87,17 @@ public:
 
 	static FName SpecieNameFromBlueprintClassName(const FString ClassName, FString RightChop);
 
+private:
+
+	/* Global variable containing all of the ordered specie names. */
+	static const TArray<FName> SpecieNames;
+	/* Global variable that contains all FName's in SpecieNames, for fast look-up. */
+	static const TSet<FName> SpecieNamesSet;
+
+	UPROPERTY()
+		/**/
+		TMap<FName, USpecieDataObject*> Species;
+
+	
 
 };
