@@ -43,6 +43,8 @@ public:
 		/**/
 		static bool IsValidSpecieName(FName SpecieName);
 
+	static TSet<FName> GetSetOfSpecieNames();
+
 	/* Set maps to nullptr to not load that set of data. */
 	void RegisterSpeciesFromDisk(UObject* Outer, const FString& FolderName, TMap<FName, USpecieDataObject*>* SpeciesOut, bool LoadLearnsets = true);
 

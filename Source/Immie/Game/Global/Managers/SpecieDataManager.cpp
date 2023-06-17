@@ -38,6 +38,11 @@ bool USpecieDataManager::IsValidSpecieName(FName SpecieName)
 	return SpecieNamesSet.Contains(SpecieName);
 }
 
+TSet<FName> USpecieDataManager::GetSetOfSpecieNames()
+{
+	return SpecieNamesSet;
+}
+
 void USpecieDataManager::SetSpecieNamesAndIds()
 {
 	//SpecieNames.Empty();
