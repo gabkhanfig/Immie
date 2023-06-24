@@ -1,8 +1,7 @@
 {
-    "HexColor": "#a3a2a3",
     "Weaknesses": [
         {
-            "Type": "dragon"
+            "Type": "Dragon"
         }
     ],
     "Resistances": [

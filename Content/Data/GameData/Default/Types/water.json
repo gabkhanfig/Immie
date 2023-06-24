@@ -1,22 +1,21 @@
 {
-    "HexColor": "#066abd",
     "Weaknesses": [
         {
-            "Type": "nature"
+            "Type": "Nature"
         },
         {
-            "Type": "electric"
+            "Type": "Electric"
         }
     ],
     "Resistances": [
         {
-            "Type": "fire"
+            "Type": "Fire"
         },
         {
-            "Type": "water"
+            "Type": "Water"
         },
         {
-            "Type": "metal"
+            "Type": "Metal"
         }
     ]
 }

@@ -1,22 +1,21 @@
 {
-    "HexColor": "#28033d",
     "Weaknesses": [
         {
-            "Type": "fire"
+            "Type": "Fire"
         },
         {
-            "Type": "light"
+            "Type": "Light"
         },
         {
-            "Type": "dragon"
+            "Type": "Dragon"
         }
     ],
     "Resistances": [
         {
-            "Type": "ground"
+            "Type": "Ground"
         },
         {
-            "Type": "dark"
+            "Type": "Dark"
         }
     ]
 }

@@ -1,31 +1,30 @@
 {
-    "HexColor": "#5c4cc7",
     "Weaknesses": [
         {
-            "Type": "electric"
+            "Type": "Electric"
         },
         {
-            "Type": "light"
+            "Type": "Light"
         },
         {
-            "Type": "dragon"
+            "Type": "Dragon"
         }
     ],
     "Resistances": [
         {
-            "Type": "fire"
+            "Type": "Fire"
         },
         {
-            "Type": "water"
+            "Type": "Water"
         },
         {
-            "Type": "nature"
+            "Type": "Nature"
         },
         {
-            "Type": "air"
+            "Type": "Air"
         },
         {
-            "Type": "dark"
+            "Type": "Dark"
         }
     ]
 }
