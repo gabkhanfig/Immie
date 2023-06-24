@@ -14,6 +14,9 @@ bool FAbilityNamesTest::RunTest(const FString& Parameters) {
 		if (!UAbilityDataManager::IsValidAbilityName(AbilityNames[i])) {
 			AddError("Couldn't find ability name " + AbilityNames[i].ToString() + " in UAbilityDataManager::IsValidAbilityName()");
 		}
+		if (!UAbilityDataManager::IsValidAbilityNameString(AbilityNames[i].ToString())) {
+			AddError("Couldn't find ability name " + AbilityNames[i].ToString() + " as an FString in UAbilityDataManager::IsValidAbilityNameString()");
+		}
 	}
 	const TSet<FName> AbilityNamesSet;
 	for (FName AbilityNameInSet : UAbilityDataManager::GetSetOfAbilityNames()) {
