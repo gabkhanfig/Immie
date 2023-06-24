@@ -18,4 +18,6 @@ struct FTypeConstants
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/**/
 		float ResistanceMultiplier;
+
+	FTypeConstants();
 };

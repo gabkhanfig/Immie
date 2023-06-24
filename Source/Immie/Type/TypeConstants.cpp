@@ -2,3 +2,7 @@
 
 
 #include "TypeConstants.h"
+
+FTypeConstants::FTypeConstants()
+	: WeaknessMultiplier(1), ResistanceMultiplier(1)
+{}

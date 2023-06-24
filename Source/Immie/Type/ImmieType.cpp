@@ -5,81 +5,118 @@
 #include <Immie/ImmieCore.h>
 #include <Immie/Game/Global/Managers/TypeDataManager.h>
 
-// Sets default values for this component's properties
-UImmieType::UImmieType()
-{
-	PrimaryComponentTick.bCanEverTick = false;
-	SetIsReplicatedByDefault(true);
+FTypeBitmask::FTypeBitmask() : Bitmask(0) {}
 
-	TypeBitmask = Type_Neutral;
-	Weaknesses = Type_Neutral;
-	Resistances = Type_Neutral;
-	Color = FLinearColor(1.f, 1.f, 1.f, 1.f);
+void FTypeBitmask::AddType(EImmieType Type)
+{
+	const int index = static_cast<int>(Type);
+	Bitmask |= 1 << index;
 }
 
-UImmieType* UImmieType::FromJson(UObject* Outer, const FName& Name, const FJsonObjectBP& Json, const FTypeConstants& _TypeConstants)
+void FTypeBitmask::RemoveType(EImmieType Type)
 {
-	UImmieType* ImmieType = NewObject<UImmieType>(Outer);
-
-	ImmieType->TypeBitmask = GetTypeDataManager()->GetTypeBitmask(Name);
-	ImmieType->Color = FLinearColor::FromSRGBColor(FColor::FromHex(Json.GetStringField("HexColor")));
-	ImmieType->TypeConstants = _TypeConstants;
-	ImmieType->Weaknesses = GetTypeDataManager()->GetTypeBitmaskFromJsonArray(Json.GetArrayField("Weaknesses"));
-	ImmieType->Resistances = GetTypeDataManager()->GetTypeBitmaskFromJsonArray(Json.GetArrayField("Resistances"));
-	
-	return ImmieType;
+	const int index = static_cast<int>(Type);
+	Bitmask &= ~(1 << index);
 }
 
-float UImmieType::GetTypeEffectiveness(int AttackTypeBitmask)
+bool FTypeBitmask::HasType(EImmieType Type) const
 {
-	if (AttackTypeBitmask & Weaknesses)
-		return TypeConstants.WeaknessMultiplier;
-	if (AttackTypeBitmask & Resistances)
-		return TypeConstants.ResistanceMultiplier;
-	return 1.f;
+	return Bitmask & (1 << static_cast<int>(Type));
 }
 
-float UImmieType::TotalTypeDamageMultiplier(const TArray<UImmieType*>& AttackingType, const TArray<UImmieType*>& DefendingType)
+TArray<EImmieType> FTypeBitmask::GetTypes() const
 {
-	float Multiplier = 1.0f;
+	TArray<EImmieType> Types;
+	Types.Reserve(TypeCount());
+	if (HasType(EImmieType::Neutral))		Types.Add(EImmieType::Neutral);
+	if (HasType(EImmieType::Fire))			Types.Add(EImmieType::Fire);
+	if (HasType(EImmieType::Water))			Types.Add(EImmieType::Water);
+	if (HasType(EImmieType::Nature))		Types.Add(EImmieType::Nature);
+	if (HasType(EImmieType::Standard))	Types.Add(EImmieType::Standard);
+	if (HasType(EImmieType::Electric))	Types.Add(EImmieType::Electric);
+	if (HasType(EImmieType::Air))				Types.Add(EImmieType::Air);
+	if (HasType(EImmieType::Ground))		Types.Add(EImmieType::Ground);
+	if (HasType(EImmieType::Metal))			Types.Add(EImmieType::Metal);
+	if (HasType(EImmieType::Light))			Types.Add(EImmieType::Light);
+	if (HasType(EImmieType::Dark))			Types.Add(EImmieType::Dark);
+	if (HasType(EImmieType::Dragon))		Types.Add(EImmieType::Dragon);
+	return Types;
+}
 
-	for (int defendIndex = 0; defendIndex < DefendingType.Num(); defendIndex++) {
-		for (int attackIndex = 0; attackIndex < AttackingType.Num(); attackIndex++) {
-			Multiplier *= DefendingType[defendIndex]->GetTypeEffectiveness(AttackingType[attackIndex]->TypeBitmask);
+void FTypeBitmask::AddTypes(const TArray<EImmieType>& Types)
+{
+	for (EImmieType Type : Types) {
+		AddType(Type);
+	}
+}
+
+int FTypeBitmask::TypeCount() const
+{
+	return FMath::CountBits(Bitmask);
+}
+
+void FTypeBitmask::Clear()
+{
+	Bitmask = 0;
+}
+
+FTypeBitmask FTypeBitmask::Combine(const FTypeBitmask Left, const FTypeBitmask Right)
+{
+	FTypeBitmask Combined;
+	Combined.Bitmask = Left.Bitmask | Right.Bitmask;
+	return Combined;
+}
+
+FTypeBitmask FTypeBitmask::FromJsonTypesArrayField(const FJsonArrayBP& JsonArray)
+{
+	FTypeBitmask Bitmask;
+	const TArray<FString> TypeStrings = JsonArray.GetStringArray("Type");
+	for (const FString& Type : TypeStrings) {
+		if (UTypeDataManager::IsValidTypeNameString(Type)) {
+			Bitmask.AddType(UTypeDataManager::GetTypeEnum(FName(Type)));
+		}
+		else {
+			iLog("Json parsed type name of " + Type + " is not a valid type name");
+			continue;
 		}
 	}
 
-	return Multiplier;
+	return Bitmask;
 }
 
-FName UImmieType::GetTypeName() const
+FImmieType FImmieType::FromJson(EImmieType Type, const FJsonObjectBP& Json)
 {
-	return GetTypeDataManager()->GetTypeName(TypeBitmask);
+	FImmieType ImmieType;
+	ImmieType.Type.AddType(Type);
+	FJsonArrayBP WeaknessesArray = Json.GetArrayField("Weaknesses");
+	FJsonArrayBP ResistancesArray = Json.GetArrayField("Resistances");
+
+	ImmieType.Weaknesses = FTypeBitmask::FromJsonTypesArrayField(WeaknessesArray);
+	ImmieType.Resistances = FTypeBitmask::FromJsonTypesArrayField(ResistancesArray);
+
+	return ImmieType;
 }
 
-void UImmieType::SyncToClients()
+FJsonObjectBP FImmieType::ToJson()
 {
-	ULogger::Log("Syncing type data with client for type " + GetTypeName().ToString());
-	SetClientTypeData(TypeBitmask, Weaknesses, Resistances, TypeConstants);
-}
+	FJsonObjectBP JsonObject;
+	FJsonArrayBP WeaknessesArray;
+	FJsonArrayBP ResistancesArray;
 
-void UImmieType::SetClientTypeData_Implementation(int _TypeBitmask, int _Weaknesses, int _Resistances, const FTypeConstants& _TypeConstants)
-{
-	if (IsRunningDedicatedServer()) {
-		return;
+	const TArray<EImmieType> WeakTypes = Weaknesses.GetTypes();
+	const TArray<EImmieType> ResistTypes = Resistances.GetTypes();
+
+	for (EImmieType Weak : WeakTypes) {
+		WeaknessesArray.AddStringElement("Type", UTypeDataManager::GetTypeName(Weak).ToString());
+	}
+	for (EImmieType Resist : ResistTypes) {
+		ResistancesArray.AddStringElement("Type", UTypeDataManager::GetTypeName(Resist).ToString());
 	}
 
-	TypeBitmask = _TypeBitmask;
-	Weaknesses = _Weaknesses;
-	Resistances = _Resistances;
-	TypeConstants = _TypeConstants;
+	JsonObject.SetArrayField("Weaknesses", WeaknessesArray);
+	JsonObject.SetArrayField("Resistances", ResistancesArray);
 
-	UImmieType* ClientLocalGlobalType = GetTypeDataManager()->GetType(TypeBitmask);
-	if (!IsValid(ClientLocalGlobalType)) {
-		iLog("Client does not have a corresponding global type for the type with bitmask " + FString::FromInt(TypeBitmask));
-		return;
-	}
-	Color = ClientLocalGlobalType->GetColor();
-	
-	ULogger::Log("Synchronized client type data for type " + GetTypeName().ToString());
+	return JsonObject;
 }
+
+

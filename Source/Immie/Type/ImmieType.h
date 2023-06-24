@@ -8,76 +8,95 @@
 #include "TypeConstants.h"
 #include "ImmieType.generated.h"
 
-enum EImmieType : int {
-	Type_Neutral = 0,
-	Type_Fire = 1,
-	Type_Water = 1 << 1,
-	Type_Nature = 1 << 2,
-	Type_Standard = 1 << 3,
-	Type_Electric = 1 << 4,
-	Type_Air = 1 << 5,
-	Type_Ground = 1 << 6,
-	Type_Metal = 1 << 7,
-	Type_Light = 1 << 8,
-	Type_Dark = 1 << 9,
-	Type_Dragon = 1 << 10
+UENUM(BlueprintType)
+enum class EImmieType : uint8 {
+	Neutral		= 0,
+	Fire			= 1,
+	Water			= 2,
+	Nature		= 3,
+	Standard	= 4,
+	Electric	= 5,
+	Air				= 6,
+	Ground		= 7,
+	Metal			= 8,
+	Light			= 9,
+	Dark			= 10,
+	Dragon		= 11
+};
+
+USTRUCT(BlueprintType)
+/* Structure containing the bitmask data for a type.
+For blueprint use, see UTypeBitmaskBlueprintWrapper and it's functions to access FTypeBitmask functions. */
+struct FTypeBitmask {
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadOnly)
+		int Bitmask;
+
+	FTypeBitmask();
+
+	void AddType(EImmieType Type);
+
+	void RemoveType(EImmieType Type);
+
+	bool HasType(EImmieType Type) const;
+
+	TArray<EImmieType> GetTypes() const;
+
+	void AddTypes(const TArray<EImmieType>& Types);
+
+	int TypeCount() const;
+
+	void Clear();
+
+	static FTypeBitmask Combine(const FTypeBitmask Left, const FTypeBitmask Right);
+
+	static FTypeBitmask FromJsonTypesArrayField(const FJsonArrayBP& JsonArray);
 };
 
 UCLASS()
-class IMMIE_API UImmieType : public UActorComponent
-{
+class IMMIE_API UTypeBitmaskBlueprintWrapper : public UBlueprintFunctionLibrary {
 	GENERATED_BODY()
 
-private:
+	UFUNCTION(BlueprintCallable)
+		static FTypeBitmask AddType(UPARAM(ref) FTypeBitmask& Bitmask, EImmieType Type) { Bitmask.AddType(Type); return Bitmask; }
 
-	UPROPERTY()
-		/* Bitmask of this type */
-		int TypeBitmask;
-
-	UPROPERTY()
-		/* Bitmask of this type's weaknesses */
-		int Weaknesses;
-
-	UPROPERTY()
-		/* Bitmask of this type's resistances */
-		int Resistances;
-
-	UPROPERTY()
-		/**/
-		FTypeConstants TypeConstants;
-
-	UPROPERTY()
-		/* Color corrsponding to this type. Is local to clients. */
-		FLinearColor Color;
-
-protected:
-
-	UFUNCTION(NetMulticast, Reliable)
-		/**/
-		void SetClientTypeData(int _TypeBitmask, int _Weaknesses, int _Resistances, const FTypeConstants& _TypeConstants);
-
-public:	
-	// Sets default values for this component's properties
-	UImmieType();
-
-	static UImmieType* FromJson(UObject* Outer, const FName& Name, const FJsonObjectBP& Json, const FTypeConstants& _TypeConstants);
+	UFUNCTION(BlueprintCallable)
+		static FTypeBitmask RemoveType(UPARAM(ref) FTypeBitmask& Bitmask, EImmieType Type) { Bitmask.RemoveType(Type); return Bitmask; }
 
 	UFUNCTION(BlueprintPure)
-		/**/
-		float GetTypeEffectiveness(int AttackTypeBitmask);
+		static bool HasType(FTypeBitmask Bitmask, EImmieType Type) { return Bitmask.HasType(Type); }
+
+	UFUNCTION(BlueprintCallable)
+		static FTypeBitmask AddTypes(UPARAM(ref) FTypeBitmask& Bitmask, const TArray<EImmieType>& Types) { Bitmask.AddTypes(Types); return Bitmask; }
 
 	UFUNCTION(BlueprintPure)
-		/**/
-		static float TotalTypeDamageMultiplier(const TArray<UImmieType*>& AttackingType, const TArray<UImmieType*>& DefendingType);
+		static int TypeCount(FTypeBitmask Bitmask) { return Bitmask.TypeCount(); }
+
+	UFUNCTION(BlueprintCallable)
+		static FTypeBitmask Clear(FTypeBitmask& Bitmask) { Bitmask.Clear(); return Bitmask; }
 
 	UFUNCTION(BlueprintPure)
-		/**/
-		FLinearColor GetColor() const { return Color; }
+		static FTypeBitmask Combine(FTypeBitmask First, FTypeBitmask Second) { return FTypeBitmask::Combine(First, Second); }
 
-	UFUNCTION(BlueprintPure)
-		/**/
-		FName GetTypeName() const;
+};
 
-	/* Called by server to perform synchronizing of type data to connected clients. */
-	void SyncToClients();
+USTRUCT(BlueprintType)
+/* Structure containing bitmasks for a type, and its weakness and resistances. */
+struct FImmieType {
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadWrite)
+		FTypeBitmask Type;
+
+	UPROPERTY(BlueprintReadWrite)
+		FTypeBitmask Weaknesses;
+
+	UPROPERTY(BlueprintReadWrite)
+		FTypeBitmask Resistances;
+
+	static FImmieType FromJson(EImmieType Type, const FJsonObjectBP& Json);
+
+	FJsonObjectBP ToJson();
+
 };
