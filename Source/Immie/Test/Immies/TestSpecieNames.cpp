@@ -14,8 +14,11 @@ bool FSpecieNamesTest::RunTest(const FString& Parameters) {
 		if (!USpecieDataManager::IsValidSpecieName(SpecieNames[i])) {
 			AddError("Couldn't find specie name " + SpecieNames[i].ToString() + " in USpecieDataManager::IsValidSpecieName()");
 		}
+		if (!USpecieDataManager::IsValidSpecieNameString(SpecieNames[i].ToString())) {
+			AddError("Couldn't find specie name " + SpecieNames[i].ToString() + " as an FString in USpecieDataManager::IsValidSpecieNameString()");
+		}
 	}
-	const TSet<FName> SpecieNamesSet;
+
 	for (FName SpecieNameInSet : USpecieDataManager::GetSetOfSpecieNames()) {
 		if (!SpecieNames.Contains(SpecieNameInSet)) {
 			AddError("Set of Specie Names contains the entry of " + SpecieNameInSet.ToString() + " that is not in array of Specie Names");
