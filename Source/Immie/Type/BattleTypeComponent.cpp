@@ -37,19 +37,6 @@ float UBattleTypeComponent::TotalTypeDamageMultiplier(const TArray<EImmieType>& 
 	return Multiplier;
 }
 
-//UBattleTypeComponent* UBattleTypeComponent::FromJson(UObject* Outer, const FName& Name, const FJsonObjectBP& Json, const FTypeConstants& _TypeConstants)
-//{
-//	UBattleTypeComponent* ImmieType = NewObject<UBattleTypeComponent>(Outer);
-//
-//	ImmieType->TypeBitmask = 0;//GetTypeDataManager()->GetTypeBitmask(Name);
-//	ImmieType->Color = FLinearColor::FromSRGBColor(FColor::FromHex(Json.GetStringField("HexColor")));
-//	ImmieType->TypeConstants = _TypeConstants;
-//	ImmieType->Weaknesses = 0;// GetTypeDataManager()->GetTypeBitmaskFromJsonArray(Json.GetArrayField("Weaknesses"));
-//	ImmieType->Resistances = 0;// GetTypeDataManager()->GetTypeBitmaskFromJsonArray(Json.GetArrayField("Resistances"));
-//
-//	return ImmieType;
-//}
-
 FLinearColor UBattleTypeComponent::GetColor() const
 {
 	EImmieType FirstType = TypesData[0].Type.GetTypes()[0]; // The checks in UBattleTypeComponent::Initialize ensure this is valid.
