@@ -6,6 +6,7 @@
 #include <Immie/Immies/ImmieObject.h>
 #include <Immie/Ability/Ability.h>
 #include <Immie/Type/ImmieType.h>
+#include <Immie/Type/BattleTypeComponent.h>
 
 UImmieBattleHud::UImmieBattleHud(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -47,7 +48,7 @@ FString UImmieBattleHud::GetMaxHealthString()
 	return FString::FromInt(int(MaxHealth));
 }
 
-FLinearColor UImmieBattleHud::GetTypeColor(UImmieType* Type) const
+FLinearColor UImmieBattleHud::GetTypeColor(UBattleTypeComponent* Type) const
 {
 	return Type->GetColor();
 }

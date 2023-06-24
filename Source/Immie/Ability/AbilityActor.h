@@ -13,7 +13,7 @@ class UAbility;
 class AImmieCharacter;
 class UDamageComponent;
 class ADummyAbilityActor;
-class UImmieType; 
+class UBattleTypeComponent; 
 class UProjectileMovementComponent;
 
 UCLASS()
@@ -267,7 +267,7 @@ public:
 
 	virtual float TotalDamageFromAbility_Implementation(const FAbilityInstigatorDamage& AbilityDamage) const override;
 
-	virtual TArray<UImmieType*> GetType_Implementation() const override;
+	virtual UBattleTypeComponent* GetTypeComponent_Implementation() const override;
 
 	virtual FString GetDisplayName_Implementation() const override;
 

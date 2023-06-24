@@ -28,6 +28,7 @@
 #include <Immie/Battle/UI/FloatingBattleHealthbar.h>
 #include <Immie/Overworld/WildImmies/WildImmieSpawner.h>
 #include "Components/SphereComponent.h"
+#include <Immie/Type/BattleTypeComponent.h>
 
 AImmieCharacter::AImmieCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UImmieMovementComponent>(ACharacter::CharacterMovementComponentName))
@@ -205,9 +206,9 @@ ABattleTeam* AImmieCharacter::GetTeam_Implementation() const
 	return Team;
 }
 
-TArray<UImmieType*> AImmieCharacter::GetType_Implementation() const
+UBattleTypeComponent* AImmieCharacter::GetTypeComponent_Implementation() const
 {
-	return Type;
+	return TypeComponent;
 }
 
 void AImmieCharacter::IncreaseHealth_Implementation(float Amount)
@@ -342,7 +343,7 @@ void AImmieCharacter::UnPossessed()
 
 AImmieCharacter* AImmieCharacter::NewImmieCharacter(AActor* _Owner, const FTransform& Transform, UImmie* _ImmieObject, bool EnabledOnSpawn, ESpawnActorCollisionHandlingMethod SpawnCollisionHandling)
 {
-	UClass* ImmieCharacterClass = GetSpecieDataManager()->GetImmieCharacterClass(_ImmieObject->GetSpecieName());
+	UClass* ImmieCharacterClass = GetSpecieDataManager()->GetSpecieDataObject(_ImmieObject->GetSpecieName())->GetImmieCharacterClass();
 	checkf(IsValid(ImmieCharacterClass), TEXT("UClass for Immie character must be valid for spawning"));
 	AImmieCharacter* SpawnedImmie = 
 		_Owner->GetWorld()->SpawnActorDeferred<AImmieCharacter>(ImmieCharacterClass, Transform, _Owner, nullptr, SpawnCollisionHandling);
@@ -435,10 +436,14 @@ void AImmieCharacter::InitializeForBattle(ABattleTeam* OwningTeam, int SlotOnTea
 	Team = OwningTeam;
 	TeamSlot = SlotOnTeam;
 
-	USpecieDataObject* SpecieDataObject = GetBattleInstance()->GetBattleSpecieManager()->GetSpecieDataObject(ImmieObject->GetSpecieName());
+	TypeComponent = NewObject<UBattleTypeComponent>(this);
 
-	const int SpecieTypeBitmask = SpecieDataObject->GetTypeBitmask();
-	Type = GetBattleInstance()->GetBattleTypeManager()->GetTypes(SpecieTypeBitmask);
+	USpecieDataObject* SpecieDataObject = GetBattleInstance()->GetBattleSpecieManager()->GetSpecieDataObject(ImmieObject->GetSpecieName());
+	UBattleTypeManager* BattleTypeManager = GetBattleInstance()->GetBattleTypeManager();
+
+	FTypeBitmask TypeBitmask = SpecieDataObject->GetType();
+	const TArray<FImmieType> TypesData = BattleTypeManager->GetTypes(TypeBitmask);
+	TypeComponent->Initialize(BattleTypeManager->GetTypeConstants(), TypesData);
 
 	Level = UFormula::LevelFromXp(ImmieObject->GetXp());
 
@@ -468,7 +473,8 @@ void AImmieCharacter::InitializeForBattle(ABattleTeam* OwningTeam, int SlotOnTea
 void AImmieCharacter::SyncClientSubobjects()
 {
 	FString ImmieObjectString = ImmieObject->SaveJsonData().ToString();
-	SetClientSubobjects(ImmieObjectString, Type, Abilities, Team, DamageComponent);
+	TypeComponent->SyncToClients();
+	SetClientSubobjects(ImmieObjectString, TypeComponent, Abilities, Team, DamageComponent);
 	BP_SyncClientSubobjects();
 }
 
@@ -500,13 +506,13 @@ void AImmieCharacter::SetClientBattleData_Implementation(int _TeamSlot, uint8 _L
 	ActiveStats = _ActiveStats;
 }
 
-void AImmieCharacter::SetClientSubobjects_Implementation(const FString& ImmieObjectString, const TArray<UImmieType*>& TypesObjects, const TArray<UAbility*>& AbilityObjects, ABattleTeam* BattleTeamObject, UDamageComponent* DamageComponentObject)
+void AImmieCharacter::SetClientSubobjects_Implementation(const FString& ImmieObjectString, UBattleTypeComponent* TypeComponentObject, const TArray<UAbility*>& AbilityObjects, ABattleTeam* BattleTeamObject, UDamageComponent* DamageComponentObject)
 {
 	if (BattleTeamObject->HasAuthority()) {
 		return;
 	}
 
-	Type = TypesObjects;
+	TypeComponent = TypeComponentObject;
 	Abilities = AbilityObjects;
 	Team = BattleTeamObject;
 	DamageComponent = DamageComponentObject;
@@ -516,13 +522,12 @@ void AImmieCharacter::SetClientSubobjects_Implementation(const FString& ImmieObj
 
 bool AImmieCharacter::AllClientBattleSubobjectsValid()
 {
-	const int TypeCount = Type.Num();
 	const int AbilityCount = Abilities.Num();
 
 	if (!IsValid(ImmieObject))
 		return false;
 
-	if (TypeCount == 0)
+	if (!IsValid(TypeComponent))
 		return false;
 
 	if (AbilityCount == 0)
@@ -533,12 +538,6 @@ bool AImmieCharacter::AllClientBattleSubobjectsValid()
 
 	if (!IsValid(DamageComponent))
 		return false;
-
-	for (int i = 0; i < TypeCount; i++) {
-		if (!IsValid(Type[i])) {
-			return false;
-		}
-	}
 
 	for (int i = 0; i < AbilityCount; i++) {
 		if (!IsValid(Abilities[i])) {
@@ -599,7 +598,7 @@ void AImmieCharacter::EventPlayerDealtDamage_Implementation(const TScriptInterfa
 
 void AImmieCharacter::WildTick(float DeltaTime)
 {
-	iLog("Wild tick immie character", LogVerbosity_Display, 0);
+	//iLog("Wild tick immie character", LogVerbosity_Display, 0);
 
 	BP_WildTick(DeltaTime);
 }
@@ -629,14 +628,14 @@ float AImmieCharacter::TotalHealingFromAbility_Implementation(const FAbilityInst
 {
 	// TODO properly implement healing thats not just the opposite of damage.
 	const float UnmodifiedDamageMultiplier = UFormula::Damage(AbilityHealing.Power, AbilityHealing.AttackerStat, AbilityHealing.DefenderStat, AbilityHealing.InstigatorLevel);
-	const float TypeDamageMultiplier = UImmieType::TotalTypeDamageMultiplier(AbilityHealing.InstigatorType, AbilityHealing.DefenderType);
+	const float TypeDamageMultiplier = AbilityHealing.DefenderTypeComponent->TotalTypeDamageMultiplier(AbilityHealing.InstigatorType);
 	return UnmodifiedDamageMultiplier * TypeDamageMultiplier;
 }
 
 float AImmieCharacter::TotalDamageFromAbility_Implementation(const FAbilityInstigatorDamage& AbilityDamage) const
 {
 	const float UnmodifiedDamageMultiplier = UFormula::Damage(AbilityDamage.Power, AbilityDamage.AttackerStat, AbilityDamage.DefenderStat, AbilityDamage.InstigatorLevel);
-	const float TypeDamageMultiplier = UImmieType::TotalTypeDamageMultiplier(AbilityDamage.InstigatorType, AbilityDamage.DefenderType);
+	const float TypeDamageMultiplier = AbilityDamage.DefenderTypeComponent->TotalTypeDamageMultiplier(AbilityDamage.InstigatorType);
 	return UnmodifiedDamageMultiplier * TypeDamageMultiplier;
 }
 

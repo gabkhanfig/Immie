@@ -53,7 +53,7 @@ public:
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		int GetSpecieTypeBitmask(FName SpecieName);
+		FTypeBitmask GetSpecieType(FName SpecieName);
 
 	UFUNCTION(BlueprintPure)
 		/**/

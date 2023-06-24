@@ -9,7 +9,7 @@
 #include "BattleActor.generated.h"
 
 class UDamageComponent;
-class UImmieType;
+class UBattleTypeComponent;
 class UAbility;
 class ABattleTeam;
 
@@ -63,7 +63,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintPure)
 		/**/
-		TArray<UImmieType*> GetType() const;
+		UBattleTypeComponent* GetTypeComponent() const;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintPure)
 		/* Check if another battle actor is an enemy or not. */

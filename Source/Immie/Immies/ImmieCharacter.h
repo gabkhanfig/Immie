@@ -12,7 +12,7 @@
 #include "ImmieCharacter.generated.h"
 
 class UImmie;
-class UImmieType;
+class UBattleTypeComponent;
 class UAbility;
 class ABattleInstance;
 class ABattleTeam;
@@ -50,7 +50,7 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly)
 		/* The actual type objects of this Immie. Uses the species type bitmask. Replicated via RPC. */
-		TArray<UImmieType*> Type;
+		UBattleTypeComponent* TypeComponent;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Battle")
 		/* The battle ability objects of this Immie. Replicated via RPC. */
@@ -187,7 +187,7 @@ protected:
 
 	UFUNCTION(NetMulticast, Reliable)
 		/* Synchronizes all of the Immie characters subobjects with the clients. */
-		void SetClientSubobjects(const FString& ImmieObjectString, const TArray<UImmieType*>& TypesObjects, const TArray<UAbility*>& AbilityObjects, ABattleTeam* BattleTeamObject, UDamageComponent* DamageComponentObject);
+		void SetClientSubobjects(const FString& ImmieObjectString, UBattleTypeComponent* TypeComponentObject, const TArray<UAbility*>& AbilityObjects, ABattleTeam* BattleTeamObject, UDamageComponent* DamageComponentObject);
 
 	UFUNCTION(BlueprintImplementableEvent, DisplayName = "Set Client Subobjects")
 		/* Blueprint sided functionality to set any subobject values on connected clients for this Immie character.
@@ -385,7 +385,7 @@ public:
 	virtual FBattleStats GetInitialStats_Implementation() const override;
 	virtual FBattleStats GetActiveStats_Implementation() const override;
 	virtual ABattleTeam* GetTeam_Implementation() const override;
-	virtual TArray<UImmieType*> GetType_Implementation() const override;
+	virtual UBattleTypeComponent* GetTypeComponent_Implementation() const override;
 	virtual FString GetDisplayName_Implementation() const override;
 	virtual void IncreaseHealth_Implementation(float Amount) override;
 	virtual void DecreaseHealth_Implementation(float Amount) override;

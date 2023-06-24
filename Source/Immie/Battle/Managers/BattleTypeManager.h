@@ -5,10 +5,11 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include <Immie/Type/TypeConstants.h>
+#include <Immie/Type/ImmieType.h>
 #include "BattleTypeManager.generated.h"
 
 class ABattleInstance;
-class UImmieType;
+class UBattleTypeComponent;
 
 UCLASS( ClassGroup=(Battle), meta=(BlueprintSpawnableComponent) )
 class IMMIE_API UBattleTypeManager : public UActorComponent
@@ -25,7 +26,7 @@ private:
 
 	UPROPERTY()
 		/**/
-		TMap<int, UImmieType*> TypesOverride;
+		TMap<EImmieType, FImmieType> TypesOverride;
 
 	UPROPERTY()
 		/**/
@@ -47,7 +48,7 @@ public:
 
 	UFUNCTION(BlueprintPure)
 		/* Uses a SINGULAR type bitmask. Only one bit should be set. */
-		UImmieType* GetType(int TypeBitmask);
+		FImmieType GetType(EImmieType Type);
 
 	UFUNCTION(BlueprintPure)
 		/**/
@@ -55,7 +56,7 @@ public:
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		TArray<UImmieType*> GetTypes(int TypeBitmask);
+		TArray<FImmieType> GetTypes(FTypeBitmask TypeBitmask);
 
 		
 };

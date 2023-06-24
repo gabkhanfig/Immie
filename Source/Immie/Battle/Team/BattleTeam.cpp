@@ -14,6 +14,7 @@
 #include "../../Controller/Ai/ImmieAIController.h"
 #include "../../Overworld/WildImmies/WildImmieSpawner.h"
 #include "../../Game/Player/PlayerImmies.h"
+#include <Immie/Type/BattleTypeComponent.h>
 
 ABattleTeam::ABattleTeam()
 {
@@ -178,26 +179,23 @@ bool ABattleTeam::ValidSubobjects()
 		iLog("team has an invalid battle instance");
 	}
 
-	for (int i = 0; i < Team.Num(); i++) {
-		if (!IsValid(Team[i])) {
+	for (AImmieCharacter* ImmieCharacter : Team) {
+		if (!IsValid(ImmieCharacter)) {
 			iLog("valid subobjects? invalid team character");
 			return false;
 		}
 
-		if (!IsValid(Team[i]->GetImmieObject())) {
+		if (!IsValid(ImmieCharacter->GetImmieObject())) {
 			iLog("valid subobjects? invalid immie object");
 			return false;
 		}
 
-		TArray<UImmieType*> ImmieTypes = IBattleActor::Execute_GetType(Team[i]);//->GetType();
-		for (const auto& Type : ImmieTypes) {
-			if (!IsValid(Type)) {
-				iLog("valid subobjects? invalid type");
-				return false;
-			}
+		if (!IsValid(IBattleActor::Execute_GetTypeComponent(ImmieCharacter))) {
+			iLog("valid subobjects? invalid immie object");
+			return false;
 		}
 
-		TArray<UAbility*> ImmieAbilities = Team[i]->GetAbilities();
+		TArray<UAbility*> ImmieAbilities = ImmieCharacter->GetAbilities();
 		for (const auto& Ability : ImmieAbilities) {
 			if (!IsValid(Ability)) {
 				iLog("valid subobjects? invalid ability");

@@ -10,7 +10,7 @@
 class AImmieCharacter;
 class UImmieObject;
 class UAbility;
-class UImmieType;
+class UBattleTypeComponent;
 
 /**
  * 
@@ -74,7 +74,7 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "Type")
 		/**/
-		FLinearColor GetTypeColor(UImmieType* Type) const;
+		FLinearColor GetTypeColor(UBattleTypeComponent* Type) const;
 
 	UFUNCTION(BlueprintPure, Category = "Ability")
 		/**/

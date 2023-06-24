@@ -12,7 +12,7 @@
 class UImmie;
 class AImmieCharacter;
 class UAbilityDataObject;
-
+class UBattleTypeComponent;
 
 UCLASS(Blueprintable)
 class IMMIE_API UAbility : public UActorComponent
@@ -42,7 +42,7 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, Category = "Battle")
 		/* The battle type objects of this ability. */
-		TArray<UImmieType*> Type;
+		UBattleTypeComponent* TypeComponent;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Battle")
 		/* The current cooldown of this ability. Determines when it's uses will restock. */
@@ -69,7 +69,7 @@ protected:
 		void SyncClientAbilityData(
 			FBattleStats _InitialStats,
 			FBattleStats _ActiveStats,
-			const TArray<UImmieType*>& _Type, 
+			UBattleTypeComponent* _TypeComponent, 
 			float _CurrentCooldown, 
 			int _CurrentUses
 		);
@@ -237,10 +237,6 @@ public:
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		int GetTypeBitmask() const;
-
-	UFUNCTION(BlueprintPure)
-		/**/
 		float GetInitialCooldown() const;
 
 	UFUNCTION(BlueprintPure)
@@ -301,7 +297,7 @@ public:
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		FORCEINLINE TArray<UImmieType*> GetType() const { return Type; }
+		FORCEINLINE UBattleTypeComponent* GetTypeComponent() const { return TypeComponent; }
 
 	UFUNCTION(BlueprintPure)
 		/**/

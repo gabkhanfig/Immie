@@ -69,7 +69,7 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "Type")
 		/**/
-		FLinearColor GetTypeColor(UImmieType* Type) const;
+		FLinearColor GetTypeColor(UBattleTypeComponent* Type) const;
 
 	UFUNCTION(BlueprintPure)
 		/**/

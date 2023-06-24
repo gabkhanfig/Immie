@@ -3,6 +3,7 @@
 
 #include "FloatingBattleHealthbar.h"
 #include <Immie/Type/ImmieType.h>
+#include <Immie/Type/BattleTypeComponent.h>
 #include "ImmieBattleHud.h"
 
 UFloatingBattleHealthbar::UFloatingBattleHealthbar(const FObjectInitializer& ObjectInitializer)
@@ -40,7 +41,7 @@ FString UFloatingBattleHealthbar::GetDisplayName() const
 	return IBattleActor::Execute_GetDisplayName(BattleActor.GetObject());
 }
 
-FLinearColor UFloatingBattleHealthbar::GetTypeColor(UImmieType* Type) const
+FLinearColor UFloatingBattleHealthbar::GetTypeColor(UBattleTypeComponent* Type) const
 {
 	return Type->GetColor();
 }

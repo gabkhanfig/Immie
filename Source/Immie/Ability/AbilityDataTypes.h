@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include <Immie/Util/Json/BlueprintJsonObject.h>
+#include <Immie/Type/ImmieType.h>
 #include "AbilityDataTypes.generated.h"
 
-#define INVALID_ABILITY_ID -1
-
 class UAbility;
+class UBattleTypeComponent;
 class AAbilityActor;
-class UImmieType;
+
 class UPrimitiveComponent;
 
 USTRUCT(BlueprintType)
@@ -25,11 +25,11 @@ struct FAbilityInstigatorDamage
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/**/
-		TArray<UImmieType*> InstigatorType;
+		TArray<EImmieType> InstigatorType;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/**/
-		TArray<UImmieType*> DefenderType;
+		UBattleTypeComponent* DefenderTypeComponent;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/**/
@@ -55,9 +55,8 @@ struct FAbilityInstigatorDamage
 		/**/
 		float Multiplier;
 
-	FAbilityInstigatorDamage()
-		: Multiplier(1)
-	{}
+	FAbilityInstigatorDamage();
+		
 };
 
 USTRUCT(BlueprintType)

@@ -19,6 +19,7 @@
 #include "AbilityActor.h"
 #include <Immie/Controller/Player/ImmiePlayerController.h>
 #include "Camera/CameraComponent.h"
+#include <Immie/Type/BattleTypeComponent.h>
 
 FTransform UAbility::GetAbilityActorSpawnTransform_Implementation() const
 {
@@ -78,12 +79,17 @@ void UAbility::InitializeForBattle()
 	CurrentCooldown = AbilityDataObject->GetInitialCooldown();
 	CurrentUses = AbilityDataObject->GetInitialUses();
 
+	UBattleTypeManager* BattleTypeManager = GetBattleInstance()->GetBattleTypeManager();
+
+	TypeComponent = NewObject<UBattleTypeComponent>(this);
+
 	if (bTypeSameAsImmie) {
-		Type = IBattleActor::Execute_GetType(GetImmieCharacter());//GetImmieCharacter()->GetType();
+		TypeComponent->CopyFrom(IBattleActor::Execute_GetTypeComponent(GetImmieCharacter()));
 	}
 	else {
-		const int AbilityTypeBitmask = AbilityDataObject->GetTypeBitmask();
-		Type = GetBattleInstance()->GetBattleTypeManager()->GetTypes(AbilityTypeBitmask);
+		FTypeBitmask TypeBitmask = AbilityDataObject->GetType();
+		const TArray<FImmieType> TypesData = BattleTypeManager->GetTypes(TypeBitmask);
+		TypeComponent->Initialize(BattleTypeManager->GetTypeConstants(), TypesData);
 	}
 
 	const int Level = GetImmieCharacter()->GetImmieLevel();
@@ -114,16 +120,17 @@ void UAbility::InitializeForBattle()
 
 void UAbility::SyncToClients()
 {
-	SyncClientAbilityData(InitialStats, ActiveStats, Type, CurrentCooldown, CurrentUses);
+	TypeComponent->SyncToClients();
+	SyncClientAbilityData(InitialStats, ActiveStats, TypeComponent, CurrentCooldown, CurrentUses);
 	BP_SyncToClients();
 }
 
-void UAbility::SyncClientAbilityData_Implementation(FBattleStats _InitialStats, FBattleStats _ActiveStats, const TArray<UImmieType*>& _Type, float _CurrentCooldown, int _CurrentUses)
+void UAbility::SyncClientAbilityData_Implementation(FBattleStats _InitialStats, FBattleStats _ActiveStats, UBattleTypeComponent* _TypeComponent, float _CurrentCooldown, int _CurrentUses)
 {
 	AbilityDataObject = GetBattleInstance()->GetBattleAbilityManager()->GetAbilityDataObject(AbilityName);
 	InitialStats = _InitialStats;
 	ActiveStats = _ActiveStats;
-	Type = _Type;
+	TypeComponent = _TypeComponent;
 	CurrentCooldown = _CurrentCooldown;
 	CurrentUses = _CurrentUses;
 }
@@ -341,11 +348,6 @@ FName UAbility::GetAbilityName() const
 UClass* UAbility::GetActorClass() const
 {
 	return GetAbilityDataObject()->GetActorClass();
-}
-
-int UAbility::GetTypeBitmask() const
-{
-	return GetAbilityDataObject()->GetTypeBitmask();
 }
 
 float UAbility::GetInitialCooldown() const

@@ -69,9 +69,9 @@ USpecieDataObject* UBattleSpecieManager::GetSpecieDataObject(FName SpecieName)
 	return USpecieDataManager::GetSpecieDataObjectFromMap(SpeciesOverride, SpecieName);
 }
 
-int UBattleSpecieManager::GetSpecieTypeBitmask(FName SpecieName)
+FTypeBitmask UBattleSpecieManager::GetSpecieType(FName SpecieName)
 {
-	return GetSpecieDataObject(SpecieName)->GetTypeBitmask();
+	return GetSpecieDataObject(SpecieName)->GetType();
 }
 
 FBaseStats UBattleSpecieManager::GetSpecieBaseStats(FName SpecieName)

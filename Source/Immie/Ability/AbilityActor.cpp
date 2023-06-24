@@ -12,6 +12,7 @@
 #include <Kismet/GameplayStatics.h>
 #include <Immie/Immies/ImmieCharacter.h>
 #include <Immie/Type/ImmieType.h>
+#include <Immie/Type/BattleTypeComponent.h>
 #include <GameFramework/ProjectileMovementComponent.h>
 #include <Components/ArrowComponent.h>
 #include "Camera/CameraComponent.h"
@@ -407,9 +408,9 @@ float AAbilityActor::GetRange() const
 	return GetAbility()->GetRange();
 }
 
-TArray<UImmieType*> AAbilityActor::GetType_Implementation() const
+UBattleTypeComponent* AAbilityActor::GetTypeComponent_Implementation() const
 {
-	return GetAbility()->GetType();
+	return GetAbility()->GetTypeComponent();
 }
 
 FString AAbilityActor::GetDisplayName_Implementation() const
@@ -430,14 +431,14 @@ float AAbilityActor::TotalHealingFromAbility_Implementation(const FAbilityInstig
 {
 	// TODO properly implement healing thats not just the opposite of damage.
 	const float UnmodifiedDamageMultiplier = UFormula::Damage(AbilityHealing.Power, AbilityHealing.AttackerStat, AbilityHealing.DefenderStat, AbilityHealing.InstigatorLevel);
-	const float TypeDamageMultiplier = UImmieType::TotalTypeDamageMultiplier(AbilityHealing.InstigatorType, AbilityHealing.DefenderType);
+	const float TypeDamageMultiplier = AbilityHealing.DefenderTypeComponent->TotalTypeDamageMultiplier(AbilityHealing.InstigatorType);
 	return UnmodifiedDamageMultiplier * TypeDamageMultiplier;
 }
 
 float AAbilityActor::TotalDamageFromAbility_Implementation(const FAbilityInstigatorDamage& AbilityDamage) const
 {
 	const float UnmodifiedDamageMultiplier = UFormula::Damage(AbilityDamage.Power, AbilityDamage.AttackerStat, AbilityDamage.DefenderStat, AbilityDamage.InstigatorLevel);
-	const float TypeDamageMultiplier = UImmieType::TotalTypeDamageMultiplier(AbilityDamage.InstigatorType, AbilityDamage.DefenderType);
+	const float TypeDamageMultiplier = AbilityDamage.DefenderTypeComponent->TotalTypeDamageMultiplier(AbilityDamage.InstigatorType);
 	return UnmodifiedDamageMultiplier * TypeDamageMultiplier;
 }
 

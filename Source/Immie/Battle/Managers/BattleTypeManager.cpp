@@ -5,6 +5,7 @@
 #include <Immie/Battle/BattleInstance/BattleInstance.h>
 #include <Immie/Game/Global/Managers/TypeDataManager.h>
 #include <Immie/Type/ImmieType.h>
+#include <Immie/Type/BattleTypeComponent.h>
 
 UBattleTypeManager::UBattleTypeManager()
 {
@@ -25,37 +26,32 @@ void UBattleTypeManager::LoadOverrideTypeData(const FString& FolderName)
 	bUseOverride = true;
 
 	ULogger::Log("Loading override type constants for battle at folder " + FolderName, LogVerbosity_Warning);
-	GetTypeDataManager()->RegisterTypeConstants(FolderName, TypeConstantsOverride);
+	UTypeDataManager::RegisterTypeConstants(FolderName, TypeConstantsOverride);
 
 	ULogger::Log("Loading override types for battle at folder " + FolderName, LogVerbosity_Warning);
-	GetTypeDataManager()->RegisterTypes(BattleInstance, FolderName, &TypesOverride, TypeConstantsOverride);
+	UTypeDataManager::RegisterTypes(BattleInstance, FolderName, &TypesOverride, TypeConstantsOverride);
 }
 
 void UBattleTypeManager::SyncToClients()
 {
-	iLog("Performing type data syncing");
-	TArray<int> Keys;
-	TypesOverride.GetKeys(Keys);
-	for (int Key : Keys) {
-		UImmieType* Type = *TypesOverride.Find(Key);
-		Type->SyncToClients();
-	}
+	//iLog("Performing type data syncing");
+	//TArray<EImmieType> Keys;
+	//TypesOverride.GetKeys(Keys);
+	//for (EImmieType Key : Keys) {
+	//	UBattleTypeComponent* Type = *TypesOverride.Find(Key);
+	//	Type->SyncToClients();
+	//}
 }
 
-UImmieType* UBattleTypeManager::GetType(int TypeBitmask)
+FImmieType UBattleTypeManager::GetType(EImmieType Type)
 {
 	if (!bUseOverride) {
-		return GetTypeDataManager()->GetType(TypeBitmask);
+		return GetTypeDataManager()->GetType(Type);
 	}
 
-	UImmieType** Found = TypesOverride.Find(TypeBitmask);
-	if (Found) {
-		return *Found;
-	}
-	else {
-		iLog("Unable to find overridden type with bitmask " + FString::FromInt(TypeBitmask), LogVerbosity_Error);
-		return nullptr;
-	}
+	FImmieType* Found = TypesOverride.Find(Type);
+	checkf(Found, TEXT("Cannot find overridden FImmieType entry for type %s"), *UTypeDataManager::GetTypeName(Type).ToString());
+	return *Found;
 }
 
 FTypeConstants UBattleTypeManager::GetTypeConstants()
@@ -68,12 +64,13 @@ FTypeConstants UBattleTypeManager::GetTypeConstants()
 	}
 }
 
-TArray<UImmieType*> UBattleTypeManager::GetTypes(int TypeBitmask)
+TArray<FImmieType> UBattleTypeManager::GetTypes(FTypeBitmask TypeBitmask)
 {
-	if (!bUseOverride) {
-		return GetTypeDataManager()->GetTypes(TypeBitmask);
+	const TArray<EImmieType> TypeEnums = TypeBitmask.GetTypes();
+	TArray<FImmieType> Types;
+	for (int i = 0; i < TypeEnums.Num(); i++) {
+		Types.Add(GetType(TypeEnums[i]));
 	}
-
-	return UTypeDataManager::GetMultipleTypesFromMap(TypeBitmask, TypesOverride);
+	return Types;
 }
 
