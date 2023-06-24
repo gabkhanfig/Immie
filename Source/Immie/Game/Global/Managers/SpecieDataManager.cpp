@@ -26,8 +26,17 @@ static TSet<FName> _SpecieNamesSet() {
 	return NamesSet;
 }
 
+static TSet<FString> SetOfSpecieStringNames(const TArray<FName>& Names) {
+	TSet<FString> Set;
+	for (FName Name : Names) {
+		Set.Add(Name.ToString());
+	}
+	return Set;
+}
+
 const TArray<FName> USpecieDataManager::SpecieNames = _AllSpecieNames();
 const TSet<FName> USpecieDataManager::SpecieNamesSet = _SpecieNamesSet();
+const TSet<FString> USpecieDataManager::SpecieStringNames = SetOfSpecieStringNames(SpecieNames);
 
 TArray<FName> USpecieDataManager::GetAllSpecieNames() {
 	return SpecieNames;
@@ -36,6 +45,11 @@ TArray<FName> USpecieDataManager::GetAllSpecieNames() {
 bool USpecieDataManager::IsValidSpecieName(FName SpecieName)
 {
 	return SpecieNamesSet.Contains(SpecieName);
+}
+
+bool USpecieDataManager::IsValidSpecieNameString(const FString& SpecieStringName)
+{
+	return SpecieStringNames.Contains(SpecieStringName);
 }
 
 TSet<FName> USpecieDataManager::GetSetOfSpecieNames()
@@ -155,11 +169,13 @@ FName USpecieDataManager::SpecieNameFromBlueprintClassName(const FString ClassNa
 		iLog("[USpecieDataManager Specie Name From Blueprint Class Name]: Unable to find right chop string of " + RightChop + " in specie blueprint class name " + ClassName, LogVerbosity_Error);
 		return FName();
 	}
-	const FName FoundSpecieName = FName(ClassName.Mid(Start, End - Start));
-	if (!IsValidSpecieName(FoundSpecieName)) {
-		iLog("[USpecieDataManager Specie Name From Blueprint Class Name]: Found specie name of " + FoundSpecieName.ToString() + " from blueprint class name " + ClassName + " is not a valid specie", LogVerbosity_Error);
+
+	const FString FoundSpecieName = ClassName.Mid(Start, End - Start);
+	if (!IsValidSpecieNameString(FoundSpecieName)) {
+		iLog("[USpecieDataManager Specie Name From Blueprint Class Name]: Found specie name of " + FoundSpecieName + " from blueprint class name " + ClassName + " is not a valid specie", LogVerbosity_Error);
+		return FName();
 	}
-	return FoundSpecieName;
+	return FName(FoundSpecieName);
 }
 
 

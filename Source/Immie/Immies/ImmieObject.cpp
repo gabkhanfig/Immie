@@ -258,13 +258,12 @@ TArray<UImmie*> UImmie::JsonToTeam(const FJsonObjectBP& TeamJsonObject, const FS
             continue;
         }
 
-        FName ParsedSpecieName = FName(ParsedSpecieString);
-        if (!USpecieDataManager::IsValidSpecieName(ParsedSpecieName)) {
-            iLog("Parsed specie name " + ParsedSpecieName.ToString() + " is not a valid Immie specie", LogVerbosity_Error);
+        if (!USpecieDataManager::IsValidSpecieNameString(ParsedSpecieString)) {
+            iLog("Parsed specie name " + ParsedSpecieString + " is not a valid Immie specie", LogVerbosity_Error);
             continue;
         }
 
-        UImmie* Immie = UImmie::NewImmieObject(Outer, ParsedSpecieName);
+        UImmie* Immie = UImmie::NewImmieObject(Outer, FName(ParsedSpecieString));
         Immie->LoadJsonData(JsonTeam[i]);
         Team.Add(Immie);
     }

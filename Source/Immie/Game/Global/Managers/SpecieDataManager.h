@@ -41,6 +41,10 @@ public:
 		/**/
 		static bool IsValidSpecieName(FName SpecieName);
 
+	UFUNCTION(BlueprintPure)
+		/* Useful for checking if valid name without adding an FName entry. Much slower than FName access though. */
+		static bool IsValidSpecieNameString(const FString& SpecieStringName);
+
 	static TSet<FName> GetSetOfSpecieNames();
 
 	/* Set maps to nullptr to not load that set of data. */
@@ -63,6 +67,8 @@ private:
 	static const TArray<FName> SpecieNames;
 	/* Global variable that contains all FName's in SpecieNames, for fast look-up. */
 	static const TSet<FName> SpecieNamesSet;
+	/* Fast access to check valid specie names as strings without adding FName entries. */
+	static const TSet<FString> SpecieStringNames;
 
 	UPROPERTY()
 		/**/

@@ -21,11 +21,12 @@ void UWildSpawnTable::LoadJsonData(const FJsonObjectBP& Json)
 			iLog("[UWildSpawnTable Json]: Immie spawn data json requires the field \"ImmieName\"", LogVerbosity_Error);
 			continue;
 		}
-		FName ImmieName = FName(TableElements[i].GetStringField("ImmieName"));
-		if (!USpecieDataManager::IsValidSpecieName(ImmieName)) {
-			iLog("[UWildSpawnTable Json]: ImmieName of " + ImmieName.ToString() + " is not a valid specie", LogVerbosity_Error);
+
+		FString ImmieName = TableElements[i].GetStringField("ImmieName");
+		if (!USpecieDataManager::IsValidSpecieNameString(ImmieName)) {
+			iLog("[UWildSpawnTable Json]: ImmieName of " + ImmieName + " is not a valid specie", LogVerbosity_Error);
 		}
-		UClass* SpawnDataClass = GetSpecieDataManager()->GetSpecieDataObject(ImmieName)->GetSpawnDataClass();
+		UClass* SpawnDataClass = GetSpecieDataManager()->GetSpecieDataObject(FName(ImmieName))->GetSpawnDataClass();
 		UImmieSpawnData* SpawnDataObject = NewObject<UImmieSpawnData>(this, SpawnDataClass);
 		SpawnDataObject->LoadJsonData(TableElements[i]);
 
