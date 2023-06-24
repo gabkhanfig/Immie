@@ -162,7 +162,7 @@ UAbilityDataObject* UAbilityDataObject::CreateAbilityDataObject(UObject* Outer, 
 void UAbilityDataObject::LoadAbilityJsonData(const FJsonObjectBP& Json)
 {
 	if (Json.HasField(ABILITY_DO_JSON_FIELD_TYPES)) {
-		TypeBitmask = GetTypeDataManager()->GetTypeBitmaskFromJsonArray(Json.GetArrayField("Types"));
+		Type = FTypeBitmask::FromJsonTypesArrayField(Json.GetArrayField("Types"));
 	}
 
 	Json.TryGetFloatField(ABILITY_DO_JSON_FIELD_INITIAL_COOLDOWN, InitialCooldown);
@@ -235,7 +235,8 @@ FJsonObjectBP UAbilityDataObject::AbilityDataToJson()
 {
 	FJsonObjectBP Json;
 
-	TArray<FName> TypeNames = GetTypeDataManager()->GetTypeNames(TypeBitmask);
+	TArray<FName> TypeNames;// = GetTypeDataManager()->GetTypeNames(TypeBitmask);
+	check(false);
 	const int TypesCount = TypeNames.Num();
 	TArray<FString> TypeStrings;
 	TypeStrings.Reserve(TypesCount);

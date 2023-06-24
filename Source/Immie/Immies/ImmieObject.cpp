@@ -45,7 +45,7 @@ void UImmie::PostLoad()
 UImmie* UImmie::NewImmieObject(UObject* Outer, FName _SpecieName)
 {
   check(Outer);
-  UClass* ImmieObjectClass = GetSpecieDataManager()->GetImmieObjectClass(_SpecieName);
+  UClass* ImmieObjectClass = GetSpecieDataManager()->GetSpecieDataObject(_SpecieName)->GetImmieObjectClass();
   check(ImmieObjectClass);
   UImmie* Immie = NewObject<UImmie>(Outer, ImmieObjectClass);
   return Immie;
@@ -284,7 +284,7 @@ void UImmie::Release()
 
 void UImmie::Heal()
 {
-    HealFromBaseStats(GetSpecieDataManager()->GetSpecieBaseStats(SpecieName).Health);
+    HealFromBaseStats(GetSpecieDataManager()->GetSpecieDataObject(SpecieName)->GetBaseStats().Health);
 }
 
 void UImmie::HealFromBaseStats(uint8 HealthBaseStat)
@@ -338,7 +338,7 @@ void UImmie::SetLevel(uint8 NewLevel)
 float UImmie::GetMaxHealth(bool UseBaseStatOverride, uint8 BaseHealth) const
 {
     if (!UseBaseStatOverride) {
-        BaseHealth = GetSpecieDataManager()->GetSpecieBaseStats(SpecieName).Health;
+        BaseHealth = GetSpecieDataManager()->GetSpecieDataObject(SpecieName)->GetBaseStats().Health;
     }
 
     return UFormula::HealthStat(BaseHealth, GetLevel(), StatLevels.Health);
@@ -347,7 +347,7 @@ float UImmie::GetMaxHealth(bool UseBaseStatOverride, uint8 BaseHealth) const
 float UImmie::GetAttack(bool UseBaseStatOverride, uint8 BaseAttack) const
 {
     if (!UseBaseStatOverride) {
-        BaseAttack = GetSpecieDataManager()->GetSpecieBaseStats(SpecieName).Attack;
+        BaseAttack = GetSpecieDataManager()->GetSpecieDataObject(SpecieName)->GetBaseStats().Attack;
     }
 
     return UFormula::AttackStat(BaseAttack, GetLevel(), StatLevels.Attack);
@@ -356,7 +356,7 @@ float UImmie::GetAttack(bool UseBaseStatOverride, uint8 BaseAttack) const
 float UImmie::GetDefense(bool UseBaseStatOverride, uint8 BaseDefense) const
 {
     if (!UseBaseStatOverride) {
-        BaseDefense = GetSpecieDataManager()->GetSpecieBaseStats(SpecieName).Defense;
+        BaseDefense = GetSpecieDataManager()->GetSpecieDataObject(SpecieName)->GetBaseStats().Defense;
     }
 
     return UFormula::DefenseStat(BaseDefense, GetLevel(), StatLevels.Defense);
@@ -365,7 +365,7 @@ float UImmie::GetDefense(bool UseBaseStatOverride, uint8 BaseDefense) const
 float UImmie::GetSpeed(bool UseBaseStatOverride, uint8 BaseSpeed) const
 {
     if (!UseBaseStatOverride) {
-        BaseSpeed = GetSpecieDataManager()->GetSpecieBaseStats(SpecieName).Speed;
+        BaseSpeed = GetSpecieDataManager()->GetSpecieDataObject(SpecieName)->GetBaseStats().Speed;
     }
 
     return UFormula::SpeedStat(BaseSpeed, StatLevels.Speed);

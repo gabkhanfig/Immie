@@ -7,6 +7,7 @@
 #include <Immie/Util/Json/BlueprintJsonObject.h>
 #include "AbilityDataTypes.h"
 #include <Immie/Core/Structures.h>
+#include <Immie/Type/ImmieType.h>
 #include "AbilityDataObject.generated.h"
 
 class UAbility;
@@ -50,7 +51,7 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly)
 		/* Bitmask containing all of this ability's types. Used in MOST cases to figure out which battle types to use. */
-		int TypeBitmask;
+		FTypeBitmask Type;
 
 	UPROPERTY(BlueprintReadOnly)
 		/* The initial cooldown amount of this ability. Always starts the cooldown with this amount. */
@@ -162,7 +163,7 @@ public:
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		int GetTypeBitmask() const { return TypeBitmask; }
+		FTypeBitmask GetType() const { return Type; }
 
 	UFUNCTION(BlueprintPure)
 		/**/

@@ -114,7 +114,7 @@ USpecieDataObject* USpecieDataObject::CreateSpecieDataObject(UObject* Outer, UCl
 
 void USpecieDataObject::LoadSpecieJsonData(const FJsonObjectBP& Json, bool LoadJsonLearnsets)
 {
-    TypeBitmask = GetTypeDataManager()->GetTypeBitmaskFromJsonArray(Json.GetArrayField(SPECIE_DO_JSON_FIELD_TYPES));
+    Type = FTypeBitmask::FromJsonTypesArrayField(Json.GetArrayField(SPECIE_DO_JSON_FIELD_TYPES));
 
     const uint8 MaxBaseStat = GetConfigDataManager()->GetMaxBaseStat();
 
@@ -220,7 +220,8 @@ FJsonObjectBP USpecieDataObject::SpecieDataToJson()
 {
     FJsonObjectBP Json;
     
-    TArray<FName> TypeNames = GetTypeDataManager()->GetTypeNames(TypeBitmask);
+    TArray<FName> TypeNames;// = GetTypeDataManager()->GetTypeNames(TypeBitmask);
+    check(false); // FIX FOR NEW TYPE
     const int TypesCount = TypeNames.Num();
     TArray<FString> TypeStrings;
     TypeStrings.Reserve(TypesCount);

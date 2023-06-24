@@ -19,8 +19,6 @@ class IMMIE_API USpecieDataManager : public UGameDataManager
 {
 	GENERATED_BODY()
 
-
-
 private:
 
 	void SetSpecieNamesAndIds();
@@ -56,36 +54,6 @@ public:
 	UFUNCTION(BlueprintPure)
 		/**/
 		USpecieDataObject* GetSpecieDataObject(FName SpecieName);
-
-	static int GetSpecieTypeBitmaskFromMap(TMap<FName, USpecieDataObject*>& Map, FName SpecieName);
-
-	UFUNCTION(BlueprintPure)
-		/**/
-		int GetSpecieTypeBitmask(FName SpecieName);
-
-	static FBaseStats GetSpecieBaseStatsFromMap(TMap<FName, USpecieDataObject*>& Map, FName SpecieName);
-
-	UFUNCTION(BlueprintPure)
-		/**/
-		FBaseStats GetSpecieBaseStats(FName SpecieName);
-
-	static UClass* GetImmieObjectClassFromMap(TMap<FName, USpecieDataObject*>& Map, FName SpecieName);
-
-	UFUNCTION(BlueprintPure)
-		/**/
-		UClass* GetImmieObjectClass(FName SpecieName);
-
-	static UClass* GetImmieCharacterClassFromMap(TMap<FName, USpecieDataObject*>& Map, FName SpecieName);
-	
-	UFUNCTION(BlueprintPure)
-		/**/
-		UClass* GetImmieCharacterClass(FName SpecieName);
-
-	static FSpecieLearnset GetSpecieLearnsetsFromMap(TMap<FName, USpecieDataObject*>& Map, FName SpecieName);
-
-	UFUNCTION(BlueprintPure)
-		/* Avoid repeated calls due to potentially expensive multiple array copying. */
-		FSpecieLearnset GetSpecieLearnsets(FName SpecieName);
 
 	static FName SpecieNameFromBlueprintClassName(const FString ClassName, FString RightChop);
 

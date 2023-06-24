@@ -7,6 +7,7 @@
 #include <Immie/Core/Structures.h>
 #include <Immie/Util/Json/BlueprintJsonObject.h>
 #include <Immie/Immies/SpecieDataTypes.h>
+#include <Immie/Type/ImmieType.h>
 #include "SpecieDataObject.generated.h"
 
 class UImmie;
@@ -45,7 +46,7 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite)
 		/**/
-		int TypeBitmask;
+		FTypeBitmask Type;
 
 	UPROPERTY(BlueprintReadWrite)
 		/**/
@@ -111,7 +112,7 @@ public:
 	
 	UFUNCTION(BlueprintPure)
 		/**/
-		int GetTypeBitmask() const { return TypeBitmask; }
+		FTypeBitmask GetType() const { return Type; }
 
 	UFUNCTION(BlueprintPure)
 		/**/
