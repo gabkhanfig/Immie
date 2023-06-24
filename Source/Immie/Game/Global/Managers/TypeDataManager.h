@@ -5,9 +5,10 @@
 #include "CoreMinimal.h"
 #include "GameDataManager.h"
 #include <Immie/Type/TypeConstants.h>
+#include <Immie/Type/ImmieType.h>
 #include "TypeDataManager.generated.h"
 
-class UImmieType;
+class UBattleTypeComponent;
 
 /**
  * 
@@ -17,75 +18,113 @@ class IMMIE_API UTypeDataManager : public UGameDataManager
 {
 	GENERATED_BODY()
 
-private:
-
-	UPROPERTY()
-		/* Map of all battle types and their relevant data */
-		TMap<int, UImmieType*> Types;
-
-	UPROPERTY()
-		/**/
-		TMap<int, FName> TypeNames;
-
-	UPROPERTY()
-		/**/
-		TMap<FName, int> TypeBitmasks;
-
-	UPROPERTY()
-		/**/
-		FTypeConstants TypeConstants;
-
-private:
-
-	void MapTypeBitmasks();
-
 protected:
 
 	virtual void LoadDefaultGameData() override;
 
 public:
 
-	void RegisterTypeConstants(const FString& FolderName, FTypeConstants& TypeConstantsOut);
+	UTypeDataManager();
 
-	void RegisterTypes(UObject* Outer, const FString& FolderName, TMap<int, UImmieType*>* TypesOut, const FTypeConstants& TypeConsts);
+	static void RegisterTypeConstants(const FString& FolderName, FTypeConstants& TypeConstantsOut);
 
-	void RegisterType(const FName& Name, UObject* Outer, const FString& FolderName, TMap<int, UImmieType*>* TypesOut, const FTypeConstants& TypeConsts);
+	static void RegisterTypes(UObject* Outer, const FString& FolderName, TMap<EImmieType, FImmieType>* TypesOut, const FTypeConstants& TypeConsts);
 
-	UFUNCTION(BlueprintPure)
-		/**/
-		int GetTypeBitmask(FName Name);
+	static void RegisterType(const FName& Name, UObject* Outer, const FString& FolderName, TMap<EImmieType, FImmieType>* TypesOut, const FTypeConstants& TypeConsts);
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		FName GetTypeName(int TypeBitmask);
+		static bool IsValidTypeName(FName TypeName);
+
+	UFUNCTION(BlueprintPure)
+		/* Useful for checking if valid name without adding an FName entry. Much slower than FName access though. */
+		static bool IsValidTypeNameString(FString TypeNameString);
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		bool IsValidType(int TypeBitmask);
+		static EImmieType GetTypeEnum(FName TypeName);
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		UImmieType* GetType(int TypeBitmask);
+		static FName GetTypeName(EImmieType Type);
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		UImmieType* GetTypeFromName(FName Name);
+		FLinearColor GetTypeColor(EImmieType Type);
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		TArray<FName> GetTypeNames(int TypeBitmask);
+		FImmieType GetType(EImmieType Type);
 
 	UFUNCTION(BlueprintPure)
 		/**/
 		FTypeConstants GetTypeConstants() const { return TypeConstants; }
-
-	UFUNCTION(BlueprintPure)
-		/**/
-		TArray<UImmieType*> GetTypes(int TypeBitmask);
-
-	static TArray<UImmieType*> GetMultipleTypesFromMap(int TypesBitmask, TMap<int, UImmieType*>& Map);
-
-	/* Assumes the objects held within the array use "Type" as the field to read from. */
-	int GetTypeBitmaskFromJsonArray(const FJsonArrayBP& JsonArray);
 	
+private:
+
+	/* Global variable that contains all FName's in SpecieNames, for fast look-up. */
+	static const TMap<FName, EImmieType> TypeEnums;
+	/* Index using EImmieType cast to int */
+	static const TArray<FName> TypeNames;
+	/* Fast access to check valid type names as strings without adding FName entries. */
+	static const TSet<FString> TypeStringNames;
+
+	UPROPERTY()
+		/* Map of all battle types and their relevant data */
+		TMap<EImmieType, FImmieType> Types;
+
+	UPROPERTY()
+		/**/
+		FTypeConstants TypeConstants;
+
+protected:
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		/**/
+		FLinearColor NeutralColor;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		/**/
+		FLinearColor FireColor;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		/**/
+		FLinearColor WaterColor;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		/**/
+		FLinearColor NatureColor;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		/**/
+		FLinearColor StandardColor;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		/**/
+		FLinearColor ElectricColor;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		/**/
+		FLinearColor AirColor;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		/**/
+		FLinearColor GroundColor;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		/**/
+		FLinearColor MetalColor;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		/**/
+		FLinearColor LightColor;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		/**/
+		FLinearColor DarkColor;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		/**/
+		FLinearColor DragonColor;
+
 };
