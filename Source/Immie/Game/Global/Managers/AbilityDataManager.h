@@ -39,6 +39,10 @@ public:
 		/**/
 		static bool IsValidAbilityName(FName AbilityName);
 
+	UFUNCTION(BlueprintPure)
+		/* Useful for checking if valid name without adding an FName entry. Much slower than FName access though. */
+		static bool IsValidAbilityNameString(const FString& AbilityStringName);
+
 	static TSet<FName> GetSetOfAbilityNames();
 
 	void RegisterAbilitiesFromDisk(UObject* Outer, const FString& FolderName, TMap<FName, UAbilityDataObject*>* AbilitiesOut);
@@ -71,6 +75,8 @@ private:
 	static const TArray<FName> AbilityNames;
 	/* Global variable that contains all FName's in SpecieNames, for fast look-up. */
 	static const TSet<FName> AbilityNamesSet;
+	/* Fast access to check valid ability names as strings without adding FName entries. */
+	static const TSet<FString> AbilityStringNames;
 
 	UPROPERTY()
 		/**/

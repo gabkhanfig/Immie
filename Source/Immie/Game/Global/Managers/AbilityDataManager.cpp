@@ -27,8 +27,17 @@ static TSet<FName> _AbilityNamesSet() {
 	return NamesSet;
 }
 
+static TSet<FString> SetOfAbilityStringNames(const TArray<FName>& Names) {
+	TSet<FString> Set;
+	for (FName Name : Names) {
+		Set.Add(Name.ToString());
+	}
+	return Set;
+}
+
 const TArray<FName> UAbilityDataManager::AbilityNames = _AllAbilityNames();
 const TSet<FName> UAbilityDataManager::AbilityNamesSet = _AbilityNamesSet();
+const TSet<FString> UAbilityDataManager::AbilityStringNames = SetOfAbilityStringNames(AbilityNames);
 
 TArray<FName> UAbilityDataManager::GetAllAbilityNames() {
 	return AbilityNames;
@@ -37,6 +46,11 @@ TArray<FName> UAbilityDataManager::GetAllAbilityNames() {
 bool UAbilityDataManager::IsValidAbilityName(FName AbilityName)
 {
 	return AbilityNamesSet.Contains(AbilityName);
+}
+
+bool UAbilityDataManager::IsValidAbilityNameString(const FString& AbilityStringName)
+{
+	return AbilityStringNames.Contains(AbilityStringName);
 }
 
 TSet<FName> UAbilityDataManager::GetSetOfAbilityNames()
@@ -185,10 +199,11 @@ FName UAbilityDataManager::AbilityNameFromBlueprintClassName(const FString Class
 		iLog("[UAbilityDataManager Ability  Name From Blueprint Class Name]: Unable to find right chop string of " + RightChop + " in ability blueprint class name " + ClassName, LogVerbosity_Error);
 		return FName();
 	}
-	const FName FoundAbilityName = FName(ClassName.Mid(Start, End - Start));
-	if (!IsValidAbilityName(FoundAbilityName)) {
-		iLog("[UAbilityDataManager Ability  Name From Blueprint Class Name]: Found ability name of " + FoundAbilityName.ToString() + " from blueprint class name " + ClassName + " is not a valid ability", LogVerbosity_Error);
+
+	const FString FoundAbilityName = ClassName.Mid(Start, End - Start);
+	if (!IsValidAbilityNameString(FoundAbilityName)) {
+		iLog("[UAbilityDataManager Ability  Name From Blueprint Class Name]: Found ability name of " + FoundAbilityName + " from blueprint class name " + ClassName + " is not a valid ability", LogVerbosity_Error);
 		return FName();
 	}
-	return FoundAbilityName;
+	return FName(FoundAbilityName);
 }

@@ -190,14 +190,12 @@ TArray<FName> USpecieDataObject::LoadAbilitySet(const FJsonObjectBP& Json, const
 
     TArray<FName> Abilities;
     Abilities.Reserve(ElementCount);
-    for (int i = 0; i < ElementCount; i++) {
-        const FName AbilityName = FName(Parsed[i]);
-
-        if (UAbilityDataManager::IsValidAbilityName(AbilityName)) {
-            Abilities.Add(AbilityName);
+    for (const FString AbilityName : Parsed) {
+        if (UAbilityDataManager::IsValidAbilityNameString(AbilityName)) {
+            Abilities.Add(FName(AbilityName));
         }
         else {
-            iLog("Unable to parse learnset json ability " + Parsed[i] + " into a valid ability");
+            iLog("Unable to parse learnset json ability " + AbilityName + " into a valid ability");
         }
     }
     return Abilities;
