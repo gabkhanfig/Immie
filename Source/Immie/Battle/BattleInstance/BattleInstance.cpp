@@ -119,8 +119,11 @@ void ABattleInstance::SyncClientManagers()
 void ABattleInstance::CreateTeams()
 {
 	for (int i = 0; i < InitTeams.Num(); i++) {
+		TSubclassOf<ABattleTeam> TeamClass = InitTeams[i].BattleTeamClass;
+		checkf(IsValid(TeamClass), TEXT("Init Team index %d does not have a valid battle team class"), i);
 		ABattleTeam* Team = GetWorld()->SpawnActorDeferred<ABattleTeam>(InitTeams[i].BattleTeamClass, InitTeams[i].SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 		UGameplayStatics::FinishSpawningActor(Team, InitTeams[i].SpawnTransform);
+		check(IsValid(Team));
 		Teams.Add(Team);
 	}
 }

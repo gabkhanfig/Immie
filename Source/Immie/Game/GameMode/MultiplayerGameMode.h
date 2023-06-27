@@ -9,6 +9,7 @@
 
 class AImmiePlayerController;
 class ABattleInstance;
+class ABattleTeam;
 
 USTRUCT(BlueprintType)
 struct FMultiplayerTeamContainer 
@@ -45,6 +46,8 @@ protected:
 
 public:
 
+	AMultiplayerGameMode();
+
 	/* Adds a player to the battle that will happen. */
 	void AddPlayerToBattle(AImmiePlayerController* Player, const FString& TeamJsonString);
 
@@ -57,5 +60,15 @@ public:
 private:
 
 	FBattleTeamInit GenerateTestAiTeam() const;
+
+protected:
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		/**/
+		TSubclassOf<ABattleTeam> PlayerTeamClass;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		/**/
+		TSubclassOf<ABattleTeam> AiTeamClass;
 
 };

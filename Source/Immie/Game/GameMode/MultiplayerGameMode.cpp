@@ -4,6 +4,7 @@
 #include "MultiplayerGameMode.h"
 #include <Immie/Controller/Player/ImmiePlayerController.h>
 #include <Immie/Battle/BattleInstance/BattleInstance.h>
+#include <Immie/Battle/Team/BattleTeam.h>
 #include <Immie/Util/Json/BlueprintJsonObject.h>
 #include <Immie/ImmieCore.h>
 #include <Immie/Immies/ImmieObject.h>
@@ -16,6 +17,15 @@ void AMultiplayerGameMode::PostLogin(APlayerController* NewPlayer)
 	AImmiePlayerController* Player = Cast<AImmiePlayerController>(NewPlayer);
 	Player->SetGameMode(this);
 	Player->RequestClientPlayerTeam();
+}
+
+AMultiplayerGameMode::AMultiplayerGameMode()
+{
+	static ConstructorHelpers::FClassFinder<ABattleTeam> BattleTeamFoundClass(TEXT("/Game/Battle/Team/BP_PlayerMultiplayerBattleTeam"));
+	PlayerTeamClass = BattleTeamFoundClass.Class;
+
+	static ConstructorHelpers::FClassFinder<ABattleTeam> AiTeamFoundClass(TEXT("/Game/Battle/Team/BP_TrainerBattleTeam"));
+	AiTeamClass = AiTeamFoundClass.Class;
 }
 
 void AMultiplayerGameMode::AddPlayerToBattle(AImmiePlayerController* Player, const FString& TeamJsonString)
@@ -37,6 +47,8 @@ bool AMultiplayerGameMode::IsReadyForBattle()
 
 void AMultiplayerGameMode::ForceStartMultiplayerBattle(AImmiePlayerController* Player)
 {
+	checkf(IsValid(PlayerTeamClass), TEXT("Player team class must be valid to force start a multiplayer battle"));
+
 	ULogger::Log("Player has force started a multiplayer battle");
 
 	const int RequiredTeamCount = 2;
@@ -56,6 +68,7 @@ void AMultiplayerGameMode::ForceStartMultiplayerBattle(AImmiePlayerController* P
 
 		FBattleTeamInit BattleTeam;
 		BattleTeam.Controller = PlayerTeams[i].Controller;
+		BattleTeam.BattleTeamClass = PlayerTeamClass;
 		//BattleTeam.TeamType = EBattleTeamType::BattleTeam_PlayerMultiplayer;
 		FJsonObjectBP PlayerImmiesJson;
 		if (!FJsonObjectBP::LoadJsonString(PlayerTeams[i].TeamJsonString, PlayerImmiesJson)) {
@@ -76,7 +89,7 @@ FBattleTeamInit AMultiplayerGameMode::GenerateTestAiTeam() const
 {
 	TArray<UImmie*> Immies;
 	for (int i = 0; i < 2; i++) {
-		UImmie* Immie = UImmie::NewImmieObject((UObject*)this, "snamdon");
+		UImmie* Immie = UImmie::NewImmieObject((UObject*)this, "Snamdon");
 		Immie->SetDisplayName("Ai Trainer Immie " + FString::FromInt(i + 1));
 		Immie->SetHealth(10000);
 		Immies.Add(Immie);
@@ -84,6 +97,7 @@ FBattleTeamInit AMultiplayerGameMode::GenerateTestAiTeam() const
 
 	FBattleTeamInit Team;
 	Team.Team = Immies;
+	Team.BattleTeamClass = AiTeamClass;
 	//Team.TeamType = EBattleTeamType::BattleTeam_PlayerSingleplayer;
 	return Team;
 }
