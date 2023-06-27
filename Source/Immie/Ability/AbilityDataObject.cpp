@@ -235,13 +235,12 @@ FJsonObjectBP UAbilityDataObject::AbilityDataToJson()
 {
 	FJsonObjectBP Json;
 
-	TArray<FName> TypeNames;// = GetTypeDataManager()->GetTypeNames(TypeBitmask);
-	check(false);
-	const int TypesCount = TypeNames.Num();
+	TArray<EImmieType> Types = Type.GetTypes();
+	const int TypesCount = Types.Num();
 	TArray<FString> TypeStrings;
 	TypeStrings.Reserve(TypesCount);
 	for (int i = 0; i < TypesCount; i++) {
-		TypeStrings.Add(TypeNames[i].ToString());
+		TypeStrings.Add(UTypeDataManager::GetTypeName(Types[i]).ToString());
 	}
 	FJsonArrayBP TypesArray;
 	TypesArray.SetStringArray("Type", TypeStrings);
