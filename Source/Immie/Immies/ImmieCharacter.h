@@ -23,6 +23,7 @@ class UImmieBattleHud;
 class UFloatingBattleHealthbar;
 class AWildImmieSpawner;
 class USphereComponent;
+class ABattleAiController;
 
 UCLASS()
 class IMMIE_API AImmieCharacter : public ACharacter, public IBattleActor, public IBattler
