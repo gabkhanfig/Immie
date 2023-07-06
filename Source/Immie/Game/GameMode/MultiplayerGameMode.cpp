@@ -67,7 +67,7 @@ void AMultiplayerGameMode::ForceStartMultiplayerBattle(AImmiePlayerController* P
 		}
 
 		FBattleTeamInit BattleTeam;
-		BattleTeam.Controller = PlayerTeams[i].Controller;
+		BattleTeam.PlayerController = PlayerTeams[i].Controller;
 		BattleTeam.BattleTeamClass = PlayerTeamClass;
 		//BattleTeam.TeamType = EBattleTeamType::BattleTeam_PlayerMultiplayer;
 		FJsonObjectBP PlayerImmiesJson;

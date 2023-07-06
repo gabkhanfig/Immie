@@ -52,7 +52,7 @@ void AImmieGameMode::StartSingleplayerBattle()
 		Teams.Add(Team);
 	}
 	
-	Teams[0].Controller = GetWorld()->GetFirstPlayerController();
+	Teams[0].PlayerController = Cast<AImmiePlayerController>(GetWorld()->GetFirstPlayerController());
 	Battle->BattleInit(Teams);
 }
 

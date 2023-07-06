@@ -10,6 +10,7 @@
 #include "../Trainer/TrainerPawn.h"
 #include "../../Battle/Team/BattleTeam.h"
 #include "../../Immies/ImmieObject.h"
+#include "../../Controller/Player/ImmiePlayerController.h"
 
 // Sets default values
 AOverworldPlayer::AOverworldPlayer()
@@ -81,7 +82,10 @@ APawn* AOverworldPlayer::GetPawn_Implementation() const
 FBattleTeamInit AOverworldPlayer::GetBattleTeamInit_Implementation() const
 {
 	FBattleTeamInit TeamInit = DefaultBattleTeamInit();
-	TeamInit.Controller = GetController();
+	TeamInit.IsPlayerControlled = true;
+	AImmiePlayerController* PlayerController = Cast<AImmiePlayerController>(GetController());
+	checkf(IsValid(PlayerController), TEXT("Cannot use an invalid player controller when starting a battle"));
+	TeamInit.PlayerController = PlayerController;
 	return TeamInit;
 }
 

@@ -15,6 +15,7 @@
 #include "../../Overworld/WildImmies/WildImmieSpawner.h"
 #include "../../Game/Player/PlayerImmies.h"
 #include <Immie/Type/BattleTypeComponent.h>
+#include "../Ai/BattleAiController.h"
 
 ABattleTeam::ABattleTeam()
 {
@@ -30,6 +31,11 @@ ABattleTeam::ABattleTeam()
 	bTeamAlive = true;
 	bUseOuterImmieCharacters = true;
 	bDestroyAllCharactersOnBattleEnd = true;
+
+	PlayerController = nullptr;
+
+	IsPlayerControlled = false;
+	AIControllerClass = ABattleAiController::StaticClass();
 }
 
 void ABattleTeam::BeginPlay()
@@ -121,19 +127,17 @@ void ABattleTeam::Tick(float DeltaTime)
 
 void ABattleTeam::InitializeTeam(ABattleInstance* _BattleInstance, const FBattleTeamInit& TeamData)
 {
+	checkf(IsPlayerControlled == TeamData.IsPlayerControlled, TEXT("FBattleTeamInit.IsPlayerController must match the flag set by the Battle Team class"));
+	if (IsPlayerControlled) {
+		checkf(IsValid(TeamData.PlayerController), TEXT("Team Player Controller must be a valid object if the player controlled flag is set"));
+	}
+
+	// Check if team owner is valid.
+
 	BattleInstance = _BattleInstance;
 	ImmieSpawnTransform = TeamData.SpawnTransform;
-	Controller = TeamData.Controller;
+	PlayerController = TeamData.PlayerController;
 	TeamOwnerAsObject = TeamData.TeamOwner;
-
-	if (Controller == nullptr) {
-		if (IsValid(AIControllerClass)) {
-			//iLog("null controller but valid ai controller class");
-		}
-		else {
-			//iLog("null controller");
-		}
-	}
 
 	BP_CreateTeam(TeamData);
 	BP_InitializeTeam(TeamData);
@@ -146,26 +150,20 @@ void ABattleTeam::BP_CreateTeam_Implementation(const FBattleTeamInit& TeamData)
 
 void ABattleTeam::SetClientSubobjects()
 {
-	SyncClientSubobjects(BattleInstance, Controller, Team);
+	SyncClientSubobjects(BattleInstance, PlayerController, Team);
 	for (int i = 0; i < Team.Num(); i++) {
 		iLog("setting client subobjects for team immie index " + FString::FromInt(i));
 		Team[i]->SyncClientSubobjects();
 	}
 }
 
-void ABattleTeam::SyncClientSubobjects_Implementation(ABattleInstance* BattleInstanceObject, AController* ControllerObject, const TArray<AImmieCharacter*>& TeamCharacterObjects)
+void ABattleTeam::SyncClientSubobjects_Implementation(ABattleInstance* BattleInstanceObject, AImmiePlayerController* PlayerControllerObject, const TArray<AImmieCharacter*>& TeamCharacterObjects)
 {
 	if (HasAuthority()) {
 		return;
 	}
 
-	BattleInstance = BattleInstanceObject;
-	if (ControllerObject == Cast<AController>(BattleInstance->GetLocalPlayerController())) {
-		Controller = ControllerObject;
-	}
-	else {
-		Controller = nullptr;
-	}
+	PlayerController = PlayerControllerObject;
 	Team = TeamCharacterObjects;
 }
 
@@ -222,8 +220,8 @@ void ABattleTeam::SetImmieForBattle(AImmieCharacter* ImmieCharacter)
 
 	ImmieCharacter->SetImmieEnabled(true);
 
-	if (IsValid(Controller)) {
-		ImmieCharacter->PossessForBattle(Controller);
+	if (IsPlayerControlled) {
+		ImmieCharacter->PossessForBattle(PlayerController);
 	}
 
 	SetActiveImmie(ImmieCharacter);
@@ -337,8 +335,10 @@ void ABattleTeam::OnBattleEnd_Implementation(EBattleTeamWinState WinState)
 		//DestroyBattleActors();
 	}
 
-	AImmiePlayerController* AsPlayerController = Cast<AImmiePlayerController>(Controller);
-	const bool IsLocalPlayer = AsPlayerController && AsPlayerController == GetBattleInstance()->GetLocalPlayerController();
+	bool IsLocalPlayer = false;
+	if (IsPlayerControlled) {
+		IsLocalPlayer = IsValid(PlayerController) && PlayerController == GetBattleInstance()->GetLocalPlayerController();
+	}
 	const bool IsLocalPlayerTeam = IsLocalPlayer && !IsRunningDedicatedServer();
 	BP_OnBattleEnd(WinState, IsLocalPlayerTeam);	
 }

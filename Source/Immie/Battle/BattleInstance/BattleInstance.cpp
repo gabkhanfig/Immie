@@ -55,7 +55,7 @@ void ABattleInstance::ClientSpawned(AImmiePlayerController* Player)
 	int NewClientTeam = -1;
 
 	for (int i = 0; i < InitTeams.Num(); i++) {
-		if (InitTeams[i].Controller == Cast<AController>(Player)) {
+		if (InitTeams[i].PlayerController == Player) {
 			NewClientTeam = i;
 			break;
 		}
@@ -102,7 +102,7 @@ void ABattleInstance::SetClientManagers_Implementation(UBattleTypeManager* NewBa
 void ABattleInstance::ClientManagersValid(AImmiePlayerController* Player)
 {
 	for (int i = 0; i < InitTeams.Num(); i++) {
-		if (InitTeams[i].Controller == Cast<AController>(Player)) {
+		if (InitTeams[i].PlayerController == Player) {
 			// Assume valid index.
 			ClientsValidSpawnedManagers[i] = true;
 		}
@@ -145,7 +145,7 @@ void ABattleInstance::SetClientTeams_Implementation(const TArray<ABattleTeam*>& 
 void ABattleInstance::ClientTeamsValid(AImmiePlayerController* Player)
 {
 	for (int i = 0; i < Teams.Num(); i++) {
-		if (Teams[i]->GetController() == Cast<AController>(Player)) {
+		if (Teams[i]->GetPlayerController() == Player) {
 			// Assume valid index.
 			ClientsValidTeamObjects[i] = true;
 		}

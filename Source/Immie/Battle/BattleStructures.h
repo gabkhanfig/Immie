@@ -9,6 +9,7 @@ class UImmie;
 class UAbility;
 class IBattler;
 class ABattleTeam;
+class AImmiePlayerController;
 
 UENUM(BlueprintType)
 enum EBattleTeamType
@@ -61,16 +62,20 @@ struct FBattleTeamInit
 		FTransform SpawnTransform;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		/* Can be null. If set to nullptr, an AI controller will be created for this battle team. */
-		AController* Controller;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/* The actor that "owns" the team. */
 		UObject* TeamOwner;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		/**/
 		TSubclassOf<ABattleTeam> BattleTeamClass;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		/**/
+		bool IsPlayerControlled;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(EditCondition="IsPlayerControlled"))
+		/* Can be null. If set to nullptr, an AI controller will be created for this battle team. */
+		AImmiePlayerController* PlayerController;
 
 	FBattleTeamInit();
 

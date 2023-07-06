@@ -11,7 +11,8 @@ class ABattleInstance;
 class UImmie;
 class AImmieCharacter;
 class AAbilityActor;
-class AImmieAIController;
+class ABattleAiController;
+class AImmiePlayerController;
 
 UCLASS()
 class IMMIE_API ABattleTeam : public AActor
@@ -26,15 +27,19 @@ private:
 
 	ABattleInstance* BattleInstance;
 
-	AController* Controller;
+	AImmiePlayerController* PlayerController;
 
 	TArray<AAbilityActor*> AbilityActors;
 
 protected:
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 		/**/
-		TSubclassOf<AImmieAIController> AIControllerClass;
+		bool IsPlayerControlled;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(EditCondition="!IsPlayerControlled", EditConditionHides))
+		/* Only used when this team is set to explicitly not use a player controller. See FBattleTeamInit. */
+		TSubclassOf<ABattleAiController> AIControllerClass;
 
 	UPROPERTY(BlueprintReadWrite)
 		/**/
@@ -70,7 +75,7 @@ protected:
 
 	UFUNCTION(NetMulticast, Reliable)
 		/* Synchronizes the team's subobjects (not the Immies). */
-		void SyncClientSubobjects(ABattleInstance* BattleInstanceObject, AController* ControllerObject, const TArray<AImmieCharacter*>& TeamCharacterObjects);
+		void SyncClientSubobjects(ABattleInstance* BattleInstanceObject, AImmiePlayerController* PlayerControllerObject, const TArray<AImmieCharacter*>& TeamCharacterObjects);
 
 	UFUNCTION(BlueprintCallable)
 		/* Makes an battle immie character from an immie object. If the object's outer is an immie character,
@@ -183,10 +188,6 @@ public:
 
 	UFUNCTION(BlueprintPure)
 		/**/
-		FORCEINLINE AController* GetController() const { return Controller; }
-
-	UFUNCTION(BlueprintPure)
-		/**/
 		FORCEINLINE TArray<AImmieCharacter*> GetTeam() const { return Team; }
 
 	UFUNCTION(BlueprintPure)
@@ -204,5 +205,9 @@ public:
 	UFUNCTION(BlueprintPure)
 		/**/
 		TArray<AAbilityActor*> GetAbilityActors() const { return AbilityActors; }
+
+	UFUNCTION(BlueprintPure)
+		/**/
+		AImmiePlayerController* GetPlayerController() const { return PlayerController; }
 
 };

@@ -6,6 +6,7 @@
 FBattleTeamInit::FBattleTeamInit()
 {
 	//Team.Reserve(8);
-	Controller = nullptr;
+	IsPlayerControlled = false;
+	PlayerController = nullptr;
 	TeamOwner = nullptr;
 }
