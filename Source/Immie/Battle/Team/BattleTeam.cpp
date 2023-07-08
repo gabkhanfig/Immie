@@ -140,6 +140,22 @@ void ABattleTeam::InitializeTeam(ABattleInstance* _BattleInstance, const FBattle
 	TeamOwnerAsObject = TeamData.TeamOwner;
 
 	BP_CreateTeam(TeamData);
+
+	checkf(Team.Num() > 0, TEXT("On BP_CreateTeam, a team of Immie Characters must be created"));
+	if (!IsPlayerControlled) {
+		for (AImmieCharacter* ImmieCharacter : Team) {
+			check(IsValid(AIControllerClass));
+			FActorSpawnParameters AiControllerSpawnParameters;
+			AiControllerSpawnParameters.Owner = ImmieCharacter;
+			AiControllerSpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+			const FTransform AiControllerSpawnTransform = ImmieCharacter->GetTransform();
+
+			ABattleAiController* AiController = GetWorld()->SpawnActor<ABattleAiController>(AIControllerClass, AiControllerSpawnTransform, AiControllerSpawnParameters);
+			check(IsValid(AiController));
+			ImmieCharacter->PossessForBattle(AiController);
+		}
+	}
+
 	BP_InitializeTeam(TeamData);
 }
 

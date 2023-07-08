@@ -407,6 +407,9 @@ void AImmieCharacter::PossessForBattle(AController* NewController)
 		AImmiePlayerController* ImmiePlayerController = Cast<AImmiePlayerController>(NewController);
 		ClientPossessedByPlayerController(ImmiePlayerController);
 	}
+	else {
+		
+	}
 }
 
 void AImmieCharacter::ClientPossessedByPlayerController_Implementation(AImmiePlayerController* PlayerController)
