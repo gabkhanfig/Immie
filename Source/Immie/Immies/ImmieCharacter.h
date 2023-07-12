@@ -275,7 +275,6 @@ public:
 		/* Turns the immie character into a wild immie character. Changes ownership to the spawner. */
 		void MakeWild(AWildImmieSpawner* Spawner);
 
-
 	UFUNCTION(BlueprintCallable, Category = "Battle")
 		/* Call to make a controller possess this Immie character for battle. Performs necessary network syncing. */
 		void PossessForBattle(AController* NewController);
@@ -290,6 +289,9 @@ public:
 	UFUNCTION(BlueprintCallable, NetMulticast, Reliable)
 		/* Sets the Immie to be visible, tick, and have collision, OR not for all of those. Replicates to connected clients. */
 		void SetImmieEnabled(bool NewEnabled);
+
+	UFUNCTION(BlueprintPure)
+		bool IsImmieEnabled() const { return bEnabled; }
 
 	/* Prepares and subsequently sends the rpc with all of this Immie character subobjects to the clients. 
 	Does not send the values held within the objects, only the objects themselves. */

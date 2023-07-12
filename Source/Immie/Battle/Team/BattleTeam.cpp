@@ -153,6 +153,7 @@ void ABattleTeam::InitializeTeam(ABattleInstance* _BattleInstance, const FBattle
 			ABattleAiController* AiController = GetWorld()->SpawnActor<ABattleAiController>(AIControllerClass, AiControllerSpawnTransform, AiControllerSpawnParameters);
 			check(IsValid(AiController));
 			ImmieCharacter->PossessForBattle(AiController);
+			AiController->Initialize(ImmieCharacter);
 		}
 	}
 
