@@ -38,12 +38,12 @@ public:
 
 private:
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 		/**/
 		AImmieCharacter* _ImmieCharacter;
 
-	UPROPERTY()
-		/**/
+	UPROPERTY(BlueprintReadOnly)
+		/* Reference to the abilities of the immie character */
 		TArray<UAbility*> _Abilities;
 
 };
