@@ -9,6 +9,7 @@
 class AImmieCharacter;
 class ABattleTeam;
 class ABattleInstance;
+class UAbility;
 
 /**
  * 
@@ -40,5 +41,9 @@ private:
 	UPROPERTY()
 		/**/
 		AImmieCharacter* _ImmieCharacter;
+
+	UPROPERTY()
+		/**/
+		TArray<UAbility*> _Abilities;
 
 };

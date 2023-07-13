@@ -5,6 +5,7 @@
 #include "../../Immies/ImmieCharacter.h"
 #include "../Team/BattleTeam.h"
 #include "../BattleInstance/BattleInstance.h"
+#include "../../Ability/Ability.h"
 
 ABattleAiController::ABattleAiController() :
 	_ImmieCharacter(nullptr)
@@ -19,6 +20,16 @@ void ABattleAiController::Tick(float DeltaTime)
 void ABattleAiController::Initialize(AImmieCharacter* ImmieCharacter)
 {
 	_ImmieCharacter = ImmieCharacter;
+
+	const FName EmptyAbilityName = FName("EmptyAbility");
+
+	TArray<UAbility*> Abilities = _ImmieCharacter->GetAbilities();
+	for (UAbility* Ability : Abilities) {
+		check(IsValid(Ability));
+		if (Ability->GetAbilityName() == EmptyAbilityName) continue;
+		
+		_Abilities.Add(Ability);
+	}
 }
 
 ABattleTeam* ABattleAiController::GetBattleTeam() const
