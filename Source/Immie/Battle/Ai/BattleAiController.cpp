@@ -15,6 +15,11 @@ ABattleAiController::ABattleAiController() :
 void ABattleAiController::Tick(float DeltaTime)
 {
 	if (!HasAuthority() || !_ImmieCharacter->IsImmieEnabled()) return;
+
+	for (UAbility* Ability : _Abilities) {
+		if (!Ability->CanAbilityBeUsed()) continue;
+		Ability->InputPress();
+	}
 }
 
 void ABattleAiController::Initialize(AImmieCharacter* ImmieCharacter)
