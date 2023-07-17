@@ -27,6 +27,8 @@ public:
 
 	void Initialize(AImmieCharacter* ImmieCharacter);
 
+	AImmieCharacter* FindNearestTarget() const;
+
 	UFUNCTION(BlueprintPure)
 		AImmieCharacter* GetImmieCharacter() const { return _ImmieCharacter; }
 
@@ -45,5 +47,9 @@ private:
 	UPROPERTY()
 		/* Reference to the abilities of the immie character other than empty ability. */
 		TArray<UAbility*> _Abilities;
+
+	UPROPERTY()
+		/**/
+		AImmieCharacter* _Target;
 
 };

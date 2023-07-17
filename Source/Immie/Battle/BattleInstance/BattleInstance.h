@@ -348,6 +348,10 @@ public:
 		/**/
 		ABattleTeam* GetTeam(int index) const { return Teams[index]; }
 
+	UFUNCTION(BlueprintPure)
+		/**/
+		TArray<ABattleTeam*> GetTeams() const { return Teams; }
+
 
 
 };
