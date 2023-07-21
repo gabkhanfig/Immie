@@ -146,7 +146,7 @@ void ABattleTeam::InitializeTeam(ABattleInstance* _BattleInstance, const FBattle
 		for (AImmieCharacter* ImmieCharacter : Team) {
 			check(IsValid(AIControllerClass));
 			FActorSpawnParameters AiControllerSpawnParameters;
-			AiControllerSpawnParameters.Owner = ImmieCharacter;
+			AiControllerSpawnParameters.Owner = this;
 			AiControllerSpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 			const FTransform AiControllerSpawnTransform = ImmieCharacter->GetTransform();
 
