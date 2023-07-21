@@ -149,7 +149,6 @@ void ABattleTeam::InitializeTeam(ABattleInstance* _BattleInstance, const FBattle
 			AiControllerSpawnParameters.Owner = this;
 			AiControllerSpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 			const FTransform AiControllerSpawnTransform = ImmieCharacter->GetTransform();
-
 			ABattleAiController* AiController = GetWorld()->SpawnActor<ABattleAiController>(AIControllerClass, AiControllerSpawnTransform, AiControllerSpawnParameters);
 			check(IsValid(AiController));
 			ImmieCharacter->PossessForBattle(AiController);
@@ -180,6 +179,7 @@ void ABattleTeam::SyncClientSubobjects_Implementation(ABattleInstance* BattleIns
 		return;
 	}
 
+	BattleInstance = BattleInstanceObject;
 	PlayerController = PlayerControllerObject;
 	Team = TeamCharacterObjects;
 }

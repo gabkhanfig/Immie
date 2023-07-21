@@ -127,7 +127,13 @@ void UAbility::SyncToClients()
 
 void UAbility::SyncClientAbilityData_Implementation(FBattleStats _InitialStats, FBattleStats _ActiveStats, UBattleTypeComponent* _TypeComponent, float _CurrentCooldown, int _CurrentUses)
 {
+	check(IsValid(GetImmieCharacter()));
+	ABattleInstance* BattleInstance = GetBattleInstance();
+	check(IsValid(BattleInstance));
+	UBattleAbilityManager* AbilityManager = BattleInstance->GetBattleAbilityManager();
+	check(IsValid(AbilityManager));
 	AbilityDataObject = GetBattleInstance()->GetBattleAbilityManager()->GetAbilityDataObject(AbilityName);
+	check(IsValid(AbilityDataObject));
 	InitialStats = _InitialStats;
 	ActiveStats = _ActiveStats;
 	TypeComponent = _TypeComponent;
