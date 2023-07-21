@@ -69,6 +69,7 @@ void AMultiplayerGameMode::ForceStartMultiplayerBattle(AImmiePlayerController* P
 		FBattleTeamInit BattleTeam;
 		BattleTeam.PlayerController = PlayerTeams[i].Controller;
 		BattleTeam.BattleTeamClass = PlayerTeamClass;
+		BattleTeam.IsPlayerControlled = true;
 		//BattleTeam.TeamType = EBattleTeamType::BattleTeam_PlayerMultiplayer;
 		FJsonObjectBP PlayerImmiesJson;
 		if (!FJsonObjectBP::LoadJsonString(PlayerTeams[i].TeamJsonString, PlayerImmiesJson)) {
@@ -98,7 +99,7 @@ FBattleTeamInit AMultiplayerGameMode::GenerateTestAiTeam() const
 	FBattleTeamInit Team;
 	Team.Team = Immies;
 	Team.BattleTeamClass = AiTeamClass;
-	//Team.TeamType = EBattleTeamType::BattleTeam_PlayerSingleplayer;
+	Team.IsPlayerControlled = false;
 	return Team;
 }
 
