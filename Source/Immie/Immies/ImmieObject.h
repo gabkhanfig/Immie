@@ -130,6 +130,10 @@ public:
 		/**/
 		inline TArray<FName> GetAbilityNames() const { return Abilities; }
 
+	UFUNCTION(BlueprintCallable)
+		/**/
+		void SetAbilityNames(const TArray<FName>& NewAbilities);
+
 	UFUNCTION(BlueprintPure)
 		/**/
 		inline FString GetDisplayName() const { return DisplayName; }

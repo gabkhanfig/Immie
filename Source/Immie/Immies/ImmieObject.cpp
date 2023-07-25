@@ -302,6 +302,14 @@ void UImmie::SetHealth(float NewHealth)
     }
 }
 
+void UImmie::SetAbilityNames(const TArray<FName>& NewAbilities)
+{
+  for (FName Name : NewAbilities) {
+    checkf(UAbilityDataManager::IsValidAbilityName(Name), TEXT("Ability name %s is not a valid ability name"), *Name.ToString());
+  }
+  Abilities = NewAbilities;
+}
+
 void UImmie::SetDisplayName(const FString& _DisplayName)
 {
     DisplayName = _DisplayName;
