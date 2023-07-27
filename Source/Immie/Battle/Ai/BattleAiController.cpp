@@ -9,7 +9,7 @@
 #include <Kismet/KismetMathLibrary.h>
 
 ABattleAiController::ABattleAiController() :
-	_ImmieCharacter(nullptr)
+	_ImmieCharacter(nullptr), _Target(nullptr)
 {
 }
 
