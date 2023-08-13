@@ -14,6 +14,8 @@ class AAbilityActor;
 class ABattleAiController;
 class AImmiePlayerController;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAuthorityBattleTickSignature, float, DeltaTime);
+
 UCLASS()
 class IMMIE_API ABattleTeam : public AActor
 {
@@ -60,6 +62,12 @@ protected:
 
 	/* If the team is current alive. */
 	uint8 bTeamAlive : 1;
+
+public:
+
+	UPROPERTY(BlueprintAssignable)
+		/**/
+		FOnAuthorityBattleTickSignature OnAuthorityBattleTickMulticastDelegate;
 
 protected:
 
