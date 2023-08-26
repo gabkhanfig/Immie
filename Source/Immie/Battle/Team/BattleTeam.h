@@ -63,7 +63,7 @@ protected:
 	/* If the team is current alive. */
 	uint8 bTeamAlive : 1;
 
-public:
+private:
 
 	UPROPERTY(BlueprintAssignable)
 		/**/
@@ -189,6 +189,14 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category = "BattleEvents", DisplayName = "Player Dealt Damage")
 		/* Event that executes immediately before an ability that an Immie character owns is dealing damage. The amount of damage done can be freely modified. */
 		void EventPlayerDealtDamage(const TScriptInterface<IBattleActor>& Target, UPARAM(ref) float& Amount, UPARAM(ref) FBattleDamage& Damage, AImmieCharacter* ImmieCharacter);
+
+
+	/**/
+	void BindAuthorityTickUFunction(const FScriptDelegate& Delegate);
+
+
+	/**/
+	void UnbindAuthorityTickUFunction(const FScriptDelegate& Delegate);
 
 	UFUNCTION(BlueprintPure)
 		/**/

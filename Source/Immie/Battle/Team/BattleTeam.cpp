@@ -333,6 +333,28 @@ void ABattleTeam::CaptureOrReturnWildImmieToSpawner(AImmieCharacter* ImmieCharac
 	}
 }
 
+void ABattleTeam::BindAuthorityTickUFunction(const FScriptDelegate& Delegate)
+{
+	if (!Delegate.IsBound()) {
+		const UObject* Object = Delegate.GetUObject();
+		const FName FunctionName = Delegate.GetFunctionName();
+		checkf(IsValid(Object), TEXT("Cannot bind authority tick ufunction with an invalid object"));
+		checkf(Object->FindFunction(FunctionName) != nullptr, TEXT("Unable to find UFunction %s for object %s for adding authority tick delegate"), *FunctionName.ToString(), *Object->GetFName().ToString());
+	}
+	OnAuthorityBattleTickMulticastDelegate.AddUnique(Delegate);
+}
+
+void ABattleTeam::UnbindAuthorityTickUFunction(const FScriptDelegate& Delegate)
+{
+	if (!Delegate.IsBound()) {
+		const UObject* Object = Delegate.GetUObject();
+		const FName FunctionName = Delegate.GetFunctionName();
+		checkf(IsValid(Object), TEXT("Cannot bind authority tick ufunction with an invalid object"));
+		checkf(Object->FindFunction(FunctionName) != nullptr, TEXT("Unable to find UFunction %s for object %s for removing authority tick delegate"), *FunctionName.ToString(), *Object->GetFName().ToString());
+	}
+	OnAuthorityBattleTickMulticastDelegate.Remove(Delegate);
+}
+
 void ABattleTeam::EventPlayerDealtHealing_Implementation(const TScriptInterface<IBattleActor>& Target, UPARAM(ref) float& Amount, UPARAM(ref)FBattleDamage& Healing, AImmieCharacter* ImmieCharacter)
 {
 }
